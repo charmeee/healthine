@@ -38,6 +38,7 @@ dependencies:
   percent_indicator: ^4.2.2
   syncfusion_flutter_charts: ^20.2.36
   qr_code_scanner: ^1.0.0
+  youtube_player_iframe: ^2.3.0
 
 dev_dependencies:
   flutter_test:

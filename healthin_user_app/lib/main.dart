@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:healthin/qrscanpage.dart';
 import 'package:healthin/dictionary.dart';
-import 'package:healthin/whileExercise.dart';
-import 'home.dart';
+import 'package:healthin/home2.dart';
+import 'package:healthin/home1.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -32,20 +32,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      Home(didexercise: didexercise),
-      Home(didexercise: didexercise),
+      Home2(didexercise: didexercise),
+      QrScanPage(didexercise: didexercise, addDidexercise: addDidexercise),
       Dictionary(),
     ];
     return Scaffold(
       extendBody: true,
       // appBar: AppBar(
       //   backgroundColor: Colors.indigo[100],
+      //   title: Text("fddfsa"),
       // ),
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      // ,
+
       floatingActionButton: FloatingActionButton(
         tooltip: "운동기구 스캔",
         backgroundColor: Colors.white,

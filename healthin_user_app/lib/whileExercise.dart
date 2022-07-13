@@ -1,6 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:healthin/youtubePlayer.dart';
+
+const textstyle1 = TextStyle(color: Colors.white);
+const double buttonheight = 40;
+const double buttonwidth = 150;
 
 class WhileExercise extends StatefulWidget {
   const WhileExercise({Key? key}) : super(key: key);
@@ -11,6 +16,7 @@ class WhileExercise extends StatefulWidget {
 
 //https://stackoverflow.com/questions/63491990/flutter-start-and-stop-stopwatch-from-parent-widget
 class _WhileExerciseState extends State<WhileExercise> {
+  String exerciseName = "랫 풀 다운";
   final stopwatch = Stopwatch();
   bool flag = false;
   String hours = '00';
@@ -34,14 +40,14 @@ class _WhileExerciseState extends State<WhileExercise> {
     }
 
     setState(() {
-      hours = stopwatch.elapsed.inHours.toString().padLeft(2, "0");
-      minutes = (stopwatch.elapsed.inMinutes % 60).toString().padLeft(2, "0");
+      //hours = stopwatch.elapsed.inHours.toString().padLeft(2, "0");
+      minutes = stopwatch.elapsed.inMinutes.toString().padLeft(2, "0");
       seconds = (stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
     });
   }
 
   void dispose() {
-    // TODO: implement dispose
+    // TODO: 시간을 상위 state에 넘겨 줘야함.
     stopwatch.stop();
     super.dispose();
   }
@@ -50,38 +56,95 @@ class _WhileExerciseState extends State<WhileExercise> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: flag ? Colors.green : Colors.red,
+        padding: EdgeInsets.all(10),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '$hours:$minutes:$seconds',
+                flag ? "${exerciseName}\n운동중" : "휴식중",
+                textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
               ),
-              IconButton(
-                icon: Icon(Icons.start),
-                onPressed: () {
-                  if (flag) {
-                    setState(() {
-                      stopwatch.stop();
-                      flag = false;
-                    });
-                  } else {
-                    setState(() {
-                      stopwatch.start();
-                      startTimer();
-                      flag = true;
-                    });
-                  }
-                  print(stopwatch.isRunning);
-                  print(stopwatch.elapsedMilliseconds);
-                },
+              Text(
+                '$minutes:$seconds',
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
               ),
-              TextButton(
-                  onPressed: () => {
-                        Navigator.of(context).popUntil((route) => route.isFirst)
-                      },
-                  child: Text("운동완료"))
+              Container(
+                height: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      height: buttonheight,
+                      width: buttonwidth,
+                      child: TextButton(
+                        child: flag
+                            ? Text("휴식", style: textstyle1)
+                            : Text("다시 시작", style: textstyle1),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                flag ? Colors.red : Colors.green)),
+                        onPressed: () {
+                          if (flag) {
+                            //스탑워치가 실행중일때 멈추면
+                            setState(() {
+                              stopwatch.stop();
+                              flag = false;
+                            });
+                          } else {
+                            setState(() {
+                              stopwatch.start();
+                              startTimer();
+                              flag = true;
+                            });
+                          }
+                          print(stopwatch.isRunning);
+                          print(stopwatch.elapsedMilliseconds);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: buttonheight,
+                      width: buttonwidth,
+                      child: TextButton(
+                        onPressed: () => {
+                          Navigator.of(context).pop()
+                          //Navigator.of(context).popUntil((route) => route.isFirst)
+                        },
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black54)),
+                        child: Text(
+                          "운동완료",
+                          style: textstyle1,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: buttonheight,
+                      width: buttonwidth,
+                      child: TextButton(
+                        onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HealthYoutubePlayer()))
+                        },
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black54)),
+                        child: Text(
+                          "운동 영상 보기",
+                          style: textstyle1,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

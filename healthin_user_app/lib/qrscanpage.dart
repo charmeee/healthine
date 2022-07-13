@@ -35,6 +35,7 @@ class _QRViewExampleState extends State<QrScanPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(ModalRoute.of(context)?.isCurrent);
     if (result != null && flag) {
       //Map<String, dynamic> resultjson = jsonDecode(result!.code.toString());
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -44,7 +45,7 @@ class _QRViewExampleState extends State<QrScanPage> {
 
       flag = false;
 
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => WhileExercise()));
       //Navigator.of(context).pop();
     }
@@ -82,10 +83,12 @@ class _QRViewExampleState extends State<QrScanPage> {
                   Center(
                       child: TextButton(
                           onPressed: () {
-                            Navigator.push(
+                            controller?.dispose();
+                            Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => WhileExercise()));
+                            //Navigator.of(context).pop();
                           },
                           child: Text("운동중"))),
                 ],
@@ -130,7 +133,7 @@ class _QRViewExampleState extends State<QrScanPage> {
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
+    //log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
