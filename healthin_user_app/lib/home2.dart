@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'package:healthin/profile.dart';
 import 'package:healthin/inbodychart.dart';
-
-final GlobalKey<ScaffoldState> _key = GlobalKey();
+import 'package:table_calendar/table_calendar.dart';
+import 'package:healthin/util.dart';
+import 'package:healthin/report.dart';
 
 class Home2 extends StatelessWidget {
   Home2({Key? key, required this.didexercise}) : super(key: key);
@@ -55,7 +55,7 @@ class Home2 extends StatelessWidget {
             //physics: BouncingScrollPhysics(),
             children: [
               Tab1(routinelist: routinelist, didexercise: didexercise),
-              Tab1(routinelist: routinelist, didexercise: didexercise),
+              Tab2(),
             ],
           ),
         ),
@@ -128,83 +128,105 @@ class Tab1 extends StatelessWidget {
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, //가로로 꽉차게
                   children: [
                 Card(
-                    child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        "인바디기록",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w300),
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Text(
+                          "인바디기록",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    InbodyChart(),
-                  ],
+                      InbodyChart(),
+                    ],
+                  ),
                 )),
                 //인바디 차트
                 Card(
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(top: 4),
-                        child: Text(
-                          "오늘의 루틴",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      for (int i = 0; i < routinelist.length; i++)
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Container(
-                            padding: EdgeInsets.all(5),
-                            child: Text(
-                              '${i + 1}. ${routinelist[i]}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w200,
-                              ),
-                            ))
-                    ],
-                  ),
-                ),
-                //오늘의 루틴
-                Card(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          "오늘 운동 기록",
-                          style: TextStyle(fontSize: 20),
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            "오늘의 루틴",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      if (didexercise.isEmpty) ...[
-                        Column(
-                          children: [
-                            Text("오늘의 운동기록이 없습니다."),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Text("운동을 기록해보세요!"),
-                            )
-                          ],
-                        )
-                      ] else ...[
-                        for (int i = 0; i < didexercise.length; i++) ...[
+                        for (int i = 0; i < routinelist.length; i++)
                           Container(
-                              alignment: Alignment.center,
                               padding: EdgeInsets.all(5),
                               child: Text(
-                                '${i + 1}. ${didexercise[i]}',
+                                '${i + 1}. ${routinelist[i]}',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w200,
                                 ),
                               ))
-                        ]
                       ],
-                    ],
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 70,
+                //오늘의 루틴
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            "오늘 운동 기록",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        if (didexercise.isEmpty) ...[
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text("오늘의 운동기록이 없습니다.\n운동을 기록해보세요!"),
+                          ),
+                        ] else ...[
+                          for (int i = 0; i < didexercise.length; i++) ...[
+                            Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(4),
+                                child: Text(
+                                  '${i + 1}. ${didexercise[i]}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w200,
+                                  ),
+                                ))
+                          ]
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  padding: EdgeInsets.all(4),
+                  child: TextButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black54)),
+                      child: Text(
+                        "리포트 보기",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Report()));
+                      }),
                 )
               ]),
         ),
@@ -213,14 +235,145 @@ class Tab1 extends StatelessWidget {
   }
 }
 
-class Tab2 extends StatelessWidget {
+class Tab2 extends StatefulWidget {
   const Tab2({Key? key}) : super(key: key);
+
+  @override
+  State<Tab2> createState() => _Tab2State();
+}
+
+class _Tab2State extends State<Tab2> {
+  late final ValueNotifier<List<Event>> _selectedEvents;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
+      .toggledOff; // Can be toggled on/off by longpressing a date
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+  }
+
+  @override
+  void dispose() {
+    _selectedEvents.dispose();
+    super.dispose();
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    // Implementation example
+    return kEvents[day] ?? [];
+  }
+
+  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+    // Implementation example
+    final days = daysInRange(start, end);
+
+    return [
+      for (final d in days) ..._getEventsForDay(d),
+    ];
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+        _rangeStart = null; // Important to clean those
+        _rangeEnd = null;
+        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+      });
+
+      _selectedEvents.value = _getEventsForDay(selectedDay);
+    }
+  }
+
+  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = null;
+      _focusedDay = focusedDay;
+      _rangeStart = start;
+      _rangeEnd = end;
+      _rangeSelectionMode = RangeSelectionMode.toggledOn;
+    });
+
+    // `start` or `end` could be null
+    if (start != null && end != null) {
+      _selectedEvents.value = _getEventsForRange(start, end);
+    } else if (start != null) {
+      _selectedEvents.value = _getEventsForDay(start);
+    } else if (end != null) {
+      _selectedEvents.value = _getEventsForDay(end);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.yellow,
-      height: 50,
+      child: Column(
+        children: [
+          TableCalendar<Event>(
+            firstDay: kFirstDay,
+            lastDay: kLastDay,
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            rangeStartDay: _rangeStart,
+            rangeEndDay: _rangeEnd,
+            calendarFormat: _calendarFormat,
+            rangeSelectionMode: _rangeSelectionMode,
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarStyle: CalendarStyle(
+              // Use `CalendarStyle` to customize the UI
+              outsideDaysVisible: false,
+            ),
+            onDaySelected: _onDaySelected,
+            onRangeSelected: _onRangeSelected,
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+          ),
+          const SizedBox(height: 8.0),
+          Expanded(
+            child: ValueListenableBuilder<List<Event>>(
+              valueListenable: _selectedEvents,
+              builder: (context, value, _) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 4.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: ListTile(
+                        onTap: () => print('${value[index]}'),
+                        title: Text('${value[index]}'),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

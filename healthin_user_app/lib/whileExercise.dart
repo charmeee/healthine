@@ -8,15 +8,18 @@ const double buttonheight = 40;
 const double buttonwidth = 150;
 
 class WhileExercise extends StatefulWidget {
-  const WhileExercise({Key? key}) : super(key: key);
-
+  WhileExercise({
+    Key? key,
+    required this.exerciseName,
+  }) : super(key: key);
+  String exerciseName;
   @override
   State<WhileExercise> createState() => _WhileExerciseState();
 }
 
 //https://stackoverflow.com/questions/63491990/flutter-start-and-stop-stopwatch-from-parent-widget
+
 class _WhileExerciseState extends State<WhileExercise> {
-  String exerciseName = "랫 풀 다운";
   final stopwatch = Stopwatch();
   bool flag = false;
   String hours = '00';
@@ -64,7 +67,7 @@ class _WhileExerciseState extends State<WhileExercise> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                flag ? "${exerciseName}\n운동중" : "휴식중",
+                flag ? "${widget.exerciseName}\n운동중" : "휴식중",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
               ),

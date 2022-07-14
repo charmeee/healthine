@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/community.dart';
+import 'package:healthin/diet.dart';
 import 'package:healthin/qrscanpage.dart';
 import 'package:healthin/dictionary.dart';
 import 'package:healthin/home2.dart';
@@ -33,7 +35,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
       Home2(didexercise: didexercise),
+      Diet(),
       QrScanPage(didexercise: didexercise, addDidexercise: addDidexercise),
+      Community(),
       Dictionary(),
     ];
     return Scaffold(
@@ -92,9 +96,21 @@ class _MyAppState extends State<MyApp> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(
+                  Icons.food_bank,
+                ),
+                label: "식단",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
                   Icons.camera_alt,
                 ),
-                label: "운동기구 스캔",
+                label: "기구 스캔",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.comment,
+                ),
+                label: "커뮤니티",
               ),
               BottomNavigationBarItem(
                 icon: Icon(

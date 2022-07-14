@@ -1,3 +1,4 @@
+import 'package:healthin/dictionary.dart';
 import 'package:healthin/whileExercise.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
@@ -5,7 +6,9 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:healthin/inbodychart.dart';
+
+const double buttonheight = 60;
+const double buttonwidth = 150;
 
 class QrScanPage extends StatefulWidget {
   QrScanPage({Key? key, this.didexercise, required this.addDidexercise})
@@ -35,7 +38,7 @@ class _QRViewExampleState extends State<QrScanPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context)?.isCurrent);
+    //print(ModalRoute.of(context)?.isCurrent);
     if (result != null && flag) {
       //Map<String, dynamic> resultjson = jsonDecode(result!.code.toString());
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,7 +49,10 @@ class _QRViewExampleState extends State<QrScanPage> {
       flag = false;
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => WhileExercise()));
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  WhileExercise(exerciseName: result!.code.toString())));
       //Navigator.of(context).pop();
     }
     return Scaffold(
@@ -64,33 +70,58 @@ class _QRViewExampleState extends State<QrScanPage> {
                     Text(
                         'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                   else
-                    const Text('Scan a code'),
+                    const Text(
+                      'QR코드를 스캔해주세요.',
+                      style: TextStyle(fontSize: 10),
+                    ),
                   Center(
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("홈으로 가기"))),
+                      child: Container(
+                    padding: EdgeInsets.all(5),
+                    height: buttonheight,
+                    width: buttonwidth,
+                    child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black54)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          "홈으로 가기",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
+                        )),
+                  )),
                   Center(
-                      child: TextButton(
-                          onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => addingpage()));
-                          },
-                          child: Text("직접 추가하기"))),
-                  Center(
-                      child: TextButton(
-                          onPressed: () {
-                            controller?.dispose();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => WhileExercise()));
-                            //Navigator.of(context).pop();
-                          },
-                          child: Text("운동중"))),
+                      child: Container(
+                    padding: EdgeInsets.all(5),
+                    height: buttonheight,
+                    width: buttonwidth,
+                    child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black54)),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Dictionary()));
+                        },
+                        child: Text(
+                          "직접 추가하기",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
+                        )),
+                  )),
+                  // Center(
+                  //     child: TextButton(
+                  //         onPressed: () {
+                  //           controller?.dispose();
+                  //           Navigator.pushReplacement(
+                  //               context,
+                  //               MaterialPageRoute(
+                  //                   builder: (context) => WhileExercise()));
+                  //           //Navigator.of(context).pop();
+                  //         },
+                  //         child: Text("운동중"))),
                 ],
               ),
             ),

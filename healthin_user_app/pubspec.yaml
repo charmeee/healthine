@@ -39,6 +39,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.2.36
   qr_code_scanner: ^1.0.0
   youtube_player_iframe: ^2.3.0
+  table_calendar: ^3.0.6
 
 dev_dependencies:
   flutter_test:

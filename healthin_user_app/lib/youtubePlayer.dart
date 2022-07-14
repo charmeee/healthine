@@ -15,7 +15,7 @@ class HealthYoutubePlayer extends StatefulWidget {
 class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
   late YoutubePlayerController _controller;
   Exercise? founddata;
-  String name = "랫 풀 다운";
+  String Exercisename = "랫 풀 다운";
   Future<void> readJson() async {
     //json파일 읽어오기
     final String response =
@@ -23,10 +23,10 @@ class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
     //print(response.runtimeType);w
     Map<String, dynamic> _alldata = await jsonDecode(response);
     setState(() {
-      for (int i = 0; i < _alldata.length; i++) {
-        print(_alldata[i].name);
-        if (_alldata[i].name.toString() == name) {
-          founddata = Exercise.fromJson(_alldata[i]);
+      for (int i = 0; i < _alldata["exerciseType"].length; i++) {
+        //print(_alldata["exerciseType"][0]["name"]);
+        if (_alldata["exerciseType"][i]["name"].toString() == Exercisename) {
+          founddata = Exercise.fromJson(_alldata["exerciseType"][i]);
         }
       }
     });
@@ -34,9 +34,9 @@ class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
 
   @override
   void initState() {
-    name = "랫 풀 다운";
-    readJson();
     super.initState();
+    Exercisename = "랫 풀 다운";
+    readJson();
 
     _controller = YoutubePlayerController(
       initialVideoId: "txL-itZYdY4",
@@ -56,27 +56,36 @@ class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
       ]);
       print('Entered Fullscreen');
     };
-    _controller.onExitFullscreen = () {
-      print('Exited Fullscreen');
-    };
+    // _controller.onExitFullscreen = () {
+    //   print('Exited Fullscreen');
+    // };
   }
 
+  @override
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.close();
-
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(name),
+        Text(
+          Exercisename,
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 50),
+        ),
         YoutubePlayerIFrame(
           controller: _controller,
           aspectRatio: 16 / 9,
         ),
-        if (founddata != null) Text(founddata!.type.toString()),
+        if (founddata != null)
+          Text(
+            founddata!.type.toString(),
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 50),
+          ),
       ],
     );
   }
