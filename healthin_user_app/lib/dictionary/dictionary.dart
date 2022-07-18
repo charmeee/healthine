@@ -116,12 +116,12 @@ class _DictionaryState extends State<Dictionary> {
           ),
           //검색창
           SizedBox(
-            height: 40,
+            height: 50,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: healthtype.length,
                 itemBuilder: (context, index) {
-                  return Padding(
+                  return Container(
                     padding: const EdgeInsets.fromLTRB(0, 3, 10, 3),
                     child: ChoiceChip(
                       backgroundColor: Colors.indigo[50],

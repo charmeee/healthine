@@ -69,24 +69,28 @@ class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          Exercisename,
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 50),
-        ),
-        YoutubePlayerIFrame(
-          controller: _controller,
-          aspectRatio: 16 / 9,
-        ),
-        if (founddata != null)
+    return Scaffold(
+      body: Column(
+        children: [
           Text(
-            founddata!.type.toString(),
+            Exercisename,
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold, fontSize: 50),
           ),
-      ],
+          YoutubePlayerIFrame(
+            controller: _controller,
+            aspectRatio: 16 / 9,
+          ),
+          if (founddata != null)
+            Text(
+              founddata!.type.toString(),
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50),
+            ),
+        ],
+      ),
     );
   }
 }
