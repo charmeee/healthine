@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:convert';
-import 'models.dart';
+import '../models.dart';
 
 class HealthYoutubePlayer extends StatefulWidget {
   const HealthYoutubePlayer({Key? key}) : super(key: key);

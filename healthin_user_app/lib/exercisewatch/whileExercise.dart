@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:healthin/youtubePlayer.dart';
+import './youtubePlayer.dart';
 
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;

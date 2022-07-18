@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/profile.dart';
-import 'package:healthin/inbodychart.dart';
+import 'package:healthin/home/profile.dart';
+import 'package:healthin/home/inbodychart.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:healthin/util.dart';
-import 'package:healthin/report.dart';
+import 'package:healthin/home/util.dart';
+import 'package:healthin/home/report.dart';
 
 class Home2 extends StatelessWidget {
   Home2({Key? key, required this.didexercise}) : super(key: key);

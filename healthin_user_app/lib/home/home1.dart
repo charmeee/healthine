@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/profile.dart';
-import 'package:healthin/inbodychart.dart';
+import 'package:healthin/home/profile.dart';
+import 'package:healthin/home/inbodychart.dart';
 
 class Home1 extends StatelessWidget {
   Home1({Key? key, required this.didexercise}) : super(key: key);
