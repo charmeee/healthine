@@ -35,10 +35,6 @@ class Home2 extends StatelessWidget {
             return <Widget>[
               SliverAppBar(
                 backgroundColor: Colors.indigo,
-                // leading: IconButton(
-                //   icon: Icon(Icons.menu),
-                //   onPressed: () => _key.currentState!.openEndDrawer(),
-                // ),
                 pinned: true,
                 floating: true,
                 expandedHeight: 270.0,
@@ -52,7 +48,7 @@ class Home2 extends StatelessWidget {
           },
 
           body: TabBarView(
-            //physics: BouncingScrollPhysics(),
+            //physics: PageScrollPhysics(),
             children: [
               Tab1(routinelist: routinelist, didexercise: didexercise),
               Tab2(),
@@ -132,6 +128,7 @@ class Tab1 extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    //여기까지 바깥으로빼고 안에 인수로다가 List<Widget>을넘겨줘서 바깥으로 빼면될듯.
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(4),

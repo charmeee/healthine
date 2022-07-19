@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/community/community.dart';
+import 'package:healthin/community/communitymain.dart';
 import 'package:healthin/diet/diet.dart';
 import 'package:healthin/qrscan/qrscanpage.dart';
 import 'package:healthin/dictionary/dictionary.dart';
@@ -49,23 +49,33 @@ class _MyAppState extends State<MyApp> {
         // ),
         body: _widgetOptions.elementAt(_selectedIndex),
 
-        floatingActionButton: FloatingActionButton(
-          tooltip: "운동기구 스캔",
-          backgroundColor: Colors.white,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => QrScanPage(
-                        didexercise: didexercise,
-                        addDidexercise: addDidexercise)));
-          },
-          child: Icon(
-            Icons.camera_alt,
-            color: Colors.indigo[700],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        // floatingActionButton: FloatingActionButton(
+        //   tooltip: "운동기구 스캔",
+        //   backgroundColor: Colors.white,
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => QrScanPage(
+        //                 didexercise: didexercise,
+        //                 addDidexercise: addDidexercise)));
+        //   },
+        //   child: Icon(
+        //     Icons.camera_alt,
+        //     color: Colors.indigo[700],
+        //   ),
+        // ),
+        // floatingActionButton: _selectedIndex == 3
+        //     ? FloatingActionButton(
+        //         backgroundColor: Colors.indigo[300],
+        //         tooltip: "글쓰기",
+        //         onPressed: () {},
+        //         child: Icon(
+        //           Icons.edit,
+        //           color: Colors.white,
+        //         ),
+        //       )
+        //     : null,
         bottomNavigationBar: BottomAppBar(
             notchMargin: 8,
             shape: CircularNotchedRectangle(),
@@ -75,9 +85,18 @@ class _MyAppState extends State<MyApp> {
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               onTap: (int index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
+                if (index == 2) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QrScanPage(
+                              didexercise: didexercise,
+                              addDidexercise: addDidexercise)));
+                } else {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                }
               },
               unselectedItemColor: Colors.grey[400],
               selectedItemColor: Colors.white,

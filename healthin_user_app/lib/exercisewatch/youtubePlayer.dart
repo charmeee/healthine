@@ -5,6 +5,8 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:convert';
 import '../models.dart';
 
+// 내가봣을때 걍 유튜브링크 넘겨줘서 webview로 보는게 더 맞는거 가틈..
+
 class HealthYoutubePlayer extends StatefulWidget {
   const HealthYoutubePlayer({Key? key}) : super(key: key);
 
