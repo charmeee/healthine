@@ -37,7 +37,7 @@ class _MyHomeState extends State<MyHome> {
     ];
     return SafeArea(
       child: Scaffold(
-        extendBody: true,
+        //extendBody: true,
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomAppBar(
             notchMargin: 8,

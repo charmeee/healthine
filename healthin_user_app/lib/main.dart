@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'signin/main_signin.dart';
 import 'mainstructure.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    status = true;
+    status = false;
+    //status = true;
     initialization();
   }
 
@@ -41,6 +43,7 @@ class _MyAppState extends State<MyApp> {
     // delaying the user experience is a bad design practice!
     // ignore_for_file: avoid_print
     //정보가다받아와질때까지 delay넣어주면될듯
+    initializeDateFormatting();
     await Future.delayed(const Duration(milliseconds: 200));
     FlutterNativeSplash.remove();
   }

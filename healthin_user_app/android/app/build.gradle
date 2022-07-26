@@ -51,8 +51,17 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
+    signingConfigs{
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'ap020303'
+            storeFile file('mykey.jks')
+            storePassword 'ap020303'
+        }
+    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -67,5 +76,6 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

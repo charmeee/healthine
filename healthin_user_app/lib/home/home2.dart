@@ -241,7 +241,6 @@ class Tab2 extends StatefulWidget {
 
 class _Tab2State extends State<Tab2> {
   late final ValueNotifier<List<Event>> _selectedEvents;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
   DateTime _focusedDay = DateTime.now();
@@ -314,13 +313,18 @@ class _Tab2State extends State<Tab2> {
       child: Column(
         children: [
           TableCalendar<Event>(
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+              leftChevronIcon: Icon(Icons.arrow_left),
+              rightChevronIcon: Icon(Icons.arrow_right),
+              titleTextStyle: const TextStyle(fontSize: 17.0),
+            ),
             firstDay: kFirstDay,
             lastDay: kLastDay,
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             rangeStartDay: _rangeStart,
             rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
             rangeSelectionMode: _rangeSelectionMode,
             eventLoader: _getEventsForDay,
             startingDayOfWeek: StartingDayOfWeek.monday,
@@ -330,13 +334,6 @@ class _Tab2State extends State<Tab2> {
             ),
             onDaySelected: _onDaySelected,
             onRangeSelected: _onRangeSelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
             },
