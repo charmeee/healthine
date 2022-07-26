@@ -181,7 +181,7 @@ class _DictionaryState extends State<Dictionary> {
                                                   .enName
                                                   .toString()),
                                               Image.asset(
-                                                  "img_exercise/${founddata![index].id}.png")
+                                                  "assets/img_exercise/${founddata![index].id}.png")
                                             ],
                                           ),
                                           Column(

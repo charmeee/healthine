@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/community/communitymain.dart';
-import 'package:healthin/diet/diet.dart';
-import 'package:healthin/qrscan/qrscanpage.dart';
-import 'package:healthin/dictionary/dictionary.dart';
-import 'package:healthin/home/home2.dart';
-//import 'package:healthin/home/home1.dart';
+// import 'community/communitymain.dart';
+// import 'diet/diet.dart';
+// import 'qrscan/qrscanpage.dart';
+// import 'dictionary/dictionary.dart';
+// import 'home/home2.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'signin/main_signin.dart';
+import 'mainstructure.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'bonoteam',
@@ -23,121 +27,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0;
-  List<String> didexercise = [];
-  void addDidexercise(String getdata) {
-    setState(() {
-      didexercise.add(getdata);
-    });
+  bool status = false;
+  @override
+  void initState() {
+    super.initState();
+    status = true;
+    initialization();
+  }
+
+  void initialization() async {
+    // This is where you can initialize the resources needed by your app while
+    // the splash screen is displayed.  Remove the following example because
+    // delaying the user experience is a bad design practice!
+    // ignore_for_file: avoid_print
+    //정보가다받아와질때까지 delay넣어주면될듯
+    await Future.delayed(const Duration(milliseconds: 200));
+    FlutterNativeSplash.remove();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _widgetOptions = <Widget>[
-      Home2(didexercise: didexercise),
-      Diet(),
-      QrScanPage(didexercise: didexercise, addDidexercise: addDidexercise),
-      Community(),
-      Dictionary(),
-    ];
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        // appBar: AppBar(
-        //   backgroundColor: Colors.indigo[100],
-        //   title: Text("fddfsa"),
-        // ),
-        body: _widgetOptions.elementAt(_selectedIndex),
-
-        // floatingActionButton: FloatingActionButton(
-        //   tooltip: "운동기구 스캔",
-        //   backgroundColor: Colors.white,
-        //   onPressed: () {
-        //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (context) => QrScanPage(
-        //                 didexercise: didexercise,
-        //                 addDidexercise: addDidexercise)));
-        //   },
-        //   child: Icon(
-        //     Icons.camera_alt,
-        //     color: Colors.indigo[700],
-        //   ),
-        // ),
-        // floatingActionButton: _selectedIndex == 3
-        //     ? FloatingActionButton(
-        //         backgroundColor: Colors.indigo[300],
-        //         tooltip: "글쓰기",
-        //         onPressed: () {},
-        //         child: Icon(
-        //           Icons.edit,
-        //           color: Colors.white,
-        //         ),
-        //       )
-        //     : null,
-        bottomNavigationBar: BottomAppBar(
-            notchMargin: 8,
-            shape: CircularNotchedRectangle(),
-            clipBehavior: Clip.antiAlias,
-            child: BottomNavigationBar(
-              backgroundColor: Colors.indigo[500],
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              onTap: (int index) {
-                if (index == 2) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QrScanPage(
-                              didexercise: didexercise,
-                              addDidexercise: addDidexercise)));
-                } else {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                }
-              },
-              unselectedItemColor: Colors.grey[400],
-              selectedItemColor: Colors.white,
-              // unselectedIconTheme: IconThemeData(color: Colors.grey[100]),
-              // selectedIconTheme: IconThemeData(color: Colors.white),
-              // unselectedLabelStyle: TextStyle(color: Colors.grey[100]),
-              // selectedLabelStyle: TextStyle(color: Colors.white),
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home_filled,
-                  ),
-                  label: "홈",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.food_bank,
-                  ),
-                  label: "식단",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.camera_alt,
-                  ),
-                  label: "기구 스캔",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.comment,
-                  ),
-                  label: "커뮤니티",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.library_books,
-                  ),
-                  label: "운동사전",
-                )
-              ],
-            )),
-      ),
-    );
+    return status ? MyHome() : MainSignIn();
   }
 }

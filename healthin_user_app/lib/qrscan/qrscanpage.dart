@@ -1,5 +1,4 @@
-import 'package:healthin/dictionary/dictionary.dart';
-import 'package:healthin/exercisewatch/whileExercise.dart';
+import '../exercisewatch/whileExercise.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
 import 'dart:io';
@@ -7,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+//웹에선 안됨!!
 //QrScanPage
 const double buttonheight = 60;
 const double buttonwidth = 150;
