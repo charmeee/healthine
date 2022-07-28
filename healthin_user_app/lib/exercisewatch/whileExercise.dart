@@ -1,7 +1,7 @@
 import 'dart:async';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
-import './youtubePlayer.dart';
+//import './youtubePlayer.dart';
 
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;
@@ -131,10 +131,8 @@ class _WhileExerciseState extends State<WhileExercise> {
                       width: buttonwidth,
                       child: TextButton(
                         onPressed: () => {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HealthYoutubePlayer()))
+                          launchUrl(Uri.parse(
+                              "https://www.youtube.com/watch?v=2K2WCGstHOY"))
                         },
                         style: ButtonStyle(
                             backgroundColor:

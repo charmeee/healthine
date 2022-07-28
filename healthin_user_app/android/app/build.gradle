@@ -56,10 +56,10 @@ android {
 
     signingConfigs{
         debug {
-            keyAlias 'androiddebugkey'
-            keyPassword 'ap020303'
-            storeFile file('mykey.jks')
-            storePassword 'ap020303'
+            keyAlias 'debugkey'
+            keyPassword 'jeonminji'
+            storeFile file('mjkey.jks')
+            storePassword 'jeonminji'
         }
     }
     buildTypes {

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import 'signup_util.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
@@ -11,46 +13,19 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  var client = http.Client();
-
-  SignUpRequest(username, password, name, nickname, phoneNumber) async {
-    var url = Uri.parse('https://api.be-healthy.life/users');
-    var response = await http.post(url,
-        body: json.encode({
-          "username": '$username',
-          "password": '$password',
-          "name": '$name',
-          "nickname": '$nickname',
-          "phoneNumber": '$phoneNumber'
-        }));
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("$name님 회원가입되셨습니다."),
-      ));
-
-      print("로그인되었습니다.");
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("$name님 회원가입되셨습니다."),
-      ));
-    }
-    print(response.statusCode);
-    print(response.body);
-  }
-
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _nicknameController = TextEditingController();
 
-  void _performLogin() {
+  void _performLogin(BuildContext context) {
     String username = _idController.text;
     String password = _passwordController.text;
     String name = _nameController.text;
     String phoneNumber = _phoneController.text;
     String nickname = _nicknameController.text;
-    SignUpRequest(username, password, name, nickname, phoneNumber);
+    SignUpRequest(username, password, name, nickname, phoneNumber, context);
     //print('login attempt: $username with $password');
   }
 
@@ -74,7 +49,7 @@ class _SignUpState extends State<SignUp> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(padding: EdgeInsets.only(top: 150)),
+            Padding(padding: EdgeInsets.only(top: 100)),
             Center(
               child: Image.asset(
                 "assets/splashicon.png",
@@ -130,20 +105,20 @@ class _SignUpState extends State<SignUp> {
                     TextField(
                       controller: _nicknameController,
                       decoration: InputDecoration(labelText: '닉네임을 입력해주세요'),
-                      keyboardType: TextInputType.phone,
+                      keyboardType: TextInputType.text,
                     ),
                     SizedBox(
                       height: 30,
                     ),
                     TextButton(
                         onPressed: () {
-                          _performLogin();
+                          _performLogin(context);
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.indigo,
                           padding: EdgeInsets.all(20),
                         ),
-                        child: Text("로그인하기",
+                        child: Text("시작하기!",
                             style: TextStyle(color: Colors.white)))
                   ],
                 ),

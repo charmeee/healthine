@@ -70,9 +70,6 @@ class _CommunityState extends State<Community> {
             color: Colors.white,
           ),
         ),
-        bottomNavigationBar: SizedBox(
-          height: kBottomNavigationBarHeight,
-        ),
       ),
     );
   }

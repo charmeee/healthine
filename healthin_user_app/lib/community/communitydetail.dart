@@ -68,12 +68,19 @@ class mainContext extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: Text(
-        "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
-        style: TextStyle(fontSize: 16),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height * 0.3),
+          padding: EdgeInsets.all(10),
+          child: Text(
+            "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -84,8 +91,7 @@ class mainComment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
-        child: Text("답글: ${contents}"));
+        padding: EdgeInsets.all(10), child: Text("답글: ${contents}"));
   }
 }
 

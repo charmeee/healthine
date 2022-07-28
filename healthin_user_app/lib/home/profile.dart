@@ -17,7 +17,7 @@ class _ProfileState extends State<Profile> {
         color: Colors.indigo,
         height: 230,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+          padding: const EdgeInsets.fromLTRB(10, 45, 10, 10),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -73,7 +73,7 @@ class _ProfileState extends State<Profile> {
                               padding: EdgeInsets.all(5),
                               data: '전민지',
                               backgroundColor: Colors.white,
-                              size: 150,
+                              size: 120,
                             ),
                           ),
                         ))

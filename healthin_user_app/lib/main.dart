@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 // import 'home/home2.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'signin/main_signin.dart';
-import 'mainstructure.dart';
+import 'main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
@@ -32,8 +32,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    status = false;
-    //status = true;
+    status = true;
     initialization();
   }
 
