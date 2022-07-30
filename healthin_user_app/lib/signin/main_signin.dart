@@ -5,6 +5,8 @@ import 'email_signin.dart';
 import 'signup.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'signup_util.dart';
+
 class MainSignIn extends StatelessWidget {
   const MainSignIn({Key? key}) : super(key: key);
   Future<void> googleSignIn(context) async {
@@ -15,18 +17,20 @@ class MainSignIn extends StatelessWidget {
     try {
       var googleLoginResult = await _googleSignIn.signIn();
       if (googleLoginResult != null) {
+        var ggauth = await googleLoginResult.authentication;
+        if (ggauth != null) {
+          print("----ggauth를받았다!");
+          print(ggauth.accessToken);
+          print(ggauth.idToken);
+        }
         print("----시작----");
         print(googleLoginResult.email);
         print(googleLoginResult.displayName);
         print("----완료----");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    GetInfo(userEmail: googleLoginResult.email)));
+        //SignInRequest(googleLoginResult.email, "fiowfef", context);
       }
     } catch (e) {
-      print("\nfail iuhiuhuh\n");
+      print("\n---LoginFailed\n");
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("로그인 실패")));
       print(e);

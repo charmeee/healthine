@@ -44,7 +44,7 @@ class _MyHomeState extends State<MyHome> {
             shape: CircularNotchedRectangle(),
             clipBehavior: Clip.antiAlias,
             child: BottomNavigationBar(
-              backgroundColor: Colors.indigo[500],
+              backgroundColor: Colors.indigo,
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               onTap: (int index) {

@@ -60,8 +60,8 @@ class Home2 extends StatelessWidget {
         backgroundColor: Colors.white,
         child: ListView(
           children: [
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.indigo),
+            const UserAccountsDrawerHeader(
+              decoration: BoxDecoration(color: Colors.black87),
               accountName: Text("yong"),
               accountEmail: Text("otrodevym@gmail.com"),
               currentAccountPicture: CircleAvatar(
@@ -110,7 +110,7 @@ class Home2 extends StatelessWidget {
 }
 
 class Tab1 extends StatelessWidget {
-  Tab1({Key? key, required this.routinelist, required this.didexercise})
+  const Tab1({Key? key, required this.routinelist, required this.didexercise})
       : super(key: key);
   final List<String> routinelist;
   final List didexercise;
@@ -151,7 +151,7 @@ class Tab1 extends StatelessWidget {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(4),
-                          child: Text(
+                          child: const Text(
                             "오늘의 루틴",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
@@ -162,7 +162,7 @@ class Tab1 extends StatelessWidget {
                               padding: EdgeInsets.all(5),
                               child: Text(
                                 '${i + 1}. ${routinelist[i]}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w200,
                                 ),
@@ -198,7 +198,7 @@ class Tab1 extends StatelessWidget {
                                 padding: EdgeInsets.all(4),
                                 child: Text(
                                   '${i + 1}. ${didexercise[i]}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w200,
                                   ),
@@ -216,7 +216,7 @@ class Tab1 extends StatelessWidget {
                       style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.black54)),
-                      child: Text(
+                      child: const Text(
                         "리포트 보기",
                         style: TextStyle(color: Colors.white),
                       ),

@@ -1,3 +1,5 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 // import 'community/communitymain.dart';
 // import 'diet/diet.dart';
@@ -32,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    status = true;
+    status = false;
     initialization();
   }
 
@@ -49,6 +51,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    //status는 로그인정보가있는지
+    //MyHome은 로그인되고 메인홈페이지
+    //MainSignIn은 로그인 페이지
     return status ? MyHome() : MainSignIn();
   }
 }

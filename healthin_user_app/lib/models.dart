@@ -26,15 +26,33 @@ class Exercise {
 }
 
 class UserInfo {
-  int? id;
+  String? id;
+  String? username;
   String? name;
-  String? time;
+  String? password;
+  String? nickname;
+  String? phoneNumber;
+  String? avatarImage;
 
-  UserInfo({
-    this.id,
-    this.name,
-    this.time,
-  });
+  UserInfo(
+      {this.id,
+      this.username,
+      this.password,
+      this.name,
+      this.nickname,
+      this.phoneNumber,
+      this.avatarImage});
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
+    return UserInfo(
+      id: json['id'],
+      username: json['username'],
+      password: json['password'],
+      name: json['name'],
+      nickname: json['nickname'],
+      phoneNumber: json['phoneNumber'],
+      avatarImage: json['avatarImage'],
+    );
+  }
 }
 
 class UserExercised {
