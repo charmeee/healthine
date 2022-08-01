@@ -14,11 +14,16 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'bonoteam',
-    theme: ThemeData(),
-    home: const MyApp(),
+  runApp(GestureDetector(
+    onTap: () {
+      FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+    },
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'bonoteam',
+      theme: ThemeData(),
+      home: const MyApp(),
+    ),
   ));
 }
 
@@ -34,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    status = false;
+    status = true;
     initialization();
   }
 

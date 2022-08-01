@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+const _divider = Divider(
+  height: 10,
+  color: Colors.indigo,
+);
+
 class Communitydetail extends StatefulWidget {
   const Communitydetail({Key? key}) : super(key: key);
 
@@ -8,24 +13,31 @@ class Communitydetail extends StatefulWidget {
 }
 
 class _CommunitydetailState extends State<Communitydetail> {
-  List<Widget> Maincontainer = [mainTitle(), mainContext()];
-  List<Widget> commentsList = [
-    mainComment(contents: 1),
-    mainComment(contents: 2),
-    mainComment(contents: 3)
-  ];
-  int communityindex = 2;
+  Map<String, dynamic> communityData = {};
+  final _Controller = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    communityindex += commentsList.length;
-    Maincontainer.addAll(commentsList);
+    setState(() {
+      communityData = {
+        "id": "전민지",
+        "title": "님들 오늘 루틴 어떻게 짤꺼임?",
+        "content": "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
+        "comments": [
+          {"id": "홍길동", "text": "어쩔티비저쩔티비"},
+          {"id": "김깍쇠", "text": "흠...?나도모름"},
+          {"id": "오렌지", "text": "오렌지 오렌지~"},
+        ]
+      };
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.indigo,
           leading: IconButton(
@@ -35,76 +47,80 @@ class _CommunitydetailState extends State<Communitydetail> {
             },
           ),
         ),
-        body: ListView.separated(
-          itemCount: communityindex,
-          itemBuilder: (context, index) {
-            return Maincontainer[index];
-          },
-          separatorBuilder: (BuildContext context, int index) => Divider(
-            height: 10,
-            color: Colors.indigo,
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _CommunityBody(communityData: communityData)),
+              Container(
+                  margin: EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: TextField(
+                        controller: _Controller,
+                        decoration: InputDecoration(labelText: "댓글을 입력해주세요"),
+                      )),
+                      IconButton(
+                        icon: Icon(Icons.send),
+                        onPressed: () {
+                          setState(() {
+                            communityData["comments"]
+                                .add({"id": "김만두", "text": _Controller.text});
+                            _Controller.text = "";
+                          });
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                      )
+                    ],
+                  )),
+            ],
           ),
-        ));
-  }
-}
-
-class mainTitle extends StatelessWidget {
-  const mainTitle({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: Text(
-        "님들 오늘 루틴 어떻게 짤꺼임?",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+        ),
       ),
     );
   }
 }
 
-class mainContext extends StatelessWidget {
-  const mainContext({Key? key}) : super(key: key);
-
+class _CommunityBody extends StatelessWidget {
+  _CommunityBody({Key? key, required this.communityData}) : super(key: key);
+  Map<String, dynamic> communityData;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Container(
-          constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height * 0.3),
-          padding: EdgeInsets.all(10),
-          child: Text(
-            "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-      ],
+    return ListView.separated(
+      itemCount: communityData["comments"].length + 2,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Text(communityData["title"],
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+          );
+        } else if (index == 1) {
+          return Container(
+            constraints: BoxConstraints(minHeight: 250),
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              communityData["content"],
+              style: TextStyle(fontSize: 18),
+            ),
+          );
+        } else {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              communityData["comments"][index - 2]["id"] +
+                  ' : ' +
+                  communityData["comments"][index - 2]["text"],
+              style: TextStyle(fontSize: 15),
+            ),
+          );
+        }
+      },
+      separatorBuilder: (BuildContext context, int index) => _divider,
     );
-  }
-}
-
-class mainComment extends StatelessWidget {
-  mainComment({Key? key, this.contents}) : super(key: key);
-  var contents;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(10), child: Text("답글: ${contents}"));
-  }
-}
-
-class addComment extends StatefulWidget {
-  const addComment({Key? key}) : super(key: key);
-
-  @override
-  State<addComment> createState() => _addCommentState();
-}
-
-class _addCommentState extends State<addComment> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

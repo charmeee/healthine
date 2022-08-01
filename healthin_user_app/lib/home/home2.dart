@@ -61,7 +61,7 @@ class Home2 extends StatelessWidget {
         child: ListView(
           children: [
             const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.black87),
+              decoration: BoxDecoration(color: Colors.indigo),
               accountName: Text("yong"),
               accountEmail: Text("otrodevym@gmail.com"),
               currentAccountPicture: CircleAvatar(
