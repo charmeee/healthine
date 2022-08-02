@@ -14,13 +14,14 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
-  List<String> didexercise = [];
-  void addDidexercise(String getdata) {
+  List<dynamic> didexercise = [];
+  void addDidexercise(Map getdata) {
     setState(() {
       didexercise.add(getdata);
     });
   }
 
+  //ㅇㅣ름,횟수,시간
   @override
   void initState() {
     super.initState();

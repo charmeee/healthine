@@ -26,9 +26,27 @@ class _CommunitydetailState extends State<Communitydetail> {
         "title": "님들 오늘 루틴 어떻게 짤꺼임?",
         "content": "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
         "comments": [
-          {"id": "홍길동", "text": "어쩔티비저쩔티비"},
-          {"id": "김깍쇠", "text": "흠...?나도모름"},
-          {"id": "오렌지", "text": "오렌지 오렌지~"},
+          {
+            "id": "홍길동",
+            "text": "어쩔티비저쩔티비",
+            "inheitcomments": [
+              {"inheitid": "", "inheittext": ""}
+            ]
+          },
+          {
+            "id": "김깍쇠",
+            "text": "흠...?나도모름",
+            "inheitcomments": [
+              {"inheitid": "", "inheittext": ""}
+            ]
+          },
+          {
+            "id": "오렌지",
+            "text": "오렌지 오렌지~",
+            "inheitcomments": [
+              {"inheitid": "", "inheittext": ""}
+            ]
+          },
         ]
       };
     });

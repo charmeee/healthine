@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    status = true;
+    status = false;
     initialization();
   }
 

@@ -15,7 +15,7 @@ class QrScanPage extends StatefulWidget {
   QrScanPage({Key? key, this.didexercise, required this.addDidexercise})
       : super(key: key);
   final didexercise;
-  final Function(String) addDidexercise;
+  final Function(Map) addDidexercise;
   @override
   State<StatefulWidget> createState() => _QRViewExampleState();
 }
@@ -109,14 +109,15 @@ class _QRViewExampleState extends State<QrScanPage> {
       setState(() {
         result = scanData;
         if (scanData != null) {
-          widget.addDidexercise(result!.code.toString());
+          //widget.addDidexercise(result!.code.toString());
           this.controller!.dispose();
           //Navigator.pop(context);
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      WhileExercise(exerciseName: result!.code.toString())));
+                  builder: (context) => WhileExercise(
+                      exerciseName: result!.code.toString(),
+                      addDidexercise: widget.addDidexercise)));
         }
       });
     });

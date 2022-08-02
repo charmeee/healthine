@@ -197,7 +197,7 @@ class Tab1 extends StatelessWidget {
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.all(4),
                                 child: Text(
-                                  '${i + 1}. ${didexercise[i]}',
+                                  '${i + 1}. ${didexercise[i]["name"]}    ${didexercise[i]["number"]}회  ${didexercise[i]["time"]}분',
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w200,

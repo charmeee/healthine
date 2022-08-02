@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;
 const double buttonwidth = 150;
+int tempsec = -1;
 
 class WhileExercise extends StatefulWidget {
   WhileExercise({
     Key? key,
     required this.exerciseName,
+    required this.addDidexercise,
   }) : super(key: key);
   String exerciseName;
+  final Function(Map) addDidexercise; //map name,time,number
   @override
   State<WhileExercise> createState() => _WhileExerciseState();
 }
@@ -26,11 +29,19 @@ class _WhileExerciseState extends State<WhileExercise> {
   String minutes = '00';
   String seconds = '00';
   final duration = const Duration(seconds: 1);
-
+  int exercise_num = 0; //운동횟수
+  int standard_sec = 4; //사용자가 정하는 시간
+  Map result = {};
+  //int getTime = 0; //넘겨줄시간
   void initState() {
     stopwatch.start();
     startTimer();
     flag = true;
+    result = {
+      "name": widget.exerciseName,
+      "time": minutes,
+      "number": exercise_num.toString()
+    };
   }
 
   void startTimer() {
@@ -41,9 +52,12 @@ class _WhileExerciseState extends State<WhileExercise> {
     if (stopwatch.isRunning) {
       startTimer();
     }
-
+    if (tempsec == standard_sec) {
+      exercise_num++;
+      tempsec = 0;
+    }
     setState(() {
-      //hours = stopwatch.elapsed.inHours.toString().padLeft(2, "0");
+      tempsec++;
       minutes = stopwatch.elapsed.inMinutes.toString().padLeft(2, "0");
       seconds = (stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
     });
@@ -74,6 +88,10 @@ class _WhileExerciseState extends State<WhileExercise> {
               Text(
                 '$minutes:$seconds',
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
+              ),
+              Text(
+                "$exercise_num 회",
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
               ),
               Container(
                 height: 200,
@@ -114,7 +132,16 @@ class _WhileExerciseState extends State<WhileExercise> {
                       width: buttonwidth,
                       child: TextButton(
                         onPressed: () => {
-                          Navigator.of(context).pop()
+                          setState(() async {
+                            result = await {
+                              "name": widget.exerciseName,
+                              "time": minutes,
+                              "number": exercise_num.toString()
+                            };
+                            widget.addDidexercise(result);
+                            Navigator.of(context).pop();
+                          })
+
                           //Navigator.of(context).popUntil((route) => route.isFirst)
                         },
                         style: ButtonStyle(
