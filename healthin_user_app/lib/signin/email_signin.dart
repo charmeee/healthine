@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 
 class EmailSignIn extends StatelessWidget {
   const EmailSignIn({Key? key}) : super(key: key);
@@ -61,6 +61,5 @@ class EmailSignIn extends StatelessWidget {
         )),
       ],
     );
-    ;
   }
 }

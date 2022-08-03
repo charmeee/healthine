@@ -1,4 +1,7 @@
 //import 'dart:html';
+import 'dart:developer';
+
+import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 import 'package:flutter/material.dart';
 // import 'community/communitymain.dart';
@@ -14,6 +17,7 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  KakaoSdk.init(nativeAppKey: '8a9e99aa7c39e4e0369b5ad69554c50b');
   runApp(GestureDetector(
     onTap: () {
       FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
@@ -43,6 +47,13 @@ class _MyAppState extends State<MyApp> {
     initialization();
   }
 
+  void changeStatus() {
+    log("어랴ㅐㅁ넝ㄹ실행댐");
+    setState(() {
+      status = true;
+    });
+  }
+
   void initialization() async {
     // This is where you can initialize the resources needed by your app while
     // the splash screen is displayed.  Remove the following example because
@@ -56,9 +67,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    //changeStatus();
+    print("메인 스테이터스" + status.toString());
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
     //MainSignIn은 로그인 페이지
-    return status ? MyHome() : MainSignIn();
+    return status ? MyHome() : MainSignIn(changeStatus: changeStatus);
   }
 }

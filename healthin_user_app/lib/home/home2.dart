@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/Inbody/InbodyCard.dart';
 import 'package:healthin/home/profile.dart';
-import 'package:healthin/home/inbodychart.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:healthin/home/util.dart';
 import 'package:healthin/home/report.dart';
 
+import '../routine/routineCard.dart';
+
 class Home2 extends StatelessWidget {
   Home2({Key? key, required this.didexercise}) : super(key: key);
   List didexercise;
-  List<String> routinelist = [
-    "러닝머신 10분",
-    "레그익스텐션 10kg 10회 3세트",
-    "레드컬 20kg 10회 3세트 ",
-    "핵스쿼트 빈바 10회 3세트",
-    "레그프레스 10회 3세트",
-    "바이시클 크런치 20회 3세트"
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +42,10 @@ class Home2 extends StatelessWidget {
           },
 
           body: TabBarView(
+            //physics: NeverScrollableScrollPhysics(),
             //physics: PageScrollPhysics(),
             children: [
-              Tab1(routinelist: routinelist, didexercise: didexercise),
+              Tab1(didexercise: didexercise),
               Tab2(),
             ],
           ),
@@ -110,9 +105,8 @@ class Home2 extends StatelessWidget {
 }
 
 class Tab1 extends StatelessWidget {
-  const Tab1({Key? key, required this.routinelist, required this.didexercise})
-      : super(key: key);
-  final List<String> routinelist;
+  const Tab1({Key? key, required this.didexercise}) : super(key: key);
+
   final List didexercise;
   @override
   Widget build(BuildContext context) {
@@ -123,55 +117,9 @@ class Tab1 extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, //가로로 꽉차게
                   children: [
-                Card(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    //여기까지 바깥으로빼고 안에 인수로다가 List<Widget>을넘겨줘서 바깥으로 빼면될듯.
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Text(
-                          "인바디기록",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      InbodyChart(),
-                    ],
-                  ),
-                )),
-                //인바디 차트
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          child: const Text(
-                            "오늘의 루틴",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        for (int i = 0; i < routinelist.length; i++)
-                          Container(
-                              padding: EdgeInsets.all(5),
-                              child: Text(
-                                '${i + 1}. ${routinelist[i]}',
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w200,
-                                ),
-                              ))
-                      ],
-                    ),
-                  ),
-                ),
-                //오늘의 루틴
+                routineCard(), //오늘의 루틴
+                InbodyCard(), //인바디 차트
+
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -212,10 +160,8 @@ class Tab1 extends StatelessWidget {
                 Container(
                   height: 50,
                   padding: EdgeInsets.all(4),
-                  child: TextButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.black54)),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.black54),
                       child: const Text(
                         "리포트 보기",
                         style: TextStyle(color: Colors.white),
