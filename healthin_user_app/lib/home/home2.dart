@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:healthin/Inbody/InbodyCard.dart';
 import 'package:healthin/home/profile.dart';
+import '../userSetting/userSetting.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:healthin/home/util.dart';
 import 'package:healthin/home/report.dart';
 
+import '../models.dart';
 import '../routine/routineCard.dart';
 
 class Home2 extends StatelessWidget {
   Home2({Key? key, required this.didexercise}) : super(key: key);
-  List didexercise;
+  List<UserExerciseData> didexercise;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class Home2 extends StatelessWidget {
                 backgroundColor: Colors.indigo,
                 pinned: true,
                 floating: true,
+                snap: true,
                 expandedHeight: 270.0,
                 flexibleSpace: FlexibleSpaceBar(background: Profile()),
                 bottom: TabBar(
@@ -69,7 +72,7 @@ class Home2 extends StatelessWidget {
                 Icons.home,
                 color: Colors.grey[850],
               ),
-              title: Text('Home'),
+              title: Text('헬스장 정보'),
               onTap: () {
                 print('Home is clicked');
               },
@@ -80,8 +83,10 @@ class Home2 extends StatelessWidget {
                 Icons.settings,
                 color: Colors.grey[850],
               ),
-              title: Text('Setting'),
+              title: Text('설정'),
               onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => UserSetting()));
                 print('Setting is clicked');
               },
               trailing: Icon(Icons.add),
@@ -107,7 +112,7 @@ class Home2 extends StatelessWidget {
 class Tab1 extends StatelessWidget {
   const Tab1({Key? key, required this.didexercise}) : super(key: key);
 
-  final List didexercise;
+  final List<UserExerciseData> didexercise;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -145,7 +150,7 @@ class Tab1 extends StatelessWidget {
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.all(4),
                                 child: Text(
-                                  '${i + 1}. ${didexercise[i]["name"]}    ${didexercise[i]["number"]}회  ${didexercise[i]["time"]}분',
+                                  '${i + 1}. ${didexercise[i].name}    ${didexercise[i].totalnum}회  ${didexercise[i].totalTime}초',
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w200,

@@ -17,6 +17,8 @@ final List<String> healthtype = [
   "유산소",
 ];
 
+//view, add, edit mode 총 3가지.
+
 class Dictionary extends StatefulWidget {
   Dictionary({Key? key}) : super(key: key);
 

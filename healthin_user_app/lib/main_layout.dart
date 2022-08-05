@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'community/communitymain.dart';
 import 'diet/diet.dart';
+import 'models.dart';
 import 'qrscan/qrscanpage.dart';
 import 'dictionary/dictionary.dart';
 import 'home/home2.dart';
@@ -14,8 +15,8 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
-  List<dynamic> didexercise = [];
-  void addDidexercise(Map getdata) {
+  List<UserExerciseData> didexercise = [];
+  void addDidexercise(UserExerciseData getdata) {
     setState(() {
       didexercise.add(getdata);
     });

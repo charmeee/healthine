@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'routineSetting.dart';
+
 class routineCard extends StatefulWidget {
   const routineCard({Key? key}) : super(key: key);
 
@@ -18,19 +20,27 @@ class _routineCardState extends State<routineCard> {
   //   "바이시클 크런치 20회 3세트"
   // ];
   List routineList = [
-    {"type": "러닝머신", "count": "10분"},
-    {"type": "레그 익스텐션", "count": "10kg 10회 3세트"},
-    {"type": "레그 컬", "count": "20kg 10회 3세트"},
-    {"type": "스컬 크러셔", "count": "10kg 10회 3세트"},
-    {"type": "펙덱", "count": "10kg 15회 3세트"},
+    {"type": "러닝머신", "count": "10분", "img": "assets/running mashin.png"},
+    {
+      "type": "레그 익스텐션",
+      "count": "10kg 10회 3세트",
+      "img": "assets/Leg extension.png"
+    },
+    {"type": "레그 컬", "count": "20kg 10회 3세트", "img": "assets/leg curl.png"},
+    {
+      "type": "스컬 크러셔",
+      "count": "10kg 10회 3세트",
+      "img": "assets/Skull Crusher.png"
+    },
+    {"type": "펙덱", "count": "10kg 15회 3세트", "img": "assets/Pec Deck .png"},
   ];
-  List routineImg = [
-    "assets/leg curl.png",
-    "assets/Leg extension.png",
-    "assets/Pec Deck .png",
-    "assets/running mashin.png",
-    "assets/Skull Crusher.png"
-  ];
+
+  void changeRoutine(List Routine) {
+    setState(() {
+      routineList = [...Routine];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -61,7 +71,7 @@ class _routineCardState extends State<routineCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
-                          routineImg[index],
+                          routineList[index]["img"],
                           height: 170,
                         ),
                         Text(
@@ -83,7 +93,14 @@ class _routineCardState extends State<routineCard> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RoutineSetting(
+                            routineList: routineList,
+                            changeRoutine: changeRoutine)));
+              },
               child: Text("루틴 수정하기"),
               style: ElevatedButton.styleFrom(primary: Colors.black54),
             ),

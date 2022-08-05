@@ -43,12 +43,12 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    status = false;
+    status = true;
     initialization();
   }
 
   void changeStatus() {
-    log("어랴ㅐㅁ넝ㄹ실행댐");
+    log("status true 로 변경");
     setState(() {
       status = true;
     });
@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     // the splash screen is displayed.  Remove the following example because
     // delaying the user experience is a bad design practice!
     // ignore_for_file: avoid_print
-    //정보가다받아와질때까지 delay넣어주면될듯
+    //정보가다받아와질때까지 delay 넣어주면될듯
     initializeDateFormatting();
     await Future.delayed(const Duration(milliseconds: 200));
     FlutterNativeSplash.remove();

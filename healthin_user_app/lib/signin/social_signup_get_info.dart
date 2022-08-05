@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'signup_util.dart';
+import 'request_util.dart';
 
 class GetInfo extends StatefulWidget {
   GetInfo({Key? key, required this.userEmail}) : super(key: key);

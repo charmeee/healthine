@@ -24,6 +24,7 @@ class _InbodyChartState extends State<InbodyChart> {
             child: SfCartesianChart(
               series: <ChartSeries>[
                 BarSeries<ChartData, String>(
+                    color: Colors.indigo[200],
                     dataSource: chartData,
                     xValueMapper: (ChartData data, _) => data.x,
                     yValueMapper: (ChartData data, _) => data.y,
@@ -31,7 +32,7 @@ class _InbodyChartState extends State<InbodyChart> {
                     // Width of the bars
                     width: 0.6,
                     // Spacing between the bars
-                    spacing: 0.3)
+                    spacing: 0.3),
               ],
               primaryXAxis: CategoryAxis(),
             )));

@@ -6,16 +6,19 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../models.dart';
+
 //웹에선 안됨!!
 //QrScanPage
 const double buttonheight = 60;
 const double buttonwidth = 150;
 
 class QrScanPage extends StatefulWidget {
-  QrScanPage({Key? key, this.didexercise, required this.addDidexercise})
+  QrScanPage(
+      {Key? key, required this.didexercise, required this.addDidexercise})
       : super(key: key);
-  final didexercise;
-  final Function(Map) addDidexercise;
+  final List<UserExerciseData> didexercise;
+  final Function(UserExerciseData) addDidexercise;
   @override
   State<StatefulWidget> createState() => _QRViewExampleState();
 }

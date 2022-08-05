@@ -28,8 +28,8 @@ class GoogleLogin implements SocialLogin {
       }
     } catch (e) {
       print("\n---LoginFailed\n");
-      return false;
       print(e);
+      return false;
     }
   }
 

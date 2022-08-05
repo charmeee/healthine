@@ -1,21 +1,24 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
+
+import '../models.dart';
 //import './youtubePlayer.dart';
 
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;
-const double buttonwidth = 150;
+//const double buttonwidth = ;
 int tempsec = -1;
 
 class WhileExercise extends StatefulWidget {
-  WhileExercise({
+  const WhileExercise({
     Key? key,
     required this.exerciseName,
     required this.addDidexercise,
   }) : super(key: key);
-  String exerciseName;
-  final Function(Map) addDidexercise; //map name,time,number
+  final String exerciseName;
+  final Function(UserExerciseData) addDidexercise; //map name,time,number
   @override
   State<WhileExercise> createState() => _WhileExerciseState();
 }
@@ -29,19 +32,14 @@ class _WhileExerciseState extends State<WhileExercise> {
   String minutes = '00';
   String seconds = '00';
   final duration = const Duration(seconds: 1);
-  int exercise_num = 0; //운동횟수
-  int standard_sec = 4; //사용자가 정하는 시간
-  Map result = {};
+  late UserExerciseData exerciseData;
+  //late Map exerciseSet;
   //int getTime = 0; //넘겨줄시간
   void initState() {
     stopwatch.start();
     startTimer();
     flag = true;
-    result = {
-      "name": widget.exerciseName,
-      "time": minutes,
-      "number": exercise_num.toString()
-    };
+    exerciseData = UserExerciseData(name: widget.exerciseName, totalnum: 1);
   }
 
   void startTimer() {
@@ -52,14 +50,32 @@ class _WhileExerciseState extends State<WhileExercise> {
     if (stopwatch.isRunning) {
       startTimer();
     }
-    if (tempsec == standard_sec) {
-      exercise_num++;
-      tempsec = 0;
+    if (exerciseData.totalnum != 0 &&
+        exerciseData.totalnum % exerciseData.numPerSet == 0) {
+      //한세트 끝낫을때
+      exerciseData.doingSet++;
+      setState(() async {
+        flag = false;
+        stopwatch.stop();
+        stopwatch.reset();
+        log("스탑워치 멈춤/휴식");
+        await Future.delayed(Duration(seconds: exerciseData.restTime), () {
+          log("휴식끝 다시시작");
+          stopwatch.start();
+          startTimer();
+          flag = true;
+        });
+      });
+    }
+    if (stopwatch.elapsed.inSeconds % exerciseData.countInterver == 0) {
+      exerciseData.totalnum++;
+      log("개수증가");
     }
     setState(() {
-      tempsec++;
       minutes = stopwatch.elapsed.inMinutes.toString().padLeft(2, "0");
       seconds = (stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
+      //log("stringsec" + seconds);
+      //log(stopwatch.elapsed.inSeconds.toString());
     });
   }
 
@@ -81,26 +97,77 @@ class _WhileExerciseState extends State<WhileExercise> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                flag ? "${widget.exerciseName}\n운동중" : "휴식중",
+                //이름
+                exerciseData.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
               ),
               Text(
+                //시간
                 '$minutes:$seconds',
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
               ),
-              Text(
-                "$exercise_num 회",
-                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //현 개수 / 총 개수
+                    "${exerciseData.totalnum % exerciseData.numPerSet} / ${exerciseData.numPerSet} 개",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  ),
+                  _BodyButtons(
+                      onPressedPlus: pressedPlus(),
+                      onPressedMinus: pressedMinus())
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //현세트 / 총세트
+                    "${exerciseData.doingSet} / ${exerciseData.totalSet} 세트",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  ),
+                  _BodyButtons(
+                      onPressedPlus: pressedPlus(),
+                      onPressedMinus: pressedMinus())
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //개수 사이 시간
+                    "${exerciseData.countInterver} 속도",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  ),
+                  _BodyButtons(
+                      onPressedPlus: pressedPlus(),
+                      onPressedMinus: pressedMinus())
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    //쉬는시간
+                    "${exerciseData.restTime} 휴식",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  ),
+                  _BodyButtons(
+                      onPressedPlus: pressedPlus(),
+                      onPressedMinus: pressedMinus())
+                ],
               ),
               Container(
-                height: 200,
-                child: Column(
+                height: 100,
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     SizedBox(
-                      height: buttonheight,
-                      width: buttonwidth,
+                      // height: buttonheight,
+                      width: MediaQuery.of(context).size.width / 3 * 0.8,
                       child: TextButton(
                         child: flag
                             ? Text("휴식", style: textstyle1)
@@ -128,17 +195,14 @@ class _WhileExerciseState extends State<WhileExercise> {
                       ),
                     ),
                     SizedBox(
-                      height: buttonheight,
-                      width: buttonwidth,
+                      // height: buttonheight,
+                      width: MediaQuery.of(context).size.width / 3 * 0.8,
                       child: TextButton(
                         onPressed: () => {
                           setState(() async {
-                            result = await {
-                              "name": widget.exerciseName,
-                              "time": minutes,
-                              "number": exercise_num.toString()
-                            };
-                            widget.addDidexercise(result);
+                            exerciseData.totalTime =
+                                stopwatch.elapsed.inSeconds;
+                            widget.addDidexercise(exerciseData);
                             Navigator.of(context).pop();
                           })
 
@@ -148,14 +212,14 @@ class _WhileExerciseState extends State<WhileExercise> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.black54)),
                         child: Text(
-                          "운동완료",
+                          "운동 완료",
                           style: textstyle1,
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: buttonheight,
-                      width: buttonwidth,
+                      // height: buttonheight,
+                      width: MediaQuery.of(context).size.width / 3 * 0.8,
                       child: TextButton(
                         onPressed: () => {
                           launchUrl(Uri.parse(
@@ -165,7 +229,7 @@ class _WhileExerciseState extends State<WhileExercise> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.black54)),
                         child: Text(
-                          "운동 영상 보기",
+                          "운동 방법",
                           style: textstyle1,
                         ),
                       ),
@@ -177,6 +241,37 @@ class _WhileExerciseState extends State<WhileExercise> {
           ),
         ),
       ),
+    );
+  }
+
+  pressedPlus() {
+    String daf = "name";
+  }
+
+  pressedMinus() {}
+}
+
+class _BodyButtons extends StatelessWidget {
+  _BodyButtons(
+      {Key? key, required this.onPressedPlus, required this.onPressedMinus})
+      : super(key: key);
+  final Function onPressedPlus;
+  final Function onPressedMinus;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+            onPressed: () {
+              onPressedMinus;
+            },
+            icon: Icon(Icons.exposure_minus_1)),
+        IconButton(
+            onPressed: () {
+              onPressedPlus;
+            },
+            icon: Icon(Icons.plus_one))
+      ],
     );
   }
 }
