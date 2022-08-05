@@ -60,11 +60,11 @@ class UserExerciseData {
 
   UserExerciseData(
       {this.name = '',
-      this.numPerSet = 10, //세트당 개수
+      this.numPerSet = 3, //세트당 개수
       this.totalSet = 3,
       this.doingSet = 1,
-      this.restTime = 30,
-      this.countInterver = 5,
+      this.restTime = 3,
+      this.countInterver = 3,
       this.totalTime = 0,
       this.totalnum = 0 //한총개수
       });

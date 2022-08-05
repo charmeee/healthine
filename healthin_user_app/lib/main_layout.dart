@@ -31,7 +31,7 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      Home2(didexercise: didexercise),
+      Home2(didexercise: didexercise, addDidexercise: addDidexercise),
       Diet(),
       QrScanPage(didexercise: didexercise, addDidexercise: addDidexercise),
       Community(),

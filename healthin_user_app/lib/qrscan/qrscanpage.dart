@@ -41,6 +41,8 @@ class _QRViewExampleState extends State<QrScanPage> {
 
   @override
   Widget build(BuildContext context) {
+    log(widget.addDidexercise.runtimeType.toString());
+    log(widget.addDidexercise != Null ? "눌아님" : "눌임");
     return Scaffold(
       body: Column(
         children: <Widget>[

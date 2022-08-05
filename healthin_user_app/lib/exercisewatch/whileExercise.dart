@@ -25,8 +25,9 @@ class WhileExercise extends StatefulWidget {
 
 //https://stackoverflow.com/questions/63491990/flutter-start-and-stop-stopwatch-from-parent-widget
 
+//휴식 운동중 정지로구분트
 class _WhileExerciseState extends State<WhileExercise> {
-  final stopwatch = Stopwatch();
+  //final stopwatch = Stopwatch();
   bool flag = false;
   String hours = '00';
   String minutes = '00';
@@ -35,54 +36,53 @@ class _WhileExerciseState extends State<WhileExercise> {
   late UserExerciseData exerciseData;
   //late Map exerciseSet;
   //int getTime = 0; //넘겨줄시간
+  Timer? _timer;
+  var _time = 0;
+
   void initState() {
-    stopwatch.start();
     startTimer();
     flag = true;
     exerciseData = UserExerciseData(name: widget.exerciseName, totalnum: 1);
   }
 
   void startTimer() {
-    Timer(duration, keepRunning); //Timer(Duration duration, void callback())
-  }
-
-  void keepRunning() {
-    if (stopwatch.isRunning) {
-      startTimer();
-    }
-    if (exerciseData.totalnum != 0 &&
-        exerciseData.totalnum % exerciseData.numPerSet == 0) {
-      //한세트 끝낫을때
-      exerciseData.doingSet++;
-      setState(() async {
-        flag = false;
-        stopwatch.stop();
-        stopwatch.reset();
+    _timer = Timer.periodic(duration, (timer) async {
+      _time++;
+      if (_time % exerciseData.countInterver == 0 && flag) {
+        exerciseData.totalnum++;
+        log("개수증가");
+      }
+      setState(() {
+        minutes = (_time / 60).toInt().toString().padLeft(2, "0");
+        seconds = (_time % 60).toString().padLeft(2, "0");
+        //log("stringsec" + seconds);
+        //log(stopwatch.elapsed.inSeconds.toString());
+      });
+      if (exerciseData.totalnum ==
+              exerciseData.numPerSet * exerciseData.doingSet + 1 &&
+          flag == true) {
+        //한세트 끝낫을때
+        log("세트증가");
+        exerciseData.doingSet++;
+        setState(() {
+          flag = false;
+        });
+        _timer?.cancel();
         log("스탑워치 멈춤/휴식");
         await Future.delayed(Duration(seconds: exerciseData.restTime), () {
-          log("휴식끝 다시시작");
-          stopwatch.start();
-          startTimer();
+          log("스탑워치 다시시작!");
           flag = true;
+          startTimer();
         });
-      });
-    }
-    if (stopwatch.elapsed.inSeconds % exerciseData.countInterver == 0) {
-      exerciseData.totalnum++;
-      log("개수증가");
-    }
-    setState(() {
-      minutes = stopwatch.elapsed.inMinutes.toString().padLeft(2, "0");
-      seconds = (stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, "0");
-      //log("stringsec" + seconds);
-      //log(stopwatch.elapsed.inSeconds.toString());
-    });
+      }
+    }); //Timer(Duration duration, void callback())
   }
 
   void dispose() {
     // TODO: 시간을 상위 state에 넘겨 줘야함.
-    stopwatch.stop();
+
     super.dispose();
+    _timer?.cancel();
   }
 
   @override
@@ -112,12 +112,27 @@ class _WhileExerciseState extends State<WhileExercise> {
                 children: [
                   Text(
                     //현 개수 / 총 개수
-                    "${exerciseData.totalnum % exerciseData.numPerSet} / ${exerciseData.numPerSet} 개",
+                    "${(exerciseData.totalnum - 1) % exerciseData.numPerSet + 1} / ${exerciseData.numPerSet} 개",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                   ),
-                  _BodyButtons(
-                      onPressedPlus: pressedPlus(),
-                      onPressedMinus: pressedMinus())
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.numPerSet--;
+                            });
+                          },
+                          icon: Icon(Icons.exposure_minus_1)),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.numPerSet++;
+                            });
+                          },
+                          icon: Icon(Icons.plus_one))
+                    ],
+                  )
                 ],
               ),
               Row(
@@ -128,9 +143,24 @@ class _WhileExerciseState extends State<WhileExercise> {
                     "${exerciseData.doingSet} / ${exerciseData.totalSet} 세트",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                   ),
-                  _BodyButtons(
-                      onPressedPlus: pressedPlus(),
-                      onPressedMinus: pressedMinus())
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.totalSet--;
+                            });
+                          },
+                          icon: Icon(Icons.exposure_minus_1)),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.totalSet++;
+                            });
+                          },
+                          icon: Icon(Icons.plus_one))
+                    ],
+                  )
                 ],
               ),
               Row(
@@ -141,9 +171,24 @@ class _WhileExerciseState extends State<WhileExercise> {
                     "${exerciseData.countInterver} 속도",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                   ),
-                  _BodyButtons(
-                      onPressedPlus: pressedPlus(),
-                      onPressedMinus: pressedMinus())
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.countInterver--;
+                            });
+                          },
+                          icon: Icon(Icons.exposure_minus_1)),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.countInterver++;
+                            });
+                          },
+                          icon: Icon(Icons.plus_one))
+                    ],
+                  )
                 ],
               ),
               Row(
@@ -154,9 +199,24 @@ class _WhileExerciseState extends State<WhileExercise> {
                     "${exerciseData.restTime} 휴식",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                   ),
-                  _BodyButtons(
-                      onPressedPlus: pressedPlus(),
-                      onPressedMinus: pressedMinus())
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.restTime--;
+                            });
+                          },
+                          icon: Icon(Icons.exposure_minus_1)),
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              exerciseData.restTime++;
+                            });
+                          },
+                          icon: Icon(Icons.plus_one))
+                    ],
+                  )
                 ],
               ),
               Container(
@@ -179,18 +239,15 @@ class _WhileExerciseState extends State<WhileExercise> {
                           if (flag) {
                             //스탑워치가 실행중일때 멈추면
                             setState(() {
-                              stopwatch.stop();
+                              _timer?.cancel();
                               flag = false;
                             });
                           } else {
                             setState(() {
-                              stopwatch.start();
                               startTimer();
                               flag = true;
                             });
                           }
-                          print(stopwatch.isRunning);
-                          print(stopwatch.elapsedMilliseconds);
                         },
                       ),
                     ),
@@ -198,16 +255,20 @@ class _WhileExerciseState extends State<WhileExercise> {
                       // height: buttonheight,
                       width: MediaQuery.of(context).size.width / 3 * 0.8,
                       child: TextButton(
-                        onPressed: () => {
-                          setState(() async {
-                            exerciseData.totalTime =
-                                stopwatch.elapsed.inSeconds;
+                        onPressed: () {
+                          setState(() {
+                            exerciseData.totalTime = _time;
                             widget.addDidexercise(exerciseData);
+                            _timer?.cancel();
+                          });
+                          Future.delayed(
+                              Duration(
+                                milliseconds: 10,
+                              ), () {
                             Navigator.of(context).pop();
-                          })
-
-                          //Navigator.of(context).popUntil((route) => route.isFirst)
+                          });
                         },
+                        //Navigator.of(context).popUntil((route) => route.isFirst)
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.black54)),
@@ -241,37 +302,6 @@ class _WhileExerciseState extends State<WhileExercise> {
           ),
         ),
       ),
-    );
-  }
-
-  pressedPlus() {
-    String daf = "name";
-  }
-
-  pressedMinus() {}
-}
-
-class _BodyButtons extends StatelessWidget {
-  _BodyButtons(
-      {Key? key, required this.onPressedPlus, required this.onPressedMinus})
-      : super(key: key);
-  final Function onPressedPlus;
-  final Function onPressedMinus;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        IconButton(
-            onPressed: () {
-              onPressedMinus;
-            },
-            icon: Icon(Icons.exposure_minus_1)),
-        IconButton(
-            onPressed: () {
-              onPressedPlus;
-            },
-            icon: Icon(Icons.plus_one))
-      ],
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthin/Inbody/InbodyCard.dart';
+import 'package:healthin/exercisewatch/whileExercise.dart';
 import 'package:healthin/home/profile.dart';
 import '../userSetting/userSetting.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -10,9 +11,10 @@ import '../models.dart';
 import '../routine/routineCard.dart';
 
 class Home2 extends StatelessWidget {
-  Home2({Key? key, required this.didexercise}) : super(key: key);
+  Home2({Key? key, required this.didexercise, required this.addDidexercise})
+      : super(key: key);
   List<UserExerciseData> didexercise;
-
+  void Function(UserExerciseData getdata) addDidexercise;
   @override
   Widget build(BuildContext context) {
     final List<String> tabs = <String>['홈', '달력'];
@@ -48,7 +50,7 @@ class Home2 extends StatelessWidget {
             //physics: NeverScrollableScrollPhysics(),
             //physics: PageScrollPhysics(),
             children: [
-              Tab1(didexercise: didexercise),
+              Tab1(didexercise: didexercise, addDidexercise: addDidexercise),
               Tab2(),
             ],
           ),
@@ -110,8 +112,9 @@ class Home2 extends StatelessWidget {
 }
 
 class Tab1 extends StatelessWidget {
-  const Tab1({Key? key, required this.didexercise}) : super(key: key);
-
+  Tab1({Key? key, required this.didexercise, required this.addDidexercise})
+      : super(key: key);
+  void Function(UserExerciseData getdata) addDidexercise;
   final List<UserExerciseData> didexercise;
   @override
   Widget build(BuildContext context) {
@@ -175,7 +178,17 @@ class Tab1 extends StatelessWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Report()));
                       }),
-                )
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WhileExercise(
+                                  exerciseName: "바벨 스쿼트",
+                                  addDidexercise: addDidexercise)));
+                    },
+                    child: Text("카운터로 이동"))
               ]),
         ),
       ),

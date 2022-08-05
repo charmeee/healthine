@@ -13,20 +13,23 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'signin/main_signin.dart';
 import 'main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   KakaoSdk.init(nativeAppKey: '8a9e99aa7c39e4e0369b5ad69554c50b');
-  runApp(GestureDetector(
-    onTap: () {
-      FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
-    },
-    child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'bonoteam',
-      theme: ThemeData(),
-      home: const MyApp(),
+  runApp(ProviderScope(
+    child: GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus(); // 키보드 닫기 이벤트
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'bonoteam',
+        theme: ThemeData(),
+        home: const MyApp(),
+      ),
     ),
   ));
 }
