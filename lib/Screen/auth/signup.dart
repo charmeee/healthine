@@ -1,18 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'request_util.dart';
+import 'package:healthin/Service/auth_request_api.dart';
 
-class SignUp extends StatefulWidget {
+import '../../Provider/user_provider.dart';
+
+class SignUp extends ConsumerStatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUp> createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpState extends ConsumerState<SignUp> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
@@ -25,7 +25,10 @@ class _SignUpState extends State<SignUp> {
     String name = _nameController.text;
     String phoneNumber = _phoneController.text;
     String nickname = _nicknameController.text;
-    UserCreateRequest(username, password, name, nickname, phoneNumber, context);
+    UserCreateRequest(username, password, name, nickname, phoneNumber, context)
+        .then((value) {
+      ref.read(loginStateProvider.notifier).state = value;
+    });
     //print('login attempt: $username with $password');
   }
 

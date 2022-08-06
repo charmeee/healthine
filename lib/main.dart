@@ -1,6 +1,7 @@
 //import 'dart:html';
 import 'dart:developer';
 
+import 'package:healthin/Provider/user_provider.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 import 'package:flutter/material.dart';
@@ -10,8 +11,8 @@ import 'package:flutter/material.dart';
 // import 'dictionary/dictionary.dart';
 // import 'home/home2.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'signin/main_signin.dart';
-import 'main_layout.dart';
+import 'Screen/auth/main_signin.dart';
+import 'Screen/main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,27 +35,19 @@ void main() {
   ));
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  bool status = false;
+class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
     //status = true;
     initialization();
-  }
-
-  void changeStatus() {
-    log("status true 로 변경");
-    setState(() {
-      status = true;
-    });
   }
 
   void initialization() async {
@@ -71,10 +64,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     //changeStatus();
-    print("메인 스테이터스" + status.toString());
+    print("메인 status ${ref.watch(loginStateProvider)}");
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
     //MainSignIn은 로그인 페이지
-    return status ? MyHome() : MainSignIn(changeStatus: changeStatus);
+    return ref.watch(loginStateProvider) ? MyHome() : MainSignIn();
   }
 }

@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/signin/social_api.dart';
-//import 'package:healthin/signin/social_signup_get_info.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Provider/user_provider.dart';
+import 'package:healthin/Service/social_api.dart';
+//import 'package:healthin/auth/social_signup_get_info.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'email_signin.dart';
-import 'google_signin_api.dart';
-import 'kakao_signin_api.dart';
+import 'package:healthin/Service/google_signin_api.dart';
+import 'package:healthin/Service/kakao_signin_api.dart';
 import 'signup.dart';
 //import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:developer';
-import 'request_util.dart';
+import 'package:healthin/Service/auth_request_api.dart';
 
-class MainSignIn extends StatefulWidget {
-  MainSignIn({Key? key, required this.changeStatus}) : super(key: key);
-  final Function() changeStatus;
+class MainSignIn extends ConsumerWidget {
+  MainSignIn({Key? key}) : super(key: key);
 
-  @override
-  State<MainSignIn> createState() => _MainSignInState();
-}
-
-class _MainSignInState extends State<MainSignIn> {
   SocialLogin kakaoLogin = KakaoLogin();
 
   SocialLogin googleLogin = GoogleLogin();
 
-  bool isLogined = false;
-
   // Future<void> googleSignIn(context) async {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    //bool isLogined = ref.watch(loginStateProvider);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -49,10 +44,8 @@ class _MainSignInState extends State<MainSignIn> {
                   color: Colors.white,
                 ),
                 onPressed: () async {
-                  isLogined = await googleLogin.login();
-                  if (isLogined) {
-                    widget.changeStatus();
-                  }
+                  ref.read(loginStateProvider.notifier).state =
+                      await googleLogin.login();
                 },
                 label: Text("구글로 로그인", style: TextStyle(color: Colors.white)),
               ),
@@ -68,11 +61,11 @@ class _MainSignInState extends State<MainSignIn> {
                   color: Colors.black,
                 ),
                 onPressed: () async {
-                  isLogined = await kakaoLogin.login();
-                  if (isLogined) {
+                  ref.read(loginStateProvider.notifier).state =
+                      await kakaoLogin.login();
+                  if (ref.read(loginStateProvider.notifier).state) {
                     User user = await UserApi.instance.me();
                     log("카카오 유저아이디" + user.id.toString());
-                    widget.changeStatus();
                   }
                 },
                 label:

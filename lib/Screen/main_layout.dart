@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'home/home2.dart';
 import 'community/communitymain.dart';
 import 'diet/diet.dart';
-import 'models.dart';
 import 'qrscan/qrscanpage.dart';
 import 'dictionary/dictionary.dart';
-import 'home/home2.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({Key? key}) : super(key: key);

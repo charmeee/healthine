@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'models.dart';
+import 'package:healthin/Model/models.dart';
 
 final isLoginedProvider = StateProvider<bool>((ref) => false);
 
@@ -25,3 +25,7 @@ final UserExercisedNotifierProvider =
     StateNotifierProvider<UserExercisedNotifier, List<UserExerciseData>>((ref) {
   return UserExercisedNotifier();
 });
+
+//var UserExercisedState = ref.watch(UserExercisedNotifierProvider); state 보기
+//final UserExercisedRead =
+//         ref.read(UserExercisedNotifierProvider.notifier); //함수들

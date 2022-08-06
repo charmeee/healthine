@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Provider/user_provider.dart';
+import 'package:healthin/Service/auth_request_api.dart';
 
-import 'request_util.dart';
 //import 'package:http/http.dart' as http;
 
-class EmailSignIn extends StatefulWidget {
+class EmailSignIn extends ConsumerStatefulWidget {
   const EmailSignIn({Key? key}) : super(key: key);
 
   @override
-  State<EmailSignIn> createState() => _EmailSignInState();
+  ConsumerState<EmailSignIn> createState() => _EmailSignInState();
 }
 
-class _EmailSignInState extends State<EmailSignIn> {
+class _EmailSignInState extends ConsumerState<EmailSignIn> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -61,7 +63,10 @@ class _EmailSignInState extends State<EmailSignIn> {
                 TextButton(
                     onPressed: () {
                       LoginRequest(_idController.text, _passwordController.text,
-                          context);
+                              context)
+                          .then((value) {
+                        ref.read(loginStateProvider.notifier).state = value;
+                      });
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.indigo,

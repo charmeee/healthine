@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'request_util.dart';
+import 'package:healthin/Service/auth_request_api.dart';
 
 class GetInfo extends StatefulWidget {
   GetInfo({Key? key, required this.userEmail}) : super(key: key);

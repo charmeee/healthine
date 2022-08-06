@@ -4,17 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
-import '../models.dart';
-import '../provider.dart';
+import '../../Model/models.dart';
+import '../../Provider//exercisedata_provider.dart';
 //import './youtubePlayer.dart';
 
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;
-//const double buttonwidth = ;
 int tempsec = -1;
 
 class WhileExercise extends ConsumerStatefulWidget {
-  WhileExercise({
+  const WhileExercise({
     Key? key,
     required this.exerciseName,
   }) : super(key: key);
@@ -22,8 +21,6 @@ class WhileExercise extends ConsumerStatefulWidget {
   @override
   ConsumerState<WhileExercise> createState() => _WhileExerciseState();
 }
-
-//https://stackoverflow.com/questions/63491990/flutter-start-and-stop-stopwatch-from-parent-widget
 
 //휴식 운동중 정지로구분트
 class _WhileExerciseState extends ConsumerState<WhileExercise> {
@@ -89,8 +86,6 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   Widget build(BuildContext context) {
     final UserExercisedRead =
         ref.read(UserExercisedNotifierProvider.notifier); //함수들
-    // final UserExercisedState =
-    //     ref.watch(UserExercisedNotifierProvider); //바로 state들이리턴되는듯?
     return Scaffold(
       body: Container(
         color: flag ? Colors.green : Colors.red,

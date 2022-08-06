@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:convert';
-import '../models.dart';
+import '../../Model/models.dart';
 
 // 내가봣을때 걍 유튜브링크 넘겨줘서 webview로 보는게 더 맞는거 가틈..
 

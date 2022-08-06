@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import '../models.dart';
+import '../../Model/models.dart';
 
 final List<String> healthtype = [
   "가슴",

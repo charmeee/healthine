@@ -1,13 +1,12 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import '../../models.dart';
-import '../../provider.dart';
-import '../../Inbody/InbodyCard.dart';
+
+import '../../../Provider/exercisedata_provider.dart';
 import '../../exercisewatch/whileExercise.dart';
-import '../../routine/routineCard.dart';
 import '../report.dart';
+import 'Inbody/InbodyCard.dart';
+import 'routine/routineCard.dart';
 
 class Tab1 extends ConsumerWidget {
   Tab1({Key? key}) : super(key: key);

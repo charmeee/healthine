@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../models.dart';
+import '../../Model/models.dart';
 
 //웹에선 안됨!!
 //QrScanPage
