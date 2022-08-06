@@ -25,7 +25,7 @@ class _SignUpState extends State<SignUp> {
     String name = _nameController.text;
     String phoneNumber = _phoneController.text;
     String nickname = _nicknameController.text;
-    SignUpRequest(username, password, name, nickname, phoneNumber, context);
+    UserCreateRequest(username, password, name, nickname, phoneNumber, context);
     //print('login attempt: $username with $password');
   }
 

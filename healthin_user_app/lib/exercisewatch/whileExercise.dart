@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../models.dart';
+import '../provider.dart';
 //import './youtubePlayer.dart';
 
 const textstyle1 = TextStyle(color: Colors.white);
@@ -11,22 +13,20 @@ const double buttonheight = 40;
 //const double buttonwidth = ;
 int tempsec = -1;
 
-class WhileExercise extends StatefulWidget {
-  const WhileExercise({
+class WhileExercise extends ConsumerStatefulWidget {
+  WhileExercise({
     Key? key,
     required this.exerciseName,
-    required this.addDidexercise,
   }) : super(key: key);
-  final String exerciseName;
-  final Function(UserExerciseData) addDidexercise; //map name,time,number
+  final exerciseName;
   @override
-  State<WhileExercise> createState() => _WhileExerciseState();
+  ConsumerState<WhileExercise> createState() => _WhileExerciseState();
 }
 
 //https://stackoverflow.com/questions/63491990/flutter-start-and-stop-stopwatch-from-parent-widget
 
 //휴식 운동중 정지로구분트
-class _WhileExerciseState extends State<WhileExercise> {
+class _WhileExerciseState extends ConsumerState<WhileExercise> {
   //final stopwatch = Stopwatch();
   bool flag = false;
   String hours = '00';
@@ -87,6 +87,10 @@ class _WhileExerciseState extends State<WhileExercise> {
 
   @override
   Widget build(BuildContext context) {
+    final UserExercisedRead =
+        ref.read(UserExercisedNotifierProvider.notifier); //함수들
+    // final UserExercisedState =
+    //     ref.watch(UserExercisedNotifierProvider); //바로 state들이리턴되는듯?
     return Scaffold(
       body: Container(
         color: flag ? Colors.green : Colors.red,
@@ -258,7 +262,7 @@ class _WhileExerciseState extends State<WhileExercise> {
                         onPressed: () {
                           setState(() {
                             exerciseData.totalTime = _time;
-                            widget.addDidexercise(exerciseData);
+                            UserExercisedRead.add(exerciseData);
                             _timer?.cancel();
                           });
                           Future.delayed(

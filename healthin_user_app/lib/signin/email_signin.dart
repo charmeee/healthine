@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+
+import 'request_util.dart';
 //import 'package:http/http.dart' as http;
 
-class EmailSignIn extends StatelessWidget {
+class EmailSignIn extends StatefulWidget {
   const EmailSignIn({Key? key}) : super(key: key);
+
+  @override
+  State<EmailSignIn> createState() => _EmailSignInState();
+}
+
+class _EmailSignInState extends State<EmailSignIn> {
+  final _idController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +42,17 @@ class EmailSignIn extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextField(
-                  decoration: InputDecoration(labelText: 'Enter email'),
+                  controller: _idController,
+                  decoration: InputDecoration(labelText: '아이디를 입력해주세요'),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 TextField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'Enter password'),
+                  decoration: InputDecoration(labelText: '비밀번호를 입력해주세요'),
                   keyboardType: TextInputType.text,
                 ),
                 SizedBox(
@@ -48,7 +60,8 @@ class EmailSignIn extends StatelessWidget {
                 ),
                 TextButton(
                     onPressed: () {
-                      //todo:로그인요청보내고 하는등의 기능작업안함
+                      LoginRequest(_idController.text, _passwordController.text,
+                          context);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.indigo,

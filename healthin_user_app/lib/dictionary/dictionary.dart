@@ -20,8 +20,8 @@ final List<String> healthtype = [
 //view, add, edit mode 총 3가지.
 
 class Dictionary extends StatefulWidget {
-  Dictionary({Key? key}) : super(key: key);
-
+  Dictionary({Key? key, required this.addmode}) : super(key: key);
+  bool addmode;
   @override
   State<Dictionary> createState() => _DictionaryState();
 }
@@ -33,7 +33,7 @@ class _DictionaryState extends State<Dictionary> {
   List<Exercise>? alldata = []; //json 파일받아온값
   List<Exercise>? founddata = []; //찾은데이터=> 출력데이터
   List<Exercise>? nonchipselecteddata = []; //칩 셀랙전 데이터
-
+  bool addmode = false;
   Future<void> readJson() async {
     //json파일 읽어오기
     final String response =
@@ -51,6 +51,7 @@ class _DictionaryState extends State<Dictionary> {
   void initState() {
     super.initState();
     readJson();
+    addmode = widget.addmode;
   }
 
   void runSearchFilter(String enteredKeyword) {
@@ -161,43 +162,56 @@ class _DictionaryState extends State<Dictionary> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return Dialog(
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.6,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.8,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Text(founddata![index]
-                                                  .name
-                                                  .toString()),
-                                              Text(founddata![index]
-                                                  .enName
-                                                  .toString()),
-                                              Image.asset(
-                                                  "assets/img_exercise/${founddata![index].id}.png")
-                                            ],
+                                  return addmode
+                                      ? AlertDialog(
+                                          content: Text("개수추가"),
+                                        )
+                                      : Dialog(
+                                          child: Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.6,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.8,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Text(founddata![index]
+                                                        .name
+                                                        .toString()),
+                                                    Text(founddata![index]
+                                                        .enName
+                                                        .toString()),
+                                                    Image.asset(
+                                                        "assets/img_exercise/${founddata![index].id}.png")
+                                                  ],
+                                                ),
+                                                Column(
+                                                    children: founddata![index]
+                                                        .content!
+                                                        .map((item) =>
+                                                            Text('- $item'))
+                                                        .toList()),
+                                              ],
+                                            ),
                                           ),
-                                          Column(
-                                              children: founddata![index]
-                                                  .content!
-                                                  .map(
-                                                      (item) => Text('- $item'))
-                                                  .toList()),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                        );
                                 });
                           },
+                          leading: addmode
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.add),
+                                )
+                              : null,
                           title: Text(founddata![index].name.toString()),
                         );
                       },

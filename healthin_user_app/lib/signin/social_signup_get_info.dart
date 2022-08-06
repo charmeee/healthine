@@ -25,7 +25,7 @@ class _GetInfoState extends State<GetInfo> {
     String name = await _nameController.text;
     String phoneNumber = await _phoneController.text;
     String nickname = await _nicknameController.text;
-    await await SignUpRequest(
+    await await UserCreateRequest(
         username, password, name, nickname, phoneNumber, context);
     //print('login attempt: $username with $password');
   }

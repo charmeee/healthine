@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/Inbody/InbodyCard.dart';
-import 'package:healthin/exercisewatch/whileExercise.dart';
 import 'package:healthin/home/profile.dart';
 import '../userSetting/userSetting.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:healthin/home/util.dart';
-import 'package:healthin/home/report.dart';
 
 import '../models.dart';
-import '../routine/routineCard.dart';
+import 'hometab/hometab.dart';
 
 class Home2 extends StatelessWidget {
-  Home2({Key? key, required this.didexercise, required this.addDidexercise})
-      : super(key: key);
-  List<UserExerciseData> didexercise;
-  void Function(UserExerciseData getdata) addDidexercise;
+  Home2({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final List<String> tabs = <String>['홈', '달력'];
@@ -50,7 +44,7 @@ class Home2 extends StatelessWidget {
             //physics: NeverScrollableScrollPhysics(),
             //physics: PageScrollPhysics(),
             children: [
-              Tab1(didexercise: didexercise, addDidexercise: addDidexercise),
+              Tab1(),
               Tab2(),
             ],
           ),
@@ -105,91 +99,6 @@ class Home2 extends StatelessWidget {
               trailing: Icon(Icons.add),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class Tab1 extends StatelessWidget {
-  Tab1({Key? key, required this.didexercise, required this.addDidexercise})
-      : super(key: key);
-  void Function(UserExerciseData getdata) addDidexercise;
-  final List<UserExerciseData> didexercise;
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, //가로로 꽉차게
-                  children: [
-                routineCard(), //오늘의 루틴
-                InbodyCard(), //인바디 차트
-
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            "오늘 운동 기록",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        if (didexercise.isEmpty) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text("오늘의 운동기록이 없습니다.\n운동을 기록해보세요!"),
-                          ),
-                        ] else ...[
-                          for (int i = 0; i < didexercise.length; i++) ...[
-                            Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(4),
-                                child: Text(
-                                  '${i + 1}. ${didexercise[i].name}    ${didexercise[i].totalnum}회  ${didexercise[i].totalTime}초',
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                ))
-                          ]
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  padding: EdgeInsets.all(4),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.black54),
-                      child: const Text(
-                        "리포트 보기",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Report()));
-                      }),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WhileExercise(
-                                  exerciseName: "바벨 스쿼트",
-                                  addDidexercise: addDidexercise)));
-                    },
-                    child: Text("카운터로 이동"))
-              ]),
         ),
       ),
     );

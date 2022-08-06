@@ -15,12 +15,6 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
-  List<UserExerciseData> didexercise = [];
-  void addDidexercise(UserExerciseData getdata) {
-    setState(() {
-      didexercise.add(getdata);
-    });
-  }
 
   //ㅇㅣ름,횟수,시간
   @override
@@ -31,11 +25,11 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      Home2(didexercise: didexercise, addDidexercise: addDidexercise),
+      Home2(),
       Diet(),
-      QrScanPage(didexercise: didexercise, addDidexercise: addDidexercise),
+      QrScanPage(),
       Community(),
-      Dictionary(),
+      Dictionary(addmode: false),
     ];
     return SafeArea(
       child: Scaffold(
@@ -51,12 +45,8 @@ class _MyHomeState extends State<MyHome> {
               currentIndex: _selectedIndex,
               onTap: (int index) {
                 if (index == 2) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QrScanPage(
-                              didexercise: didexercise,
-                              addDidexercise: addDidexercise)));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => QrScanPage()));
                 } else {
                   setState(() {
                     _selectedIndex = index;

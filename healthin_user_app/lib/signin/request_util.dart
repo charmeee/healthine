@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../models.dart';
 import 'social_signup_get_info.dart';
 
-SignUpRequest(username, password, name, nickname, phoneNumber,
+UserCreateRequest(username, password, name, nickname, phoneNumber,
     BuildContext context) async {
   print('SignUp attempt: $username with $password');
   var url = Uri.parse('https://api.be-healthy.life/users');
@@ -24,6 +24,7 @@ SignUpRequest(username, password, name, nickname, phoneNumber,
     ));
     Navigator.push(context, MaterialPageRoute(builder: (context) => MyHome()));
     print("회원가입완료.");
+    LoginRequest(username, password, context);
   } else {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(jsonDecode(response.body)["message"].toString()),
@@ -32,7 +33,7 @@ SignUpRequest(username, password, name, nickname, phoneNumber,
   print(response.body);
 }
 
-SignInRequest(username, password, context) async {
+LoginRequest(username, password, context) async {
   print('login attempt: $username with $password');
   var url = Uri.parse('https://api.be-healthy.life/auth/login');
   var response = await http.post(url, body: {

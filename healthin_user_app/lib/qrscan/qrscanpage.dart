@@ -14,11 +14,7 @@ const double buttonheight = 60;
 const double buttonwidth = 150;
 
 class QrScanPage extends StatefulWidget {
-  QrScanPage(
-      {Key? key, required this.didexercise, required this.addDidexercise})
-      : super(key: key);
-  final List<UserExerciseData> didexercise;
-  final Function(UserExerciseData) addDidexercise;
+  QrScanPage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _QRViewExampleState();
 }
@@ -41,8 +37,6 @@ class _QRViewExampleState extends State<QrScanPage> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.addDidexercise.runtimeType.toString());
-    log(widget.addDidexercise != Null ? "눌아님" : "눌임");
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -120,9 +114,8 @@ class _QRViewExampleState extends State<QrScanPage> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => WhileExercise(
-                      exerciseName: result!.code.toString(),
-                      addDidexercise: widget.addDidexercise)));
+                  builder: (context) =>
+                      WhileExercise(exerciseName: result!.code.toString())));
         }
       });
     });
