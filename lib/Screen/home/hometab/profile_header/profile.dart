@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Provider/user_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
-
-  @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
+class Profile extends ConsumerWidget {
+  Profile({
+    Key? key,
+  }) : super(key: key);
   double _percent = 0.7;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userState);
     return Container(
         color: Colors.indigo,
         height: 230,
@@ -42,7 +41,7 @@ class _ProfileState extends State<Profile> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "전민지",
+                                    user.name.toString(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 )

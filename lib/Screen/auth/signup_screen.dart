@@ -25,10 +25,19 @@ class _SignUpState extends ConsumerState<SignUp> {
     String name = _nameController.text;
     String phoneNumber = _phoneController.text;
     String nickname = _nicknameController.text;
-    UserCreateRequest(username, password, name, nickname, phoneNumber, context)
-        .then((value) {
-      ref.read(loginStateProvider.notifier).state = value;
-    });
+    try {
+      UserCreateRequest(
+              username, password, name, nickname, phoneNumber, context)
+          .then((value) {
+        ref.read(loginStateProvider.notifier).state = true;
+        ref.read(userState.notifier).state = value;
+        LoginRequest(username, password, context)
+            .then((value) => Navigator.pop(context));
+      });
+    } catch (e) {
+      print("회원가입실패");
+    }
+
     //print('login attempt: $username with $password');
   }
 

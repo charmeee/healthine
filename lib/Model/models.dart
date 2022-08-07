@@ -7,8 +7,14 @@ class Exercise {
   List? content;
   List? precautions;
 
-  Exercise(this.id, this.name, this.enName, this.type, this.difficulty,
-      this.content, this.precautions);
+  Exercise(
+      {this.id,
+      this.name,
+      this.enName,
+      this.type,
+      this.difficulty,
+      this.content,
+      this.precautions});
   Exercise.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
@@ -20,27 +26,21 @@ class Exercise {
 }
 
 class UserInfo {
-  String? id;
   String? username;
   String? name;
-  String? password;
   String? nickname;
   String? phoneNumber;
   String? avatarImage;
 
-  UserInfo(
-    this.id,
+  UserInfo({
     this.username,
-    this.password,
     this.name,
     this.nickname,
     this.phoneNumber,
-    this.avatarImage,
-  );
+    this.avatarImage = "",
+  });
   UserInfo.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        username = json['username'],
-        password = json['password'],
+      : username = json['username'],
         name = json['name'],
         nickname = json['nickname'],
         phoneNumber = json['phoneNumber'],
@@ -68,4 +68,18 @@ class UserExerciseData {
       this.totalTime = 0,
       this.totalnum = 0 //한총개수
       });
+}
+
+class CommunityData {
+  int id;
+  String nickname;
+  String title;
+  List content;
+  List? comment;
+  CommunityData(
+      {required this.id,
+      required this.nickname,
+      required this.title,
+      required this.content,
+      this.comment});
 }

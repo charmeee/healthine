@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'communitydetail.dart';
+import 'community_detail_screen.dart';
 
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);

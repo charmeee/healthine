@@ -5,13 +5,8 @@ import 'package:healthin/Provider/user_provider.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 import 'package:flutter/material.dart';
-// import 'community/communitymain.dart';
-// import 'diet/diet.dart';
-// import 'qrscan/qrscanpage.dart';
-// import 'dictionary/dictionary.dart';
-// import 'home/home2.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'Screen/auth/main_signin.dart';
+import 'Screen/auth/main_signin_screen.dart';
 import 'Screen/main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

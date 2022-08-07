@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../../Model/models.dart';
-import '../../Provider//exercisedata_provider.dart';
+import '../../Provider/exercisedata_provider.dart';
 //import './youtubePlayer.dart';
 
 const textstyle1 = TextStyle(color: Colors.white);

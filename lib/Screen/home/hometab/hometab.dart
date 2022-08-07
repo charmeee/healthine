@@ -1,11 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../Provider/exercisedata_provider.dart';
 import '../../exercisewatch/whileExercise.dart';
-import '../report.dart';
+import 'package:healthin/Screen/report/report_screen.dart';
 import 'Inbody/InbodyCard.dart';
+import 'Todayexecise/todayExecisedCard.dart';
 import 'routine/routineCard.dart';
 
 class Tab1 extends ConsumerWidget {
@@ -13,7 +12,6 @@ class Tab1 extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     log("홈텝빌드");
-    var UserExercisedState = ref.watch(UserExercisedNotifierProvider);
     return SingleChildScrollView(
       child: Container(
         child: Padding(
@@ -23,46 +21,7 @@ class Tab1 extends ConsumerWidget {
                   children: [
                 routineCard(), //오늘의 루틴
                 InbodyCard(), //인바디 차트
-
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            "오늘 운동 기록",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        if (UserExercisedState.isEmpty) ...[
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text("오늘의 운동기록이 없습니다.\n운동을 기록해보세요!"),
-                          ),
-                        ] else ...[
-                          for (int i = 0;
-                              i < UserExercisedState.length;
-                              i++) ...[
-                            Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(4),
-                                child: Text(
-                                  '${i + 1}. ${UserExercisedState[i].name}    ${UserExercisedState[i].totalnum}회  ${UserExercisedState[i].totalTime}초',
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w200,
-                                  ),
-                                ))
-                          ]
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
+                ExecisedCard(),
                 Container(
                   height: 50,
                   padding: EdgeInsets.all(4),

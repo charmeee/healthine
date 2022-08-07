@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Provider/user_provider.dart';
@@ -62,11 +64,22 @@ class _EmailSignInState extends ConsumerState<EmailSignIn> {
                 ),
                 TextButton(
                     onPressed: () {
-                      LoginRequest(_idController.text, _passwordController.text,
-                              context)
-                          .then((value) {
-                        ref.read(loginStateProvider.notifier).state = value;
-                      });
+                      try {
+                        LoginRequest(_idController.text,
+                                _passwordController.text, context)
+                            .then((value) {
+                          ref.read(loginStateProvider.notifier).state = true;
+                          try {
+                            UserProfileRequest(value.username).then((data) {
+                              ref.read(userState.notifier).state = data;
+                            });
+                          } catch (e) {
+                            log("유저 정보 갖기 에러");
+                          }
+                        });
+                      } catch (e) {
+                        log("로그인 에러");
+                      }
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.indigo,

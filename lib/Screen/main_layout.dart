@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home/home2.dart';
-import 'community/communitymain.dart';
+import 'package:healthin/Model/models.dart';
+import 'package:healthin/Service/auth_request_api.dart';
+import 'home/home_screen.dart';
+import 'community/community_main_screen.dart';
 import 'diet/diet.dart';
 import 'qrscan/qrscanpage.dart';
 import 'dictionary/dictionary.dart';
@@ -14,7 +16,6 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
-
   //ㅇㅣ름,횟수,시간
   @override
   void initState() {

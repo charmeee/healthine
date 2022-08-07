@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/models.dart';
+import 'package:healthin/Provider/user_provider.dart';
 
-class UserSetting extends StatefulWidget {
+class UserSetting extends ConsumerStatefulWidget {
   const UserSetting({Key? key}) : super(key: key);
 
   @override
-  State<UserSetting> createState() => _UserSettingState();
+  ConsumerState<UserSetting> createState() => _UserSettingState();
 }
 
-class _UserSettingState extends State<UserSetting> {
+class _UserSettingState extends ConsumerState<UserSetting> {
   final formKey = GlobalKey<FormState>();
+  @override
+  late UserInfo _userinfo;
+  void initState() {
+    // TODO: implement initState
+    _userinfo = ref.read(userState);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +36,9 @@ class _UserSettingState extends State<UserSetting> {
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: 40,
+          ),
           CircleAvatar(
             radius: 40,
             backgroundColor: Colors.white,
@@ -38,28 +51,43 @@ class _UserSettingState extends State<UserSetting> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "전민지",
+              _userinfo.name.toString(),
               style: TextStyle(color: Colors.white),
             ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Form(
               key: this.formKey,
               child: Column(
                 children: [
                   ListTile(
+                    leading: Text("아이디"),
+                    title: Text(_userinfo.username.toString()),
+                  ),
+                  ListTile(
                     leading: Text("전화번호"),
-                    title: Text("01020202020"),
+                    title: Text(_userinfo.phoneNumber.toString()),
                     trailing: Icon(Icons.edit),
                   ),
                   ListTile(
                     leading: Text("닉네임"),
-                    title: Text("와라라랄"),
+                    title: Text(_userinfo.nickname.toString()),
                     trailing: Icon(Icons.edit),
                   ),
                   ListTile(
                     leading: Text("등록핼스장"),
-                    title: Text("관악관악헭스"),
+                    title: Text("관악관악헬스"),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text("비밀번호 변경"),
+                      style: ElevatedButton.styleFrom(primary: Colors.indigo),
+                    ),
+                  )
                 ],
               ))
         ],
