@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "812774997300",
+    "project_id": "healthiin",
+    "storage_bucket": "healthiin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812774997300:android:f54fc34659e0796bb4b961",
+        "android_client_info": {
+          "package_name": "com.example.healthin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "812774997300-ssr1q1d8m9d0ukcjdrbduslevu31vv17.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.healthin",
+            "certificate_hash": "4dd52986181894318a99a79637d859902dd5ce24"
+          }
+        },
+        {
+          "client_id": "812774997300-09i4vr0q6c88d58pslsb1194go8qb4oh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgcZxOcOp-o3tzodjrC8sbmoJS2OMx2jQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "812774997300-09i4vr0q6c88d58pslsb1194go8qb4oh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
