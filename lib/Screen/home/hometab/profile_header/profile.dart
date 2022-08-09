@@ -11,7 +11,7 @@ class Profile extends ConsumerWidget {
   double _percent = 0.7;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userState);
+    final user = ref.watch(userStateProvider);
     return Container(
         color: Colors.indigo,
         height: 230,

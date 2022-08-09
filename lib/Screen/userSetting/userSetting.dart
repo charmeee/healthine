@@ -16,7 +16,7 @@ class _UserSettingState extends ConsumerState<UserSetting> {
   late UserInfo _userinfo;
   void initState() {
     // TODO: implement initState
-    _userinfo = ref.read(userState);
+    _userinfo = ref.read(userStateProvider);
     super.initState();
   }
 

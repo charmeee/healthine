@@ -11,6 +11,8 @@ import 'Screen/main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'Service/auth_request_api.dart';
+
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -59,10 +61,18 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     //changeStatus();
-    print("메인 status ${ref.watch(loginStateProvider)}");
+    final isLogined = ref.watch(loginStateProvider);
+    final user = ref.watch(userStateProvider);
+
+    print("메인 status ${isLogined}");
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
-    //MainSignIn은 로그인 페이지
-    return ref.watch(loginStateProvider) ? MyHome() : MainSignIn();
+    //MainSignIn은 로그인 페이지'
+    if (user.accessToken != null) {
+      UserProfileRequest(user.accessToken).then((value) {
+        ref.read(userStateProvider.notifier).state = value;
+      });
+    }
+    return isLogined ? MyHome() : MainSignIn();
   }
 }

@@ -26,25 +26,30 @@ class Exercise {
 }
 
 class UserInfo {
+  String? id;
   String? username;
   String? name;
   String? nickname;
   String? phoneNumber;
   String? avatarImage;
-
+  String? accessToken;
   UserInfo({
+    this.id,
     this.username,
     this.name,
     this.nickname,
     this.phoneNumber,
-    this.avatarImage = "",
+    this.avatarImage,
+    this.accessToken,
   });
   UserInfo.fromJson(Map<String, dynamic> json)
-      : username = json['username'],
+      : id = json['id'],
+        username = json['username'],
         name = json['name'],
         nickname = json['nickname'],
         phoneNumber = json['phoneNumber'],
-        avatarImage = json['avatarImage'];
+        avatarImage = json['avatarImage'],
+        accessToken = json['accessToken'];
 }
 
 class UserExerciseData {
@@ -74,12 +79,14 @@ class CommunityData {
   int id;
   String nickname;
   String title;
-  List content;
+  Map<String, String?> content = {"text": null, "img": null};
   List? comment;
+  String? type = "all";
   CommunityData(
       {required this.id,
       required this.nickname,
       required this.title,
       required this.content,
-      this.comment});
+      this.comment,
+      this.type});
 }

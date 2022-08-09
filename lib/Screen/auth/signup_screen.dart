@@ -30,9 +30,12 @@ class _SignUpState extends ConsumerState<SignUp> {
               username, password, name, nickname, phoneNumber, context)
           .then((value) {
         ref.read(loginStateProvider.notifier).state = true;
-        ref.read(userState.notifier).state = value;
-        LoginRequest(username, password, context)
-            .then((value) => Navigator.pop(context));
+        //ref.read(userState.notifier).state = value;
+        LoginRequest(username, password, context).then((value) {
+          ref.read(userStateProvider.notifier).state.accessToken =
+              value.accessToken;
+          Navigator.pop(context);
+        });
       });
     } catch (e) {
       print("회원가입실패");

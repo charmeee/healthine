@@ -69,13 +69,10 @@ class _EmailSignInState extends ConsumerState<EmailSignIn> {
                                 _passwordController.text, context)
                             .then((value) {
                           ref.read(loginStateProvider.notifier).state = true;
-                          try {
-                            UserProfileRequest(value.username).then((data) {
-                              ref.read(userState.notifier).state = data;
-                            });
-                          } catch (e) {
-                            log("유저 정보 갖기 에러");
-                          }
+                          ref
+                              .read(userStateProvider.notifier)
+                              .state
+                              .accessToken = value.accessToken;
                         });
                       } catch (e) {
                         log("로그인 에러");

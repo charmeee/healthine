@@ -4,6 +4,12 @@ import 'package:flutter/services.dart';
 
 import 'community_detail_screen.dart';
 
+enum CommunityListFilter {
+  all,
+  active,
+  completed,
+} //나중에 카테고리 별 분류할 예정
+
 class Community extends StatefulWidget {
   const Community({Key? key}) : super(key: key);
 
@@ -12,6 +18,12 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
+  @override
+  void initState() {
+    // TODO: community get request
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
