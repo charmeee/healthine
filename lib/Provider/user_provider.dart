@@ -12,3 +12,9 @@ final userStateProvider = StateProvider<UserInfo>((ref) {
   log("userState 변경");
   return UserInfo();
 });
+
+final httpAccessHeader = Provider((ref) {
+  return {
+    "Authorization": "Bearer ${ref.watch(userStateProvider).accessToken}"
+  };
+});

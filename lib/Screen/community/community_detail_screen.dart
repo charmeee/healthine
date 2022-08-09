@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Provider/user_provider.dart';
 
 const _divider = Divider(
   height: 10,
   color: Colors.indigo,
 );
 
-class Communitydetail extends StatefulWidget {
+class Communitydetail extends ConsumerStatefulWidget {
   const Communitydetail({Key? key}) : super(key: key);
 
   @override
-  State<Communitydetail> createState() => _CommunitydetailState();
+  ConsumerState<Communitydetail> createState() => _CommunitydetailState();
 }
 
-class _CommunitydetailState extends State<Communitydetail> {
+class _CommunitydetailState extends ConsumerState<Communitydetail> {
   Map<String, dynamic> communityData = {};
   final _Controller = TextEditingController();
-
+  late var user;
   @override
   void initState() {
     // TODO: implement initState
@@ -49,6 +51,7 @@ class _CommunitydetailState extends State<Communitydetail> {
           },
         ]
       };
+      user = ref.read(userStateProvider);
     });
   }
 
@@ -86,8 +89,10 @@ class _CommunitydetailState extends State<Communitydetail> {
                         icon: Icon(Icons.send),
                         onPressed: () {
                           setState(() {
-                            communityData["comments"]
-                                .add({"id": "김만두", "text": _Controller.text});
+                            communityData["comments"].add({
+                              "id": user.nickname.toString(),
+                              "text": _Controller.text
+                            });
                             _Controller.text = "";
                           });
                           FocusManager.instance.primaryFocus?.unfocus();
