@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/models.dart';
 
 //사용자가 한 운동
-//사용자가 해야할 루틴틴
 class UserExercisedNotifier extends StateNotifier<List<UserExerciseData>> {
   //var ref;
   //[List<UserExerciseData>? initialUserExerciseData]

@@ -90,3 +90,14 @@ class CommunityData {
       this.comment,
       this.type});
 }
+
+class RoutineData {
+  String? name;
+  String? type;
+  int? set;
+  int? num;
+  int? time; //분단뒤
+  bool? doing = false;
+  RoutineData(
+      {this.name, this.type, this.set, this.num, this.time, this.doing});
+}
