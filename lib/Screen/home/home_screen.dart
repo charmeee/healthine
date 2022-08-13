@@ -27,7 +27,7 @@ class Home2 extends StatelessWidget {
                 backgroundColor: Colors.indigo,
                 pinned: true,
                 floating: true,
-                snap: true,
+                //snap: true,
                 expandedHeight: 270.0,
                 flexibleSpace: FlexibleSpaceBar(background: Profile()),
                 bottom: TabBar(

@@ -21,64 +21,15 @@ class routineCard extends ConsumerStatefulWidget {
 class _routineCardState extends ConsumerState<routineCard> {
   int _index = 0;
 
-  // Future<List<RoutineData>> readJson() async {
-  //   //json파일 읽어오기
-  //   final String response =
-  //       await rootBundle.loadString('testjsonfile/healthmachinedata.json');
-  //   //print(response.runtimeType);w
-  //   Map<String, dynamic> _alldata = await jsonDecode(response);
-  //   log("키들 :" + _alldata.keys.toString());
-  //   // List<RoutineData> _data = [
-  //   //   ..._alldata["routineData"].map((item) => RoutineData.fromJson(item))
-  //   // ];
-  //   // log(_alldata.keys.toString());
-  //   // log(_data[0].toString());
-  //   setState(() {
-  //     routineList = [
-  //       ..._alldata["routineData"].map((item) => RoutineData.fromJson(item))
-  //     ];
-  //   });
-  //   return routineList;
-  // }
-  //
-  // List<RoutineData> routineList = [
-  //   // {"type": "러닝머신", "count": "10분", "img": "assets/running mashin.png"},
-  //   // {
-  //   //   "type": "레그 익스텐션",
-  //   //   "count": "10kg 10회 3세트",
-  //   //   "img": "assets/Leg extension.png"
-  //   // },
-  //   // {"type": "레그 컬", "count": "20kg 10회 3세트", "img": "assets/leg curl.png"},
-  //   // {
-  //   //   "type": "스컬 크러셔",
-  //   //   "count": "10kg 10회 3세트",
-  //   //   "img": "assets/Skull Crusher.png"
-  //   // },
-  //   // {"type": "펙덱", "count": "10kg 15회 3세트", "img": "assets/Pec Deck .png"},
-  // ];
-  //
-  // void changeRoutine(List Routine) {
-  //   setState(() {
-  //     routineList = [...Routine];
-  //   });
-  // }
-  //
-  // initState() {
-  //   super.initState();
-  //   readJson();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final routineListState = ref.watch(RoutineNotifierProvider);
     ref.listen(RoutineNotifierProvider,
         (List<RoutineData>? previousCount, List<RoutineData>? newCount) {
-      log("웨안바뀜?");
       setState(() {
         _index = 0;
       });
     });
-    log("빌드수");
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
