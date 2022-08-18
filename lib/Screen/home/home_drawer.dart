@@ -1,24 +1,31 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Provider/user_provider.dart';
 import 'package:healthin/Screen/userSetting/userSetting.dart';
+import 'package:healthin/Model/models.dart';
 
 class HomeDrawer extends ConsumerWidget {
   const HomeDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    log("빌드시작");
+    final _userdata = ref.watch(userStateProvider);
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
         children: [
-          const UserAccountsDrawerHeader(
+          UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.indigo),
-            accountName: Text("yong"),
-            accountEmail: Text("otrodevym@gmail.com"),
+            accountName: Text("닉네임: ${_userdata.nickname}"),
+            //accountEmail: Text("닉네임: ${_userdata.nickname}"),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               //backgroundImage: null,
             ),
+            accountEmail: null,
           ),
           ListTile(
             leading: Icon(

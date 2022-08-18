@@ -1,48 +1,35 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/models.dart';
+import 'package:healthin/Provider/routine_provider.dart';
+import 'package:healthin/Provider/user_provider.dart';
 
-import 'routineSetting.dart';
+import 'package:healthin/Screen/routineSetting/routineSetting_screen.dart';
 
-class routineCard extends StatefulWidget {
+class routineCard extends ConsumerStatefulWidget {
   const routineCard({Key? key}) : super(key: key);
 
   @override
-  State<routineCard> createState() => _routineCardState();
+  ConsumerState<routineCard> createState() => _routineCardState();
 }
 
-class _routineCardState extends State<routineCard> {
+class _routineCardState extends ConsumerState<routineCard> {
   int _index = 0;
-  // List<String> routinelist = [
-  //   "러닝머신 10분",
-  //   "레그익스텐션 10kg 10회 3세트",
-  //   "레드컬 20kg 10회 3세트 ",
-  //   "핵스쿼트 빈바 10회 3세트",
-  //   "레그프레스 10회 3세트",
-  //   "바이시클 크런치 20회 3세트"
-  // ];
-  List routineList = [
-    {"type": "러닝머신", "count": "10분", "img": "assets/running mashin.png"},
-    {
-      "type": "레그 익스텐션",
-      "count": "10kg 10회 3세트",
-      "img": "assets/Leg extension.png"
-    },
-    {"type": "레그 컬", "count": "20kg 10회 3세트", "img": "assets/leg curl.png"},
-    {
-      "type": "스컬 크러셔",
-      "count": "10kg 10회 3세트",
-      "img": "assets/Skull Crusher.png"
-    },
-    {"type": "펙덱", "count": "10kg 15회 3세트", "img": "assets/Pec Deck .png"},
-  ];
-
-  void changeRoutine(List Routine) {
-    setState(() {
-      routineList = [...Routine];
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final routineListState = ref.watch(RoutineNotifierProvider);
+    ref.listen(RoutineNotifierProvider,
+        (List<RoutineData>? previousCount, List<RoutineData>? newCount) {
+      setState(() {
+        _index = 0;
+      });
+    });
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -57,7 +44,7 @@ class _routineCardState extends State<routineCard> {
           SizedBox(
             height: 250,
             child: PageView.builder(
-              itemCount: 5,
+              itemCount: routineListState.length,
               controller: PageController(viewportFraction: 0.7),
               onPageChanged: (int index) => setState(() => _index = index),
               itemBuilder: (BuildContext context, int index) {
@@ -71,16 +58,18 @@ class _routineCardState extends State<routineCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
-                          routineList[index]["img"],
+                          routineListState[index].img.toString(),
                           height: 170,
                         ),
                         Text(
-                          routineList[index]["type"],
+                          routineListState[index].name.toString(),
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          routineList[index]["count"],
+                          routineListState[index].type.toString() == "유산소"
+                              ? routineListState[index].time.toString()
+                              : "${routineListState[index].weight}kg ${routineListState[index].num}회 ${routineListState[index].set}세트",
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -94,12 +83,8 @@ class _routineCardState extends State<routineCard> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RoutineSetting(
-                            routineList: routineList,
-                            changeRoutine: changeRoutine)));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RoutineSetting()));
               },
               child: Text("루틴 수정하기"),
               style: ElevatedButton.styleFrom(primary: Colors.black54),

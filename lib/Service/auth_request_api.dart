@@ -8,11 +8,6 @@ import 'package:http/http.dart' as http;
 import '../Model/models.dart';
 
 //밑의 api를 다 provider에 넣어가지고
-// final httpAccessHeader = Provider((ref) {
-//   return {
-//     "Authorization": "Bearer ${ref.watch(userStateProvider).accessToken}"
-//   };
-// });
 
 Future<UserInfo> UserCreateRequest(username, password, name, nickname,
     phoneNumber, BuildContext context) async {
