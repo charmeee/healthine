@@ -99,8 +99,8 @@ class CommunityData {
 }
 
 class RoutineData {
-  String? name;
-  String? type;
+  String name;
+  String type;
   int? set;
   int? num;
   int? weight;
@@ -108,8 +108,8 @@ class RoutineData {
   bool? doing = false;
   String? img;
   RoutineData(
-      {this.name,
-      this.type,
+      {required this.name,
+      required this.type,
       this.set,
       this.num,
       this.weight,

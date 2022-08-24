@@ -12,18 +12,12 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
   }
 
   getDictionary() async {
-    List<DictionaryData> routinedata = await readDictionaryJson();
-    if (routinedata.isNotEmpty) {
-      state = routinedata;
-      log(routinedata[0].name.toString());
+    List<DictionaryData> dictionaryData = await readDictionaryJson();
+    if (dictionaryData.isNotEmpty) {
+      state = dictionaryData;
+      log(state[0].name.toString());
       log("사전데이터를 받아옴.");
     }
-  }
-
-  changeDictionaryOrder(data) {
-    log("사전데이터 순서 변경");
-    log(data.toString());
-    state = data;
   }
 
   addDictionary(List<DictionaryData> data) {
@@ -38,25 +32,25 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
 
   // editDictionary({index, required String props, required int value}) {
   //   log("사전데이터 편집.");
-  //   Dictionary routine = state[index];
+  //   Dictionary dictionaryData = state[index];
   //   switch (props) {
   //     case "time":
-  //       routine.time = (routine.time ?? 0) + value;
-  //       log(routine.time.toString());
+  //       dictionaryData.time = (dictionaryData.time ?? 0) + value;
+  //       log(dictionaryData.time.toString());
   //       break;
   //     case "weight":
-  //       routine.weight = (routine.weight ?? 0) + value;
+  //       dictionaryData.weight = (dictionaryData.weight ?? 0) + value;
   //       break;
   //     case "set":
-  //       routine.set = (routine.set ?? 0) + value;
+  //       dictionaryData.set = (dictionaryData.set ?? 0) + value;
   //       break;
   //     case "num":
-  //       routine.num = (routine.num ?? 0) + value;
+  //       dictionaryData.num = (dictionaryData.num ?? 0) + value;
   //       break;
   //   }
   //   state = [
   //     for (final item in state)
-  //       if (item.name == routine.name) routine else item
+  //       if (item.name == dictionaryData.name) dictionaryData else item
   //   ];
   // }
 }

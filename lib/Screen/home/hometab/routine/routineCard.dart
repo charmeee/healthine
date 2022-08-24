@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/models.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import 'package:healthin/Provider/user_provider.dart';
+import 'package:healthin/Screen/exercisewatch/whileExercise.dart';
 
 import 'package:healthin/Screen/routineSetting/routineSetting_screen.dart';
 
@@ -83,6 +84,21 @@ class _routineCardState extends ConsumerState<routineCard> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WhileExercise(
+                            routinedata: routineListState[_index])));
+              },
+              child: Text("루틴 시작하기"),
+              style: ElevatedButton.styleFrom(primary: Colors.black54),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                //routineListState[index]
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => RoutineSetting()));
               },

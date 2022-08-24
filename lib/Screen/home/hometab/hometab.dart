@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../exercisewatch/whileExercise.dart';
 import 'package:healthin/Screen/report/report_screen.dart';
 import 'Inbody/InbodyCard.dart';
 import 'Todayexecise/todayExecisedCard.dart';
@@ -59,17 +58,7 @@ class Tab1 extends ConsumerWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Report()));
                       }),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WhileExercise(
-                                    exerciseName: "바벨 스쿼트",
-                                  )));
-                    },
-                    child: Text("카운터로 이동"))
+                )
               ]),
         ),
       ),

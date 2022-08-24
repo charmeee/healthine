@@ -13,11 +13,12 @@ const double buttonheight = 40;
 int tempsec = -1;
 
 class WhileExercise extends ConsumerStatefulWidget {
-  const WhileExercise({
+  WhileExercise({
     Key? key,
-    required this.exerciseName,
+    required this.routinedata,
   }) : super(key: key);
-  final exerciseName;
+  RoutineData routinedata;
+  //RoutineData
   @override
   ConsumerState<WhileExercise> createState() => _WhileExerciseState();
 }
@@ -39,7 +40,15 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   void initState() {
     startTimer();
     flag = true;
-    exerciseData = UserExerciseData(name: widget.exerciseName, totalnum: 1);
+    if (widget.routinedata.type == "유산소") {
+      exerciseData =
+          UserExerciseData(name: widget.routinedata.name, totalnum: 10);
+    } else {
+      exerciseData = UserExerciseData(
+          name: widget.routinedata.name,
+          numPerSet: widget.routinedata.num ?? 10,
+          totalSet: widget.routinedata.set ?? 3);
+    }
   }
 
   void startTimer() {

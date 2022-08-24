@@ -24,9 +24,9 @@ import 'package:healthin/Provider/user_provider.dart';
 class CommunityNotifier extends StateNotifier<List<CommunityData>> {
   CommunityNotifier() : super([]);
   final myNickname = Provider<String>((ref) {
-    final _nickname =
+    final nickname =
         ref.watch(userStateProvider.select((value) => value.nickname));
-    return _nickname.toString();
+    return nickname.toString();
   });
   //페이지를 추가한다
   void addPage(CommunityData data) {

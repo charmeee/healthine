@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Provider/dictonary_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import 'dart:async';
 import '../../Model/models.dart';
@@ -31,9 +32,9 @@ class Dictionary extends ConsumerStatefulWidget {
 class _DictionaryState extends ConsumerState<Dictionary> {
   var isSelected = List<bool>.filled(healthtype.length, false);
   FocusNode focusNode = FocusNode();
-  List<DictionaryData>? alldata = []; //json 파일받아온값
-  List<DictionaryData>? founddata = []; //찾은데이터=> 출력데이터
-  List<DictionaryData>? nonchipselecteddata = []; //칩 셀랙전 데이터
+  List<DictionaryData> alldata = []; //json 파일받아온값
+  List<DictionaryData> founddata = []; //찾은데이터=> 출력데이터
+  List<DictionaryData> nonchipselecteddata = []; //칩 셀랙전 데이터
   List<RoutineData> _routineList = [];
 
   Future<void> readJson() async {
@@ -46,21 +47,22 @@ class _DictionaryState extends ConsumerState<Dictionary> {
       alldata = [
         ..._alldata["exerciseType"].map((item) => DictionaryData.fromJson(item))
       ];
-      founddata = [...alldata!];
+      founddata = [...alldata];
     });
   }
 
+  @override
   void initState() {
     super.initState();
     readJson();
   }
 
   void runSearchFilter(String enteredKeyword) {
-    List<DictionaryData>? result = [];
+    List<DictionaryData> result = [];
     if (enteredKeyword.isEmpty) {
-      result = [...alldata!];
+      result = [...alldata];
     } else {
-      result = alldata!
+      result = alldata
           .where((data) =>
               data.name!.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
@@ -71,18 +73,18 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   }
 
   void runChipFilter() {
-    List<DictionaryData>? result = [];
+    List<DictionaryData> result = [];
     bool flag = true;
     for (int i = 0; i < healthtype.length; i++) {
       if (isSelected[i] == true) {
         flag = false;
-        result = alldata!
+        result = alldata
             .where((data) => data.type!.contains(healthtype[i]))
             .toList();
       }
     }
     if (flag) {
-      result = [...alldata!];
+      result = [...alldata];
     }
     setState(() {
       founddata = result;
@@ -92,7 +94,6 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   @override
   Widget build(BuildContext context) {
     final routineListRead = ref.read(RoutineNotifierProvider.notifier);
-
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -158,7 +159,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
             //chips
             Expanded(
               child: Container(
-                child: alldata == null || alldata!.isEmpty
+                child: alldata == null || alldata.isEmpty
                     ? Text("로딩중")
                     : ListView.separated(
                         itemBuilder: (BuildContext context, int index) {
@@ -177,14 +178,13 @@ class _DictionaryState extends ConsumerState<Dictionary> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               DictionaryDetail(
-                                                  founddata:
-                                                      founddata![index])),
+                                                  founddata: founddata[index])),
                                     );
                             },
                             trailing: widget.addmode
                                 ? Checkbox(
                                     value: _routineList.any((item) =>
-                                        item.name == founddata![index].name),
+                                        item.name == founddata[index].name),
                                     onChanged: (value) {
                                       log(_routineList.length.toString());
                                       log("체크박스 value" + value.toString());
@@ -192,27 +192,28 @@ class _DictionaryState extends ConsumerState<Dictionary> {
                                         if (value!) {
                                           setState(() {
                                             _routineList.add(RoutineData(
-                                                name: founddata![index].name,
+                                                name:
+                                                    founddata[index].name ?? "",
                                                 type: "하체",
                                                 num: 10,
                                                 weight: 10,
                                                 img:
-                                                    "assets/img_exercise/${founddata![index].id}.png"));
+                                                    "assets/img_exercise/${founddata[index].id}.png"));
                                           });
                                         } else {
                                           setState(() {
                                             _routineList.removeWhere((item) =>
                                                 item.name ==
-                                                founddata![index].name);
+                                                (founddata[index].name ?? ""));
                                           });
                                         }
                                       });
                                     })
                                 : null,
-                            title: Text(founddata![index].name.toString()),
+                            title: Text(founddata[index].name.toString()),
                           );
                         },
-                        itemCount: founddata!.length,
+                        itemCount: founddata.length,
                         separatorBuilder: (BuildContext context, int index) =>
                             Divider(
                           height: 10,
