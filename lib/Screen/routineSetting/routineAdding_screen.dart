@@ -11,18 +11,30 @@ class RoutineAdding extends ConsumerWidget {
     final routineListWatch = ref.watch(RoutineNotifierProvider);
     return Dialog(
       child: Container(
-        height: 300,
-        width: 300,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: routineListWatch[index].type == "유산소"
               ? [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    child: Text(
+                      routineListWatch[index].name.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   AddRowButton(
                     index: index,
                     props: props[0],
                   )
                 ]
               : [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                    child: Text(
+                      routineListWatch[index].name.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   for (var i = 1; i < props.length; i++)
                     AddRowButton(
                       index: index,
@@ -59,32 +71,38 @@ class AddRowButton extends ConsumerWidget {
         content = "${routineListWatch[index].num} 회";
     }
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton(
             onPressed: () {
               routineListRead.editRoutineData(
                   index: index, props: props, value: -5);
             },
-            child: Text('-5')),
+            child: Text(
+              '-5',
+              style: TextStyle(color: Colors.indigo),
+            )),
         TextButton(
             onPressed: () {
               routineListRead.editRoutineData(
                   index: index, props: props, value: -1);
             },
-            child: Text('-1')),
-        Text(content),
+            child: Text('-1', style: TextStyle(color: Colors.indigo))),
+        Text(
+          content,
+        ),
         TextButton(
             onPressed: () {
               routineListRead.editRoutineData(
                   index: index, props: props, value: 1);
             },
-            child: Text('+1')),
+            child: Text('+1', style: TextStyle(color: Colors.indigo))),
         TextButton(
             onPressed: () {
               routineListRead.editRoutineData(
                   index: index, props: props, value: 5);
             },
-            child: Text('+5')),
+            child: Text('+5', style: TextStyle(color: Colors.indigo))),
       ],
     );
   }

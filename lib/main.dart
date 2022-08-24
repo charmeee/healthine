@@ -1,6 +1,7 @@
 //import 'dart:html';
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:healthin/Service/community_api.dart';
 import 'firebase_options.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
@@ -77,6 +78,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       UserProfileRequest(user.accessToken).then((value) {
         ref.read(userStateProvider.notifier).state = value;
       });
+      //getComunnityData(user.accessToken);
     }
     return isLogined ? MyHome() : MainSignIn();
   }

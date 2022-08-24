@@ -12,15 +12,7 @@ class GoogleLogin implements SocialLogin {
       var googleLoginResult = await _googleSignIn.signIn();
       if (googleLoginResult != null) {
         var ggauth = await googleLoginResult.authentication;
-        if (ggauth != null) {
-          print("----ggauth를받았다!");
-          print(ggauth.accessToken);
-          print(ggauth.idToken);
-        }
-        print("----시작----");
-        print(googleLoginResult.email);
-        print(googleLoginResult.displayName);
-        print("----완료----");
+        if (ggauth != null) {}
         //SignInRequest(googleLoginResult.email, "fiowfef", context);
         return true;
       } else {

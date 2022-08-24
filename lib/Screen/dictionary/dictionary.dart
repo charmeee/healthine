@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import 'dart:async';
 import '../../Model/models.dart';
+import 'dictionary_detail.dart';
 
 final List<String> healthtype = [
   "가슴",
@@ -30,9 +31,9 @@ class Dictionary extends ConsumerStatefulWidget {
 class _DictionaryState extends ConsumerState<Dictionary> {
   var isSelected = List<bool>.filled(healthtype.length, false);
   FocusNode focusNode = FocusNode();
-  List<Exercise>? alldata = []; //json 파일받아온값
-  List<Exercise>? founddata = []; //찾은데이터=> 출력데이터
-  List<Exercise>? nonchipselecteddata = []; //칩 셀랙전 데이터
+  List<DictionaryData>? alldata = []; //json 파일받아온값
+  List<DictionaryData>? founddata = []; //찾은데이터=> 출력데이터
+  List<DictionaryData>? nonchipselecteddata = []; //칩 셀랙전 데이터
   List<RoutineData> _routineList = [];
 
   Future<void> readJson() async {
@@ -43,7 +44,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
     Map<String, dynamic> _alldata = await jsonDecode(response);
     setState(() {
       alldata = [
-        ..._alldata["exerciseType"].map((item) => Exercise.fromJson(item))
+        ..._alldata["exerciseType"].map((item) => DictionaryData.fromJson(item))
       ];
       founddata = [...alldata!];
     });
@@ -55,7 +56,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   }
 
   void runSearchFilter(String enteredKeyword) {
-    List<Exercise>? result = [];
+    List<DictionaryData>? result = [];
     if (enteredKeyword.isEmpty) {
       result = [...alldata!];
     } else {
@@ -70,7 +71,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   }
 
   void runChipFilter() {
-    List<Exercise>? result = [];
+    List<DictionaryData>? result = [];
     bool flag = true;
     for (int i = 0; i < healthtype.length; i++) {
       if (isSelected[i] == true) {
@@ -163,54 +164,22 @@ class _DictionaryState extends ConsumerState<Dictionary> {
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
                             onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return widget.addmode
-                                        ? Dialog(
-                                            child: Text("개수추가"),
-                                          )
-                                        : Dialog(
-                                            child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.6,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.8,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  Column(
-                                                    children: [
-                                                      Text(founddata![index]
-                                                          .name
-                                                          .toString()),
-                                                      Text(founddata![index]
-                                                          .enName
-                                                          .toString()),
-                                                      Image.asset(
-                                                          "assets/img_exercise/${founddata![index].id}.png")
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                      children: founddata![
-                                                              index]
-                                                          .content!
-                                                          .map((item) =>
-                                                              Text('- $item'))
-                                                          .toList()),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                  });
+                              widget.addmode
+                                  ? showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          child: Text("개수추가"),
+                                        );
+                                      })
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DictionaryDetail(
+                                                  founddata:
+                                                      founddata![index])),
+                                    );
                             },
                             trailing: widget.addmode
                                 ? Checkbox(

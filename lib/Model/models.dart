@@ -1,4 +1,4 @@
-class Exercise {
+class DictionaryData {
   int? id;
   String? name;
   String? enName;
@@ -7,7 +7,7 @@ class Exercise {
   List? content;
   List? precautions;
 
-  Exercise(
+  DictionaryData(
       {this.id,
       this.name,
       this.enName,
@@ -15,7 +15,7 @@ class Exercise {
       this.difficulty,
       this.content,
       this.precautions});
-  Exercise.fromJson(Map<String, dynamic> json)
+  DictionaryData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         enName = json['enName'],
@@ -89,6 +89,13 @@ class CommunityData {
       required this.content,
       this.comment,
       this.type});
+  CommunityData.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        nickname = json['nickname'],
+        title = json['title'],
+        content = json['content'],
+        comment = json['comment'],
+        type = json['type'];
 }
 
 class RoutineData {

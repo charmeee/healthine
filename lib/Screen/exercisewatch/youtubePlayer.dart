@@ -16,7 +16,7 @@ class HealthYoutubePlayer extends StatefulWidget {
 
 class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
   late YoutubePlayerController _controller;
-  Exercise? founddata;
+  DictionaryData? founddata;
   String Exercisename = "랫 풀 다운";
   Future<void> readJson() async {
     //json파일 읽어오기
@@ -28,7 +28,7 @@ class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
       for (int i = 0; i < _alldata["exerciseType"].length; i++) {
         //print(_alldata["exerciseType"][0]["name"]);
         if (_alldata["exerciseType"][i]["name"].toString() == Exercisename) {
-          founddata = Exercise.fromJson(_alldata["exerciseType"][i]);
+          founddata = DictionaryData.fromJson(_alldata["exerciseType"][i]);
         }
       }
     });

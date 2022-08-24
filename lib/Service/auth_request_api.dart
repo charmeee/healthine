@@ -25,7 +25,7 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("$name님 회원가입되셨습니다."),
     ));
-    print("회원가입완료.");
+    log("회원가입완료.");
 
     return UserInfo(
         username: username.toString(),
@@ -33,16 +33,16 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
         nickname: nickname.toString(),
         phoneNumber: phoneNumber.toString());
   } else {
-    print(response.body);
+    log(response.body);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(jsonDecode(response.body)["message"].toString()),
     ));
-    throw Exception(response.body);
+    throw Exception("회원관리오류코드${response.body}");
   }
 }
 
 Future<UserInfo> LoginRequest(username, password, context) async {
-  print('login attempt: $username with $password');
+  log('login attempt: $username with $password');
   var url = Uri.parse('https://api.be-healthy.life/auth/login');
   var response = await http.post(url, body: {
     "username": username.toString(), //아이디
@@ -52,8 +52,8 @@ Future<UserInfo> LoginRequest(username, password, context) async {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("$username님 로그인되었습니다."),
     ));
-    print("로그인완료.");
-    print(response.body.toString());
+    log("로그인완료.");
+    log(response.body.toString());
     return UserInfo(
         username: username,
         accessToken: jsonDecode(response.body)["accessToken"]);
@@ -61,8 +61,7 @@ Future<UserInfo> LoginRequest(username, password, context) async {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(jsonDecode(response.body)["message"].toString()),
     ));
-    print(response.body);
-    throw Exception(response.body);
+    throw Exception("로그인 오류 코드${response.body}");
   }
 }
 
@@ -76,7 +75,6 @@ Future<UserInfo> UserProfileRequest(accessToken) async {
     log("회원정보가져오기 완료");
     return UserInfo.fromJson(_userData);
   } else {
-    log("회원정보가져오기 오류");
-    throw Exception(response.body);
+    throw Exception("회원정보가져오기 오류코드${response.body}");
   }
 }

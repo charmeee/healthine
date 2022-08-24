@@ -19,6 +19,30 @@ class Tab1 extends ConsumerWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, //가로로 꽉차게
                   children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "이번주에 운동을 하지 않았어요..",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        Text(
+                          "운동을 시작해보세요!",
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 routineCard(), //오늘의 루틴
                 InbodyCard(), //인바디 차트
                 ExecisedCard(),
