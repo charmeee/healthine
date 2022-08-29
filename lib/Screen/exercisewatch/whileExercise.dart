@@ -37,6 +37,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   Timer? _timer;
   var _time = 0;
 
+  @override
   void initState() {
     startTimer();
     flag = true;
@@ -84,6 +85,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
     }); //Timer(Duration duration, void callback())
   }
 
+  @override
   void dispose() {
     // TODO: 시간을 상위 state에 넘겨 줘야함.
 

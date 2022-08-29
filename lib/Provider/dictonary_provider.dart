@@ -4,6 +4,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/models.dart';
 import 'package:healthin/Service/dictionary_api.dart';
 
+final searchBynameProvider = StateProvider<String?>((ref) => null);
+final searchBytypeProvider = StateProvider<String?>((ref) => null);
+
+final filteredDatas = Provider<List<DictionaryData>>((ref) {
+  final String? filtername = ref.watch(searchBynameProvider); //string으로 들어감.
+  final String? filtertype = ref.watch(searchBytypeProvider); //string으로 들어갈것.
+  final List<DictionaryData> dictionarys =
+      ref.watch(DictionaryNotifierProvider); //전체 데이타
+  Set<DictionaryData> filteredDictionarys = {};
+  if (filtername == null && filtertype == null) {
+    return dictionarys;
+  } else {
+    if (filtername != null) {
+      filteredDictionarys.addAll(dictionarys.where((data) =>
+          data.name!.toLowerCase().contains(filtername.toLowerCase())));
+    }
+    if (filtertype != null) {
+      filteredDictionarys
+          .addAll(dictionarys.where((element) => element.type == filtertype));
+    }
+    return filteredDictionarys.toList();
+  }
+});
+
 class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
   DictionaryNotifier([List<DictionaryData>? initialDictionary])
       : super(initialDictionary ?? []) {
