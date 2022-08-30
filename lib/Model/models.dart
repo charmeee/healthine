@@ -75,26 +75,44 @@ class UserExerciseData {
       });
 }
 
-class CommunityData {
-  int id;
+class CommunityBoardData {
+  String id;
   String nickname;
   String title;
-  Map<String, String?> content = {"text": null, "img": null};
-  List? comment;
+  String content;
+  List? comment = [];
   String? type = "all";
-  CommunityData(
+  CommunityBoardData(
       {required this.id,
       required this.nickname,
       required this.title,
       required this.content,
       this.comment,
       this.type});
-  CommunityData.fromJson(Map<String, dynamic> json)
+  CommunityBoardData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         nickname = json['nickname'],
         title = json['title'],
         content = json['content'],
         comment = json['comment'],
+        type = json['type'];
+}
+
+class CommunityBoardsList {
+  //id list ,page,
+  String id;
+  String nickname;
+  String title;
+  String? type = "all";
+  CommunityBoardsList(
+      {required this.id,
+      required this.nickname,
+      required this.title,
+      this.type = "all"});
+  CommunityBoardsList.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        nickname = json['nickname'],
+        title = json['title'],
         type = json['type'];
 }
 
