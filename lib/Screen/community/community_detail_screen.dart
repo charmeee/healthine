@@ -22,7 +22,7 @@ class Communitydetail extends ConsumerStatefulWidget {
 class _CommunitydetailState extends ConsumerState<Communitydetail> {
   Map<String, dynamic> communityData = {};
   final _Controller = TextEditingController();
-  late var user;
+  late UserInfo user;
   @override
   void initState() {
     // TODO: implement initState
@@ -64,11 +64,29 @@ class _CommunitydetailState extends ConsumerState<Communitydetail> {
                         IconButton(
                           icon: Icon(Icons.send),
                           onPressed: () {
+                            if (user.nickname == null) {
+                              log("로그인이 필요합니다");
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: Text("로그인이 필요한 서비스입니다"),
+                                        content: Text("로그인을 해주세요"),
+                                        actions: [
+                                          ElevatedButton(
+                                            child: Text("확인"),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      ));
+                            }
+                            ref
+                                .read(CommunityDataNotifierProvider.notifier)
+                                .addComment(widget.id, user.nickname.toString(),
+                                    _Controller.text);
                             setState(() {
-                              communityData["comments"].add({
-                                "id": user.nickname.toString(),
-                                "text": _Controller.text
-                              });
                               _Controller.text = "";
                             });
                             FocusManager.instance.primaryFocus?.unfocus();

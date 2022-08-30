@@ -39,6 +39,13 @@ class CommunityDataNotifier extends StateNotifier<CommunityBoardData?> {
   //   log("페이지 추가");
   //   log(state.length.toString());
   // }
+  void addComment(String id, String nickname, String text) {
+    if (state != null) {
+      CommunityBoardData temp = state!;
+      temp.comment.add({"id": id, "nickname": nickname, "text": text});
+      state = temp;
+    }
+  }
 
   //페이지 수정
   void editPage(String id, String title, String content) {
