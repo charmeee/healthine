@@ -36,11 +36,6 @@ Future<CommunityBoardData> readCommmunityDataJson(String id) async {
       await rootBundle.loadString('testjsonfile/healthmachinedata.json');
   Map<String, dynamic> _alldata = await jsonDecode(response);
   CommunityBoardData alldata;
-  // var temp = _alldata["community"].firstWhere((item) => item["id"] == id,
-  //     orElse: () => Exception("맞는 id 값이 없음"));
-  // log(temp.runtimeType.toString());
-  // log(temp);
-  // alldata = temp.map((data) => CommunityBoardData.fromJson(data));
   alldata = CommunityBoardData.fromJson(_alldata["community"].firstWhere(
       (item) => item["id"] == id,
       orElse: () => Exception("맞는 id 값이 없음")));
@@ -57,5 +52,6 @@ Future<List<CommunityBoardsList>> readCommmunityListJson() async {
     ..._alldata["communityList"]
         .map((item) => CommunityBoardsList.fromJson(item))
   ];
+
   return alldata;
 }

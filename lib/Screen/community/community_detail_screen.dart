@@ -84,16 +84,16 @@ class _CommunitydetailState extends ConsumerState<Communitydetail> {
 }
 
 class _CommunityBody extends ConsumerWidget {
-  _CommunityBody({Key? key}) : super(key: key);
+  const _CommunityBody({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CommunityBoardData? boardData = ref.watch(CommunityDataNotifierProvider);
     if (boardData != null) {
-      int length =
-          (boardData.comment != null) ? boardData.comment!.length + 2 : 2;
-      log(length.toString());
+      // int length =
+      //     (boardData.comment != null) ? boardData.comment!.length + 2 : 2;
+      //log(length.toString());
       return ListView.separated(
-        itemCount: length,
+        itemCount: boardData.comment.length + 2,
         itemBuilder: (context, index) {
           if (index == 0) {
             return Padding(
@@ -114,9 +114,9 @@ class _CommunityBody extends ConsumerWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                boardData.comment![index - 2]["id"] +
+                boardData.comment[index - 2]["nickname"] +
                     ' : ' +
-                    boardData.comment![index - 2]["text"],
+                    boardData.comment[index - 2]["text"],
                 style: TextStyle(fontSize: 15),
               ),
             );
