@@ -6,6 +6,7 @@ import 'package:healthin/Model/models.dart';
 import 'package:healthin/Provider/community_provider.dart';
 
 import 'community_detail_screen.dart';
+import 'communiuty_write_screen.dart';
 
 enum CommunityListFilter {
   all,
@@ -73,7 +74,10 @@ class Community extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.indigo[300],
           tooltip: "글쓰기",
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CommunityWrite()));
+          },
           child: Icon(
             Icons.edit,
             color: Colors.white,
