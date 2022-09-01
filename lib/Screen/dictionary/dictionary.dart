@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Provider/dictonary_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
-import '../../Model/models.dart';
+import '../../Model/routine_models.dart';
 import 'dictionary_detail.dart';
 
 final List<String> healthtype = [

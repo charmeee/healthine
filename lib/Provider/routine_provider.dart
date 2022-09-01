@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Service/routine_request_api.dart';
 
 class RoutineNotifier extends StateNotifier<List<RoutineData>> {

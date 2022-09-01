@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/dictionary_model.dart';
+import 'package:healthin/Model/routine_models.dart';
 
 class DictionaryDetail extends StatelessWidget {
   DictionaryData founddata;

@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
+import 'package:healthin/Model/user_model.dart';
 
 //사용자가 한 운동
 class UserExercisedNotifier extends StateNotifier<List<UserExerciseData>> {

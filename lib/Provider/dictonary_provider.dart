@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/dictionary_model.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Service/dictionary_api.dart';
 
 final searchBynameProvider = StateProvider<String?>((ref) => null);

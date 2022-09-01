@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/community_model.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Provider/community_provider.dart';
 
 import 'community_detail_screen.dart';

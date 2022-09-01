@@ -18,8 +18,7 @@ comment
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
-import 'package:healthin/Provider/user_provider.dart';
+import 'package:healthin/Model/community_model.dart';
 import 'package:healthin/Service/community_api.dart';
 
 class CommunityDataNotifier extends StateNotifier<CommunityBoardData?> {

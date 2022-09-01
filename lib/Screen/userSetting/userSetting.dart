@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
+import 'package:healthin/Model/user_model.dart';
 import 'package:healthin/Provider/user_provider.dart';
 
 class UserSetting extends ConsumerStatefulWidget {

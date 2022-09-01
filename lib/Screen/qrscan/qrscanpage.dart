@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:healthin/Model/dictionary_model.dart';
 import 'package:healthin/Screen/dictionary/dictionary_detail.dart';
 
 //import '../exercisewatch/whileExercise.dart';
@@ -8,8 +9,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../Model/models.dart';
 
 //웹에선 안됨!!
 //QrScanPage

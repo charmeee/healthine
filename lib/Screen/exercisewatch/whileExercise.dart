@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
-import '../../Model/models.dart';
+import '../../Model/routine_models.dart';
 import '../../Provider/exercisedata_provider.dart';
 //import './youtubePlayer.dart';
 

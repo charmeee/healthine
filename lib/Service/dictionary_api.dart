@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/dictionary_model.dart';
+import 'package:healthin/Model/routine_models.dart';
 
 Future<List<DictionaryData>> readDictionaryJson() async {
   //json파일 읽어오기

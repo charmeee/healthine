@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/services.dart';
+import 'package:healthin/Model/community_model.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 
 //Future<List<CommunityData>>
 void getComunnityData(accessToken) async {

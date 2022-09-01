@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:healthin/Screen/exercisewatch/whileExercise.dart';

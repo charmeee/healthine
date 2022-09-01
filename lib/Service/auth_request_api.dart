@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/user_model.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:http/http.dart' as http;
-import '../Model/models.dart';
+import '../Model/routine_models.dart';
 
 //밑의 api를 다 provider에 넣어가지고
 
