@@ -37,7 +37,7 @@ class ExecisedCard extends ConsumerWidget {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(4),
                     child: Text(
-                      '${i + 1}. ${UserExercisedState[i].name}    ${UserExercisedState[i].totalnum}회  ${UserExercisedState[i].totalTime}초',
+                      '${i + 1}. ${UserExercisedState[i].name}    ${UserExercisedState[i].doingNum}회  ${UserExercisedState[i].doingTime}초',
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w200,

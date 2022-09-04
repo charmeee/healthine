@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/exerciserecord_model.dart';
 import 'package:healthin/Model/user_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class WhileExercise extends ConsumerStatefulWidget {
     required this.routinedata,
   }) : super(key: key);
   RoutineData routinedata;
+
   //RoutineData
   @override
   ConsumerState<WhileExercise> createState() => _WhileExerciseState();
@@ -27,7 +29,8 @@ class WhileExercise extends ConsumerStatefulWidget {
 //휴식 운동중 정지로구분트
 class _WhileExerciseState extends ConsumerState<WhileExercise> {
   //final stopwatch = Stopwatch();
-  bool flag = false;
+  bool timewatchflag = false;
+  bool isAEROBIC = false; //유산소인가
   String hours = '00';
   String minutes = '00';
   String seconds = '00';
@@ -40,25 +43,66 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
 
   @override
   void initState() {
+    super.initState();
     startTimer();
-    flag = true;
+    timewatchflag = true;
     if (widget.routinedata.type == "유산소") {
-      exerciseData =
-          UserExerciseData(name: widget.routinedata.name, totalnum: 10);
-    } else {
+      isAEROBIC = true;
       exerciseData = UserExerciseData(
           name: widget.routinedata.name,
-          numPerSet: widget.routinedata.num ?? 10,
-          totalSet: widget.routinedata.set ?? 3);
+          type: widget.routinedata.type,
+          totalTime: widget.routinedata.totalTime);
+    } else {
+      exerciseData = UserExerciseData(
+        name: widget.routinedata.name,
+        type: widget.routinedata.type,
+        totalSet: widget.routinedata.totalSet ?? 3,
+        numPerSet: widget.routinedata.numPerSet ?? 10,
+        doingSet: 1,
+        doingNum: 1,
+        restTime: 3,
+        countInterver: 3,
+        doingTime: 0,
+      );
     }
   }
 
   void startTimer() {
     _timer = Timer.periodic(duration, (timer) async {
       _time++;
-      if (_time % exerciseData.countInterver == 0 && flag) {
-        exerciseData.totalnum++;
-        log("개수증가");
+      if (isAEROBIC == false) {
+        //유산소가 아니면
+        if (_time % exerciseData.countInterver! == 0 && timewatchflag) {
+          exerciseData.doingNum = exerciseData.doingNum! + 1;
+          log("개수증가");
+        }
+        if (exerciseData.doingNum ==
+                exerciseData.numPerSet! * exerciseData.doingSet! + 1 &&
+            timewatchflag == true) {
+          //유산소의 경우 개수 기준으로 카운트해서 멈춤
+          //한세트 끝낫을때
+          log("세트증가");
+          exerciseData.doingSet = exerciseData.doingSet! + 1;
+          setState(() {
+            timewatchflag = false;
+          });
+          _timer?.cancel();
+          log("스탑워치 멈춤/휴식");
+          await Future.delayed(Duration(seconds: exerciseData.restTime!), () {
+            log("스탑워치 다시시작!");
+            timewatchflag = true;
+            startTimer();
+          });
+        }
+      } else {
+        //유산소이면
+        if (_time == exerciseData.totalTime!) {
+          log("유산소 완료");
+          setState(() {
+            timewatchflag = false;
+          });
+          _timer?.cancel();
+        }
       }
       setState(() {
         minutes = (_time / 60).toInt().toString().padLeft(2, "0");
@@ -66,23 +110,6 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         //log("stringsec" + seconds);
         //log(stopwatch.elapsed.inSeconds.toString());
       });
-      if (exerciseData.totalnum ==
-              exerciseData.numPerSet * exerciseData.doingSet + 1 &&
-          flag == true) {
-        //한세트 끝낫을때
-        log("세트증가");
-        exerciseData.doingSet++;
-        setState(() {
-          flag = false;
-        });
-        _timer?.cancel();
-        log("스탑워치 멈춤/휴식");
-        await Future.delayed(Duration(seconds: exerciseData.restTime), () {
-          log("스탑워치 다시시작!");
-          flag = true;
-          startTimer();
-        });
-      }
     }); //Timer(Duration duration, void callback())
   }
 
@@ -96,11 +123,12 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
 
   @override
   Widget build(BuildContext context) {
+    log("토탈넘" + exerciseData.doingNum.toString());
     final UserExercisedRead =
         ref.read(UserExercisedNotifierProvider.notifier); //함수들
     return Scaffold(
       body: Container(
-        color: flag ? Colors.green : Colors.red,
+        color: timewatchflag ? Colors.green : Colors.red,
         padding: EdgeInsets.all(10),
         child: Center(
           child: Column(
@@ -118,118 +146,148 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                 '$minutes:$seconds',
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    //현 개수 / 총 개수
-                    "${(exerciseData.totalnum - 1) % exerciseData.numPerSet + 1} / ${exerciseData.numPerSet} 개",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.numPerSet--;
-                            });
-                          },
-                          icon: Icon(Icons.exposure_minus_1)),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.numPerSet++;
-                            });
-                          },
-                          icon: Icon(Icons.plus_one))
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    //현세트 / 총세트
-                    "${exerciseData.doingSet} / ${exerciseData.totalSet} 세트",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.totalSet--;
-                            });
-                          },
-                          icon: Icon(Icons.exposure_minus_1)),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.totalSet++;
-                            });
-                          },
-                          icon: Icon(Icons.plus_one))
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    //개수 사이 시간
-                    "${exerciseData.countInterver} 속도",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.countInterver--;
-                            });
-                          },
-                          icon: Icon(Icons.exposure_minus_1)),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.countInterver++;
-                            });
-                          },
-                          icon: Icon(Icons.plus_one))
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    //쉬는시간
-                    "${exerciseData.restTime} 휴식",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.restTime--;
-                            });
-                          },
-                          icon: Icon(Icons.exposure_minus_1)),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              exerciseData.restTime++;
-                            });
-                          },
-                          icon: Icon(Icons.plus_one))
-                    ],
-                  )
-                ],
-              ),
+              if (isAEROBIC == false) ...[
+                Row(
+                  //현 개수 / 총 개수
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${exerciseData.doingNum != 0 ? (exerciseData.doingNum! - 1) % (exerciseData.numPerSet ?? 0) + 1 : 0} / ${exerciseData.numPerSet} 개",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (exerciseData.numPerSet != null) {
+                                  if (exerciseData.doingNum != 0) {
+                                    exerciseData.doingNum =
+                                        exerciseData.doingNum! - 1;
+                                  }
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.exposure_minus_1)),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (exerciseData.numPerSet != null) {
+                                  if (exerciseData.doingNum != 0) {
+                                    exerciseData.doingNum =
+                                        exerciseData.doingNum! + 1;
+                                  }
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.plus_one))
+                      ],
+                    )
+                  ],
+                ),
+                Row(
+                  //현세트 / 총세트
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${exerciseData.doingSet} / ${exerciseData.totalSet ?? 0} 세트",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (exerciseData.totalSet != null) {
+                                  if (exerciseData.totalSet != 0) {
+                                    exerciseData.totalSet =
+                                        exerciseData.totalSet! + 1;
+                                  }
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.exposure_minus_1)),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (exerciseData.totalSet != null) {
+                                  if (exerciseData.totalSet != 0) {
+                                    exerciseData.totalSet =
+                                        exerciseData.totalSet! - 1;
+                                  }
+                                }
+                              });
+                            },
+                            icon: Icon(Icons.plus_one))
+                      ],
+                    )
+                  ],
+                ),
+                Row(
+                  //개수 사이 시간
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${exerciseData.countInterver} 속도",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                exerciseData.countInterver =
+                                    exerciseData.countInterver! - 1;
+                              });
+                            },
+                            icon: Icon(Icons.exposure_minus_1)),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                exerciseData.countInterver =
+                                    exerciseData.countInterver! + 1;
+                              });
+                            },
+                            icon: Icon(Icons.plus_one))
+                      ],
+                    )
+                  ],
+                ),
+                Row(
+                  //쉬는시간
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${exerciseData.restTime} 휴식",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                exerciseData.restTime =
+                                    exerciseData.restTime! - 1;
+                              });
+                            },
+                            icon: Icon(Icons.exposure_minus_1)),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                exerciseData.restTime =
+                                    exerciseData.restTime! + 1;
+                              });
+                            },
+                            icon: Icon(Icons.plus_one))
+                      ],
+                    )
+                  ],
+                ),
+              ],
               Container(
                 height: 100,
                 child: Row(
@@ -240,23 +298,23 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                       // height: buttonheight,
                       width: MediaQuery.of(context).size.width / 3 * 0.8,
                       child: TextButton(
-                        child: flag
+                        child: timewatchflag
                             ? Text("휴식", style: textstyle1)
                             : Text("다시 시작", style: textstyle1),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
-                                flag ? Colors.red : Colors.green)),
+                                timewatchflag ? Colors.red : Colors.green)),
                         onPressed: () {
-                          if (flag) {
+                          if (timewatchflag) {
                             //스탑워치가 실행중일때 멈추면
                             setState(() {
                               _timer?.cancel();
-                              flag = false;
+                              timewatchflag = false;
                             });
                           } else {
                             setState(() {
                               startTimer();
-                              flag = true;
+                              timewatchflag = true;
                             });
                           }
                         },
@@ -268,7 +326,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            exerciseData.totalTime = _time;
+                            exerciseData.doingTime = _time;
                             UserExercisedRead.add(exerciseData);
                             _timer?.cancel();
                           });

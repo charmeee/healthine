@@ -218,7 +218,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                                 widget.addRoutineData(RoutineData(
                                     name: filteredDatasWatch[index].name ?? "",
                                     type: filteredDatasWatch[index].type ?? "",
-                                    num: 10,
+                                    numPerSet: 10,
                                     weight: 10,
                                     img:
                                         "assets/img_exercise/${filteredDatasWatch[index].id}.png"));

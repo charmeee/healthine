@@ -69,8 +69,8 @@ class _routineCardState extends ConsumerState<routineCard> {
                         ),
                         Text(
                           routineListState[index].type.toString() == "유산소"
-                              ? routineListState[index].time.toString()
-                              : "${routineListState[index].weight}kg ${routineListState[index].num}회 ${routineListState[index].set}세트",
+                              ? routineListState[index].totalTime.toString()
+                              : "${routineListState[index].weight}kg ${routineListState[index].numPerSet}회 ${routineListState[index].totalSet}세트",
                           style: TextStyle(fontSize: 16),
                         )
                       ],

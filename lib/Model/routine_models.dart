@@ -1,28 +1,28 @@
 class RoutineData {
   String name;
   String type;
-  int? set;
-  int? num;
-  int? weight;
-  int? time; //분단뒤
+  int? totalSet; //전체세트
+  int? numPerSet; //세트당 횟수
+  int? weight; //근력운동일때만 사용
+  int? totalTime; //분단뒤 유산소일때 사용
   bool? doing = false;
   String? img;
   RoutineData(
       {required this.name,
       required this.type,
-      this.set,
-      this.num,
+      this.totalSet,
+      this.numPerSet,
       this.weight,
-      this.time,
+      this.totalTime,
       this.doing,
       this.img});
   RoutineData.fromJson(Map<String, dynamic> json)
       : name = json['name'],
         type = json['type'],
-        set = json['set'],
-        num = json['num'],
+        totalSet = json['set'],
+        numPerSet = json['num'],
         weight = json['weight'],
-        time = json['time'],
+        totalTime = json['time'],
         doing = json['doing'],
         img = json['img'];
 }

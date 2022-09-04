@@ -41,17 +41,17 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     RoutineData routine = state[index];
     switch (props) {
       case "time":
-        routine.time = (routine.time ?? 0) + value;
-        log(routine.time.toString());
+        routine.totalTime = (routine.totalTime ?? 0) + value;
+        log(routine.totalTime.toString());
         break;
       case "weight":
         routine.weight = (routine.weight ?? 0) + value;
         break;
       case "set":
-        routine.set = (routine.set ?? 0) + value;
+        routine.totalSet = (routine.totalSet ?? 0) + value;
         break;
       case "num":
-        routine.num = (routine.num ?? 0) + value;
+        routine.numPerSet = (routine.numPerSet ?? 0) + value;
         break;
     }
     state = [

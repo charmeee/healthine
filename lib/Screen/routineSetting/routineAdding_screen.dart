@@ -59,16 +59,16 @@ class AddRowButton extends ConsumerWidget {
     String content = "";
     switch (props) {
       case "time":
-        content = "${routineListWatch[index].time} 분";
+        content = "${routineListWatch[index].totalTime} 분";
         break;
       case "weight":
         content = "${routineListWatch[index].weight} kg";
         break;
       case "set":
-        content = "${routineListWatch[index].set} 세트";
+        content = "${routineListWatch[index].totalSet} 세트";
         break;
       case "num":
-        content = "${routineListWatch[index].num} 회";
+        content = "${routineListWatch[index].numPerSet} 회";
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
