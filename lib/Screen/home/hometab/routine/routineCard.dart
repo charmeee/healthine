@@ -1,36 +1,45 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:async';
-
+// import 'dart:convert';
+// import 'dart:developer';
+// import 'dart:async';
+// import 'package:flutter/services.dart';
+// import 'package:healthin/Provider/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Provider/routine_provider.dart';
-import 'package:healthin/Provider/user_provider.dart';
 import 'package:healthin/Screen/exercisewatch/whileExercise.dart';
-
 import 'package:healthin/Screen/routineSetting/routineSetting_screen.dart';
 
-class routineCard extends ConsumerStatefulWidget {
-  const routineCard({Key? key}) : super(key: key);
+final indexProvider = Provider<int>((ref) {
+  final routineListWatch = ref.watch(RoutineNotifierProvider);
+  int index = routineListWatch.indexWhere((element) => element.doing == true);
+  if (index == -1) {
+    index = 0;
+  }
+  return index;
+});
+
+class RoutineCard extends ConsumerStatefulWidget {
+  const RoutineCard({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<routineCard> createState() => _routineCardState();
+  ConsumerState<RoutineCard> createState() => _RoutineCardState();
 }
 
-class _routineCardState extends ConsumerState<routineCard> {
+class _RoutineCardState extends ConsumerState<RoutineCard> {
   int _index = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _index = ref.read(indexProvider);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routineListState = ref.watch(RoutineNotifierProvider);
-    ref.listen(RoutineNotifierProvider,
-        (List<RoutineData>? previousCount, List<RoutineData>? newCount) {
-      setState(() {
-        _index = 0;
-      });
-    });
+    final routineListWatch = ref.watch(RoutineNotifierProvider);
+    final routineListRead = ref.read(RoutineNotifierProvider.notifier);
+
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -45,7 +54,7 @@ class _routineCardState extends ConsumerState<routineCard> {
           SizedBox(
             height: 250,
             child: PageView.builder(
-              itemCount: routineListState.length,
+              itemCount: routineListWatch.length,
               controller: PageController(viewportFraction: 0.7),
               onPageChanged: (int index) => setState(() => _index = index),
               itemBuilder: (BuildContext context, int index) {
@@ -53,24 +62,27 @@ class _routineCardState extends ConsumerState<routineCard> {
                   scale: index == _index ? 1 : 0.9,
                   child: Card(
                     elevation: 6,
+                    color: routineListWatch[index].doing
+                        ? Colors.green[100]
+                        : Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Image.asset(
-                          routineListState[index].img.toString(),
+                          routineListWatch[index].img.toString(),
                           height: 170,
                         ),
                         Text(
-                          routineListState[index].name.toString(),
+                          routineListWatch[index].name.toString(),
                           style: TextStyle(
                               fontSize: 17, fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          routineListState[index].type.toString() == "유산소"
-                              ? routineListState[index].totalTime.toString()
-                              : "${routineListState[index].weight}kg ${routineListState[index].numPerSet}회 ${routineListState[index].totalSet}세트",
+                          routineListWatch[index].type.toString() == "유산소"
+                              ? routineListWatch[index].totalTime.toString()
+                              : "${routineListWatch[index].weight}kg ${routineListWatch[index].numPerSet}회 ${routineListWatch[index].totalSet}세트",
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -84,26 +96,27 @@ class _routineCardState extends ConsumerState<routineCard> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
+                routineListRead.doRoutine(_index);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => WhileExercise(
-                            routinedata: routineListState[_index])));
+                            routinedata: routineListWatch[_index])));
               },
-              child: Text("루틴 시작하기"),
               style: ElevatedButton.styleFrom(primary: Colors.black54),
+              child: Text("루틴 시작하기"),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                //routineListState[index]
+                //routineListWatch[index]
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => RoutineSetting()));
               },
-              child: Text("루틴 수정하기"),
               style: ElevatedButton.styleFrom(primary: Colors.black54),
+              child: Text("루틴 수정하기"),
             ),
           )
         ],

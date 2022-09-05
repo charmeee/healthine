@@ -42,7 +42,7 @@ class Tab1 extends ConsumerWidget {
                     ),
                   ),
                 ),
-                routineCard(), //오늘의 루틴
+                RoutineCard(), //오늘의 루틴
                 InbodyCard(), //인바디 차트
                 ExecisedCard(),
                 Container(

@@ -53,6 +53,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                       color: Colors.indigo,
                     ),
                     TextField(
+                      maxLines: null,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           focusedBorder: InputBorder.none,

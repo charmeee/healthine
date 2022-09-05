@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:healthin/Service/auth_request_api.dart';
@@ -113,6 +114,9 @@ class _SignUpState extends ConsumerState<SignUp> {
                       controller: _phoneController,
                       decoration: InputDecoration(labelText: '전화번호를 입력해주세요'),
                       keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                     ),
                     SizedBox(
                       height: 10,

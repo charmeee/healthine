@@ -20,6 +20,19 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     }
   }
 
+  doRoutine(int index) {
+    List<RoutineData> routineList = [...state];
+    routineList = routineList.asMap().entries.map((e) {
+      if (e.key == index) {
+        e.value.doing = true;
+      } else {
+        e.value.doing = false;
+      }
+      return e.value;
+    }).toList();
+    state = routineList;
+  }
+
   changeRoutineOrder(data) {
     log("루틴데이터 순서 변경");
     log(data.toString());
@@ -41,17 +54,17 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     RoutineData routine = state[index];
     switch (props) {
       case "time":
-        routine.totalTime = (routine.totalTime ?? 0) + value;
+        routine.totalTime = (routine.totalTime) + value;
         log(routine.totalTime.toString());
         break;
       case "weight":
-        routine.weight = (routine.weight ?? 0) + value;
+        routine.weight = (routine.weight) + value;
         break;
       case "set":
-        routine.totalSet = (routine.totalSet ?? 0) + value;
+        routine.totalSet = (routine.totalSet) + value;
         break;
       case "num":
-        routine.numPerSet = (routine.numPerSet ?? 0) + value;
+        routine.numPerSet = (routine.numPerSet) + value;
         break;
     }
     state = [
