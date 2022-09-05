@@ -25,9 +25,10 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     routineList = routineList.asMap().entries.map((e) {
       if (e.key == index) {
         e.value.doing = true;
-      } else {
-        e.value.doing = false;
       }
+      // else {
+      //   e.value.doing = false;
+      // }
       return e.value;
     }).toList();
     state = routineList;

@@ -19,6 +19,14 @@ class UserExercisedNotifier extends StateNotifier<List<UserExerciseData>> {
     log(state.length.toString());
     //post요청도넣으면 될듯.
   }
+
+  void replace(UserExerciseData data, int index) {
+    List<UserExerciseData> temp = [...state];
+    temp[index] = data;
+    state = temp;
+    log("교체됨");
+    log(state.length.toString());
+  }
 }
 
 final UserExercisedNotifierProvider =

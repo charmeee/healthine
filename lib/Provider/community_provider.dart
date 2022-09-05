@@ -23,7 +23,7 @@ import 'package:healthin/Service/community_api.dart';
 
 class CommunityDataNotifier extends StateNotifier<CommunityBoardData?> {
   CommunityDataNotifier([CommunityBoardData? initialCommunity])
-      : super(initialCommunity ?? null) {}
+      : super(initialCommunity) {}
 
   getComunnity(String id) async {
     CommunityBoardData dictionaryData = await readCommmunityDataJson(id);

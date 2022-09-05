@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/exerciserecord_model.dart';
+import 'package:healthin/Provider/routine_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,10 @@ class WhileExercise extends ConsumerStatefulWidget {
   const WhileExercise({
     Key? key,
     required this.routinedata,
+    required this.index,
   }) : super(key: key);
   final RoutineData routinedata;
-
+  final int index;
   //RoutineData
   @override
   ConsumerState<WhileExercise> createState() => _WhileExerciseState();
@@ -34,21 +36,33 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   String minutes = '00';
   String seconds = '00';
   final duration = const Duration(seconds: 1);
-  late UserExerciseData exerciseData =
-      UserExerciseData(routineData: widget.routinedata);
+  late UserExerciseData exerciseData;
   //late Map exerciseSet;
   //int getTime = 0; //넘겨줄시간
   Timer? _timer;
   var _time = 0;
-
+  late int findedindex;
   @override
   void initState() {
     super.initState();
+    findedindex = ref.read(UserExercisedNotifierProvider).indexWhere((element) {
+      log("그래도찾음" + element.doingTime.toString());
+      return element.name == widget.routinedata.name;
+    });
+    if (findedindex == -1) {
+      exerciseData = UserExerciseData(routineData: widget.routinedata);
+    } else {
+      exerciseData = ref.read(UserExercisedNotifierProvider)[findedindex];
+    }
+    _time = exerciseData.doingTime;
     startTimer();
     timewatchflag = true;
     if (widget.routinedata.type == "유산소") {
       isAEROBIC = true;
     }
+    // if (widget.routinedata.doing == false) {
+    //   ref.read(RoutineNotifierProvider.notifier).doRoutine(widget.index);
+    // }
   }
 
   void startTimer() {
@@ -294,7 +308,12 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                         onPressed: () {
                           setState(() {
                             exerciseData.doingTime = _time;
-                            userExercisedRead.add(exerciseData);
+                            if (findedindex == -1) {
+                              userExercisedRead.add(exerciseData);
+                            } else {
+                              userExercisedRead.replace(
+                                  exerciseData, findedindex);
+                            }
                             _timer?.cancel();
                           });
                           Future.delayed(

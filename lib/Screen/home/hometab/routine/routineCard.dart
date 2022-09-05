@@ -38,7 +38,6 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
   @override
   Widget build(BuildContext context) {
     final routineListWatch = ref.watch(RoutineNotifierProvider);
-    final routineListRead = ref.read(RoutineNotifierProvider.notifier);
 
     return Card(
       child: Column(
@@ -96,12 +95,13 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                routineListRead.doRoutine(_index);
+                ref.read(RoutineNotifierProvider.notifier).doRoutine(_index);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => WhileExercise(
-                            routinedata: routineListWatch[_index])));
+                            routinedata: routineListWatch[_index],
+                            index: _index)));
               },
               style: ElevatedButton.styleFrom(primary: Colors.black54),
               child: Text("루틴 시작하기"),
