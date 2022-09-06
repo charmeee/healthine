@@ -63,6 +63,8 @@ class _DictionaryState extends ConsumerState<Dictionary> {
     setState(() {
       routineList.add(routinedata);
     });
+    log(routinedata.id.toString());
+    log(routinedata.name.toString());
   }
 
   removeRoutineData(String data) {
@@ -218,7 +220,6 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                               log("체크박스 value" + value.toString());
                               if (value!) {
                                 widget.addRoutineData(RoutineData(
-                                    id: uuid.v1(),
                                     name: filteredDatasWatch[index].name ?? "",
                                     type: filteredDatasWatch[index].type ?? "",
                                     numPerSet: 10,

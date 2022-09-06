@@ -1,11 +1,14 @@
 //import 'dart:developer';
 
 import 'routine_models.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
 
 class UserExerciseData {
   //운동기록이랑 운동 시계에서 ㅆㅁ
   //time 단위는 초
-  var id;
+  var id = uuid.v1();
   String name;
   String type;
   int doingTime = 0; //한 시간 !
@@ -17,8 +20,7 @@ class UserExerciseData {
   int doingNum = 1; //한 횟수 !
 
   UserExerciseData(
-      {required this.id,
-      required this.name,
+      {required this.name,
       required this.type,
       this.doingSet = 1,
       this.restTime = 3,

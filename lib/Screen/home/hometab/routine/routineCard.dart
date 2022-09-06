@@ -3,6 +3,8 @@
 // import 'dart:async';
 // import 'package:flutter/services.dart';
 // import 'package:healthin/Provider/user_provider.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/routine_models.dart';
@@ -96,6 +98,7 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
+                log(routineListWatch[_index].status.toString());
                 if (routineListWatch[_index].status == routineStatus.before) {
                   ref
                       .read(RoutineNotifierProvider.notifier)

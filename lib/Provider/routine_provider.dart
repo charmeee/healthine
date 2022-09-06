@@ -69,7 +69,7 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     }
     state = [
       for (final item in state)
-        if (item.name == routine.name) routine else item
+        if (item.id == routine.id) routine else item
     ];
   }
 
@@ -96,7 +96,7 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     }
     state = [
       for (final item in state)
-        if (item.name == routine.name) routine else item
+        if (item.id == routine.id) routine else item
     ];
   }
 
@@ -109,6 +109,9 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
       for (final item in state)
         if (item.id == routine.id) routine else item
     ];
+    for (var i in state) {
+      log(i.userExerciseId.toString());
+    }
   }
 }
 

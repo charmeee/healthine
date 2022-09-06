@@ -1,7 +1,11 @@
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
+
 enum routineStatus { before, doing, done }
 
 class RoutineData {
-  var id;
+  var id = uuid.v1();
   var userExerciseId;
   String name;
   String type;
@@ -17,8 +21,7 @@ class RoutineData {
   int weight; //근력운동일때만 사용
 
   RoutineData(
-      {required id,
-      required this.name,
+      {required this.name,
       required this.type,
       this.totalSet = 3,
       this.numPerSet = 10,

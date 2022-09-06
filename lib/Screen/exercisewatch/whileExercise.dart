@@ -9,9 +9,6 @@ import 'package:flutter/material.dart';
 import '../../Model/routine_models.dart';
 import '../../Provider/exercisedata_provider.dart';
 //import './youtubePlayer.dart';
-import 'package:uuid/uuid.dart';
-
-var uuid = const Uuid();
 
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;
@@ -56,8 +53,8 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         .firstWhere((element) => element.id == widget.routineid);
     if (widget.userExerciseId == null) {
       //전에 기록이없음
-      exerciseData = UserExerciseData(
-          id: uuid.v1(), name: routineData.name, type: routineData.type);
+      exerciseData =
+          UserExerciseData(name: routineData.name, type: routineData.type);
     } else {
       //기록이있음
       exerciseData = ref
