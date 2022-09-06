@@ -180,8 +180,9 @@
     }
   ],
   "routineData": [
-    {"name": "러닝머신","type": "유산소", "time": 10, "img": "assets/running mashin.png"},
+    {"id": "4213","name": "러닝머신","type": "유산소", "time": 10, "img": "assets/running mashin.png"},
     {
+      "id": "2929",
       "name": "레그 익스텐션",
       "type": "하체",
       "set": 3,
@@ -189,13 +190,15 @@
       "weight": 10,
       "img": "assets/Leg extension.png"
     },
-    {"name": "레그 컬",
+    {"id": "3992",
+      "name": "레그 컬",
       "type": "하체",
       "set": 3,
       "num": 10,
       "weight": 10,
       "img": "assets/leg curl.png"},
     {
+      "id": "2983",
       "name": "스컬 크러셔",
       "type": "팔",
       "set": 3,
@@ -203,7 +206,9 @@
       "weight": 10,
       "img": "assets/Skull Crusher.png"
     },
-    {"name": "펙덱",
+    {
+      "id": "8192",
+      "name": "펙덱",
       "type": "상체",
       "set": 3,
       "num": 10,

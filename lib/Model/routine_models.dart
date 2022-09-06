@@ -1,7 +1,11 @@
+enum routineStatus { before, doing, done }
+
 class RoutineData {
+  var id;
+  var userExerciseId;
   String name;
   String type;
-  bool doing = false;
+  routineStatus status = routineStatus.before;
   String? img;
 
   //유산소
@@ -13,22 +17,23 @@ class RoutineData {
   int weight; //근력운동일때만 사용
 
   RoutineData(
-      {required this.name,
+      {required id,
+      required this.name,
       required this.type,
       this.totalSet = 3,
       this.numPerSet = 10,
       this.weight = 10,
       this.totalTime = 10,
-      this.doing = false,
-      this.img});
+      this.img,
+      this.userExerciseId});
   RoutineData.fromJson(Map<String, dynamic> json)
-      : name = json['name'] ?? "",
+      : id = json['id'],
+        name = json['name'] ?? "",
         type = json['type'] ?? "",
         totalSet = json['set'] ?? 3,
         numPerSet = json['num'] ?? 10,
         weight = json['weight'] ?? 10,
         totalTime = json['time'] ?? 10,
-        doing = json['doing'] ?? false,
         img = json['img'];
 
   // RoutineData.fromJson(Map<String, dynamic> json)

@@ -5,7 +5,9 @@ import 'package:healthin/Provider/dictonary_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import '../../Model/routine_models.dart';
 import 'dictionary_detail.dart';
+import 'package:uuid/uuid.dart';
 
+var uuid = const Uuid();
 final List<String> healthtype = [
   "가슴",
   "등",
@@ -216,6 +218,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                               log("체크박스 value" + value.toString());
                               if (value!) {
                                 widget.addRoutineData(RoutineData(
+                                    id: uuid.v1(),
                                     name: filteredDatasWatch[index].name ?? "",
                                     type: filteredDatasWatch[index].type ?? "",
                                     numPerSet: 10,

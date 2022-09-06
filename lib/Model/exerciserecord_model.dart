@@ -2,9 +2,12 @@
 
 import 'routine_models.dart';
 
-class UserExerciseData extends RoutineData {
+class UserExerciseData {
   //운동기록이랑 운동 시계에서 ㅆㅁ
   //time 단위는 초
+  var id;
+  String name;
+  String type;
   int doingTime = 0; //한 시간 !
 
   //근력
@@ -14,19 +17,25 @@ class UserExerciseData extends RoutineData {
   int doingNum = 1; //한 횟수 !
 
   UserExerciseData(
-      {required RoutineData routineData, //유산소
+      {required this.id,
+      required this.name,
+      required this.type,
       this.doingSet = 1,
       this.restTime = 3,
       this.countInterver = 3,
       this.doingTime = 0,
       this.doingNum = 1 //한총개수
-      })
-      : super(
-            name: routineData.name,
-            type: routineData.type,
-            totalSet: routineData.totalSet,
-            numPerSet: routineData.numPerSet,
-            totalTime: routineData.totalTime);
+      });
+  // : super(
+  //     name: routineData.name,
+  //     type: routineData.type,
+  //     //유산소
+  //     totalTime: routineData.totalTime,
+  //     //근력운동
+  //     totalSet: routineData.totalSet,
+  //     numPerSet: routineData.numPerSet,
+  //     weight: routineData.weight,
+  //   );
 
   putAerobicWatchData({doingTime}) {
     // TODO: implement putAerobicRoutine

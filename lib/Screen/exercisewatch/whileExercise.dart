@@ -9,19 +9,24 @@ import 'package:flutter/material.dart';
 import '../../Model/routine_models.dart';
 import '../../Provider/exercisedata_provider.dart';
 //import './youtubePlayer.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
 
 const textstyle1 = TextStyle(color: Colors.white);
 const double buttonheight = 40;
 int tempsec = -1;
 
 class WhileExercise extends ConsumerStatefulWidget {
-  const WhileExercise({
+  WhileExercise({
     Key? key,
-    required this.routinedata,
-    required this.index,
+    required this.routineid,
+    required this.userExerciseId,
+    required this.type,
   }) : super(key: key);
-  final RoutineData routinedata;
-  final int index;
+  var routineid;
+  var userExerciseId;
+  String type;
   //RoutineData
   @override
   ConsumerState<WhileExercise> createState() => _WhileExerciseState();
@@ -37,6 +42,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   String seconds = '00';
   final duration = const Duration(seconds: 1);
   late UserExerciseData exerciseData;
+  late RoutineData routineData;
   //late Map exerciseSet;
   //int getTime = 0; //넘겨줄시간
   Timer? _timer;
@@ -45,24 +51,25 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   @override
   void initState() {
     super.initState();
-    findedindex = ref.read(UserExercisedNotifierProvider).indexWhere((element) {
-      log("그래도찾음" + element.doingTime.toString());
-      return element.name == widget.routinedata.name;
-    });
-    if (findedindex == -1) {
-      exerciseData = UserExerciseData(routineData: widget.routinedata);
+    routineData = ref
+        .read(RoutineNotifierProvider)
+        .firstWhere((element) => element.id == widget.routineid);
+    if (widget.userExerciseId == null) {
+      //전에 기록이없음
+      exerciseData = UserExerciseData(
+          id: uuid.v1(), name: routineData.name, type: routineData.type);
     } else {
-      exerciseData = ref.read(UserExercisedNotifierProvider)[findedindex];
+      //기록이있음
+      exerciseData = ref
+          .read(UserExercisedNotifierProvider)
+          .firstWhere((element) => element.id == widget.userExerciseId);
+      _time = exerciseData.doingTime;
     }
-    _time = exerciseData.doingTime;
     startTimer();
     timewatchflag = true;
-    if (widget.routinedata.type == "유산소") {
+    if (widget.type == "유산소") {
       isAEROBIC = true;
     }
-    // if (widget.routinedata.doing == false) {
-    //   ref.read(RoutineNotifierProvider.notifier).doRoutine(widget.index);
-    // }
   }
 
   void startTimer() {
@@ -75,7 +82,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           log("개수증가");
         }
         if (exerciseData.doingNum ==
-                exerciseData.numPerSet * exerciseData.doingSet + 1 &&
+                routineData.numPerSet * exerciseData.doingSet + 1 &&
             timewatchflag == true) {
           //유산소의 경우 개수 기준으로 카운트해서 멈춤
           //한세트 끝낫을때
@@ -94,7 +101,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         }
       } else {
         //유산소이면
-        if (_time == exerciseData.totalTime) {
+        if (_time == routineData.totalTime) {
           log("유산소 완료");
           setState(() {
             timewatchflag = false;
@@ -121,6 +128,10 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
 
   @override
   Widget build(BuildContext context) {
+    routineData = ref
+        .watch(RoutineNotifierProvider)
+        .firstWhere((element) => element.id == widget.routineid); //구독
+    final routineDataRead = ref.read(RoutineNotifierProvider.notifier);
     final userExercisedRead =
         ref.read(UserExercisedNotifierProvider.notifier); //함수들
     return Scaffold(
@@ -134,7 +145,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
             children: [
               Text(
                 //이름
-                exerciseData.name,
+                routineData.name,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
               ),
@@ -149,7 +160,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${exerciseData.doingNum != 0 ? (exerciseData.doingNum - 1) % (exerciseData.numPerSet) + 1 : 0} / ${exerciseData.numPerSet} 개",
+                      "${exerciseData.doingNum != 0 ? (exerciseData.doingNum - 1) % (routineData.numPerSet) + 1 : 0} / ${routineData.numPerSet} 개",
                       style:
                           TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                     ),
@@ -157,20 +168,22 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              setState(() {
-                                if (exerciseData.numPerSet != 0) {
-                                  exerciseData.numPerSet--;
-                                }
-                              });
+                              if (routineData.numPerSet != 0) {
+                                routineDataRead.editRoutineDataById(
+                                    routineId: widget.routineid,
+                                    props: "num",
+                                    value: -1);
+                              }
                             },
                             icon: Icon(Icons.exposure_minus_1)),
                         IconButton(
                             onPressed: () {
-                              setState(() {
-                                if (exerciseData.numPerSet != 0) {
-                                  exerciseData.numPerSet++;
-                                }
-                              });
+                              if (routineData.numPerSet != 0) {
+                                routineDataRead.editRoutineDataById(
+                                    routineId: widget.routineid,
+                                    props: "num",
+                                    value: 1);
+                              }
                             },
                             icon: Icon(Icons.plus_one))
                       ],
@@ -182,7 +195,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${exerciseData.doingSet} / ${exerciseData.totalSet} 세트",
+                      "${exerciseData.doingSet} / ${routineData.totalSet} 세트",
                       style:
                           TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                     ),
@@ -190,20 +203,22 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              setState(() {
-                                if (exerciseData.totalSet != 0) {
-                                  exerciseData.totalSet--;
-                                }
-                              });
+                              if (routineData.totalSet != 0) {
+                                routineDataRead.editRoutineDataById(
+                                    routineId: widget.routineid,
+                                    props: "set",
+                                    value: -1);
+                              }
                             },
                             icon: Icon(Icons.exposure_minus_1)),
                         IconButton(
                             onPressed: () {
-                              setState(() {
-                                if (exerciseData.totalSet != 0) {
-                                  exerciseData.totalSet++;
-                                }
-                              });
+                              if (routineData.totalSet != 0) {
+                                routineDataRead.editRoutineDataById(
+                                    routineId: widget.routineid,
+                                    props: "set",
+                                    value: 1);
+                              }
                             },
                             icon: Icon(Icons.plus_one))
                       ],
@@ -308,11 +323,17 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                         onPressed: () {
                           setState(() {
                             exerciseData.doingTime = _time;
-                            if (findedindex == -1) {
+
+                            if (widget.userExerciseId == null) {
                               userExercisedRead.add(exerciseData);
+                              ref
+                                  .read(RoutineNotifierProvider.notifier)
+                                  .editUserExerciseId(
+                                      routineId: widget.routineid,
+                                      userExerciseId: exerciseData.id);
                             } else {
                               userExercisedRead.replace(
-                                  exerciseData, findedindex);
+                                  exerciseData, widget.userExerciseId);
                             }
                             _timer?.cancel();
                           });

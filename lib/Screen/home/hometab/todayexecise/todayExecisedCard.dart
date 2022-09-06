@@ -1,16 +1,18 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Provider/exercisedata_provider.dart';
+import 'package:healthin/Provider/routine_provider.dart';
 
 class ExecisedCard extends ConsumerWidget {
   const ExecisedCard({
     Key? key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     log("카드텝빌드");
+
     final UserExercisedState = ref.watch(UserExercisedNotifierProvider);
     log(UserExercisedState.runtimeType.toString());
     return Card(

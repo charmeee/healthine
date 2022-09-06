@@ -10,14 +10,14 @@ import 'package:healthin/Provider/routine_provider.dart';
 import 'package:healthin/Screen/exercisewatch/whileExercise.dart';
 import 'package:healthin/Screen/routineSetting/routineSetting_screen.dart';
 
-final indexProvider = Provider<int>((ref) {
-  final routineListWatch = ref.watch(RoutineNotifierProvider);
-  int index = routineListWatch.indexWhere((element) => element.doing == true);
-  if (index == -1) {
-    index = 0;
-  }
-  return index;
-});
+// final indexProvider = Provider<int>((ref) {
+//   final routineListWatch = ref.watch(RoutineNotifierProvider);
+//   int index = routineListWatch.indexWhere((element) => element.status == true);
+//   if (index == -1) {
+//     index = 0;
+//   }
+//   return index;
+// });
 
 class RoutineCard extends ConsumerStatefulWidget {
   const RoutineCard({Key? key}) : super(key: key);
@@ -32,7 +32,7 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _index = ref.read(indexProvider);
+    //_index = ref.read(indexProvider);
   }
 
   @override
@@ -61,9 +61,10 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
                   scale: index == _index ? 1 : 0.9,
                   child: Card(
                     elevation: 6,
-                    color: routineListWatch[index].doing
-                        ? Colors.green[100]
-                        : Colors.white,
+                    color:
+                        routineListWatch[index].status != routineStatus.before
+                            ? Colors.green[100]
+                            : Colors.white,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     child: Column(
@@ -95,13 +96,22 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                ref.read(RoutineNotifierProvider.notifier).doRoutine(_index);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WhileExercise(
-                            routinedata: routineListWatch[_index],
-                            index: _index)));
+                if (routineListWatch[_index].status == routineStatus.before) {
+                  ref
+                      .read(RoutineNotifierProvider.notifier)
+                      .changeRoutineStatus(_index, routineStatus.doing);
+                }
+                if (routineListWatch[_index].status != routineStatus.done) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WhileExercise(
+                                routineid: routineListWatch[_index].id,
+                                userExerciseId:
+                                    routineListWatch[_index].userExerciseId,
+                                type: routineListWatch[_index].type,
+                              )));
+                }
               },
               style: ElevatedButton.styleFrom(primary: Colors.black54),
               child: Text("루틴 시작하기"),

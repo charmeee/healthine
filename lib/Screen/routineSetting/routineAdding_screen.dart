@@ -75,7 +75,7 @@ class AddRowButton extends ConsumerWidget {
       children: [
         TextButton(
             onPressed: () {
-              routineListRead.editRoutineData(
+              routineListRead.editRoutineDataByIndex(
                   index: index, props: props, value: -5);
             },
             child: Text(
@@ -84,7 +84,7 @@ class AddRowButton extends ConsumerWidget {
             )),
         TextButton(
             onPressed: () {
-              routineListRead.editRoutineData(
+              routineListRead.editRoutineDataByIndex(
                   index: index, props: props, value: -1);
             },
             child: Text('-1', style: TextStyle(color: Colors.indigo))),
@@ -93,13 +93,13 @@ class AddRowButton extends ConsumerWidget {
         ),
         TextButton(
             onPressed: () {
-              routineListRead.editRoutineData(
+              routineListRead.editRoutineDataByIndex(
                   index: index, props: props, value: 1);
             },
             child: Text('+1', style: TextStyle(color: Colors.indigo))),
         TextButton(
             onPressed: () {
-              routineListRead.editRoutineData(
+              routineListRead.editRoutineDataByIndex(
                   index: index, props: props, value: 5);
             },
             child: Text('+5', style: TextStyle(color: Colors.indigo))),
