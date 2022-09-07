@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:healthin/Screen/userSetting/userSetting.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 
 class HomeDrawer extends ConsumerWidget {
   const HomeDrawer({Key? key}) : super(key: key);

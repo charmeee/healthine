@@ -56,15 +56,17 @@ class _DietState extends State<Diet> {
               ),
               //ate_calories,recommended_calories,
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _TodayCaloriesCard(
-                        ate_calories: ate_calories,
-                        recommended_calories: recommended_calories,
-                        caloriesByTime: caloriesByTime),
-                    _NutritionalAnalysisCard()
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _TodayCaloriesCard(
+                          ate_calories: ate_calories,
+                          recommended_calories: recommended_calories,
+                          caloriesByTime: caloriesByTime),
+                      _NutritionalAnalysisCard()
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../exercisewatch/whileExercise.dart';
 import 'package:healthin/Screen/report/report_screen.dart';
 import 'Inbody/InbodyCard.dart';
 import 'Todayexecise/todayExecisedCard.dart';
@@ -19,7 +18,31 @@ class Tab1 extends ConsumerWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, //가로로 꽉차게
                   children: [
-                routineCard(), //오늘의 루틴
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "이번주에 운동을 하지 않았어요..",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87),
+                        ),
+                        Text(
+                          "운동을 시작해보세요!",
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                RoutineCard(), //오늘의 루틴
                 InbodyCard(), //인바디 차트
                 ExecisedCard(),
                 Container(
@@ -35,17 +58,7 @@ class Tab1 extends ConsumerWidget {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Report()));
                       }),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WhileExercise(
-                                    exerciseName: "바벨 스쿼트",
-                                  )));
-                    },
-                    child: Text("카운터로 이동"))
+                )
               ]),
         ),
       ),

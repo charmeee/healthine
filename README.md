@@ -1,16 +1,18 @@
 # healthin
 
-A new Flutter project.
+##소개
 
-## Getting Started
+healthin app은 헬스장 이용자들을 위한 참여형 서비스 앱입니다.
 
-This project is a starting point for a Flutter application.
+##주요 기능
 
-A few resources to get you started if this is your first Flutter project:
+1. 출입 관리
+2. 운동 기록
+3. 커뮤니티
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+##관리자
+- 전민지
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##기술
+-flutter
+-riverpod

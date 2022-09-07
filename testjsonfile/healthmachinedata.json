@@ -209,6 +209,108 @@
       "num": 10,
       "weight": 10,
       "img": "assets/Pec Deck .png"}
+  ],
+  "communityList": [
+    {
+      "id": "1",
+      "nickname": "전민지",
+      "title": "님들 오늘 루틴 어떻게 짤꺼임?"
+    },
+    {
+      "id": "2",
+      "nickname": "fea",
+      "title": "ㅇ마ㅐ라앨애ㅓㄹ?"
+    },
+    {
+      "id": "3",
+      "nickname": "전민지",
+      "title": "님들 오늘 루틴 어떻게 짤꺼임?"
+    },
+    {
+      "id": "4",
+      "nickname": "DSfasd",
+      "title": "ㅇ마ㅐ라앨애ㅓㄹ?"
+    }
+  ],
+  "community": [
+    {
+      "id": "1",
+      "nickname": "전민지",
+      "title": "님들 오늘 루틴 어떻게 짤꺼임?",
+      "content": "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
+      "comments": [
+        {
+          "id": "101",
+          "nickname": "홍길동",
+          "text": "어쩔티비저쩔티비",
+          "inheitcomments": [
+            {"inheitid": "", "inheittext": ""}
+          ]
+        },
+        {
+          "id": "102",
+          "nickname": "김깍쇠",
+          "text": "흠...?나도모름",
+          "inheitcomments": [
+            {"inheitid": "", "inheittext": ""}
+          ]
+        },
+        {
+          "id": "103",
+          "nickname": "오렌지",
+          "text": "오렌지 오렌지~",
+          "inheitcomments": [
+            {"inheitid": "", "inheittext": ""}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "nickname": "fea",
+      "title": "ㅇ마ㅐ라앨애ㅓㄹ?",
+      "content": "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
+      "comments": []
+    },
+    {
+      "id": "3",
+      "nickname": "전민지",
+      "title": "님들 오늘 루틴 어떻게 짤꺼임?",
+      "content": "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
+      "comments": [
+        {
+          "id": "301",
+          "nickname": "홍길동",
+          "text": "어쩔티비저쩔티비",
+          "inheitcomments": [
+            {"inheitid": "", "inheittext": ""}
+          ]
+        },
+        {
+          "id": "302",
+          "nickname": "김깍쇠",
+          "text": "흠...?나도모름",
+          "inheitcomments": [
+            {"inheitid": "", "inheittext": ""}
+          ]
+        },
+        {
+          "id": "303",
+          "nickname": "오렌지",
+          "text": "오렌지 오렌지~",
+          "inheitcomments": [
+            {"inheitid": "", "inheittext": ""}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "nickname": "DSfasd",
+      "title": "ㅇ마ㅐ라앨애ㅓㄹ?",
+      "content": "dajfdjfskfk\ndfasfjhdskjfk\nfadfdsfda\ndafudhfkdhf",
+      "comments": []
+    }
   ]
 
 

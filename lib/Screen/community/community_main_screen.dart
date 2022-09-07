@@ -1,8 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/community_model.dart';
+import 'package:healthin/Model/routine_models.dart';
+import 'package:healthin/Provider/community_provider.dart';
 
 import 'community_detail_screen.dart';
+import 'communiuty_write_screen.dart';
 
 enum CommunityListFilter {
   all,
@@ -10,22 +15,14 @@ enum CommunityListFilter {
   completed,
 } //나중에 카테고리 별 분류할 예정
 
-class Community extends StatefulWidget {
+class Community extends ConsumerWidget {
   const Community({Key? key}) : super(key: key);
 
   @override
-  State<Community> createState() => _CommunityState();
-}
-
-class _CommunityState extends State<Community> {
-  @override
-  void initState() {
-    // TODO: community get request
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ref를 사용해 프로바이더 구독(listen)하기
+    List<CommunityBoardsList> CommunityList =
+        ref.watch(CommunityListNotifierProvider);
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -45,16 +42,18 @@ class _CommunityState extends State<Community> {
           children: [
             Container(
               child: ListView.separated(
-                itemCount: 20,
+                itemCount: CommunityList.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text("title"),
+                    title: Text(CommunityList[index].title),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Communitydetail()));
+                              builder: (context) => Communitydetail(
+                                  id: CommunityList[index].id)));
                     },
+                    trailing: Text(CommunityList[index].nickname),
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) => Divider(
@@ -76,7 +75,10 @@ class _CommunityState extends State<Community> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.indigo[300],
           tooltip: "글쓰기",
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CommunityWrite()));
+          },
           child: Icon(
             Icons.edit,
             color: Colors.white,

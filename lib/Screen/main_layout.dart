@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Service/auth_request_api.dart';
+import 'package:healthin/Service/community_api.dart';
 import 'home/home_screen.dart';
 import 'community/community_main_screen.dart';
 import 'diet/diet.dart';

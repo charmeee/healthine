@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/user_model.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:http/http.dart' as http;
-import '../Model/models.dart';
+import '../Model/routine_models.dart';
 
 //밑의 api를 다 provider에 넣어가지고
 
@@ -25,7 +26,7 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("$name님 회원가입되셨습니다."),
     ));
-    print("회원가입완료.");
+    log("회원가입완료.");
 
     return UserInfo(
         username: username.toString(),
@@ -33,16 +34,16 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
         nickname: nickname.toString(),
         phoneNumber: phoneNumber.toString());
   } else {
-    print(response.body);
+    log(response.body);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(jsonDecode(response.body)["message"].toString()),
     ));
-    throw Exception(response.body);
+    throw Exception("회원관리오류코드${response.body}");
   }
 }
 
 Future<UserInfo> LoginRequest(username, password, context) async {
-  print('login attempt: $username with $password');
+  log('login attempt: $username with $password');
   var url = Uri.parse('https://api.be-healthy.life/auth/login');
   var response = await http.post(url, body: {
     "username": username.toString(), //아이디
@@ -52,8 +53,8 @@ Future<UserInfo> LoginRequest(username, password, context) async {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("$username님 로그인되었습니다."),
     ));
-    print("로그인완료.");
-    print(response.body.toString());
+    log("로그인완료.");
+    log(response.body.toString());
     return UserInfo(
         username: username,
         accessToken: jsonDecode(response.body)["accessToken"]);
@@ -61,8 +62,7 @@ Future<UserInfo> LoginRequest(username, password, context) async {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(jsonDecode(response.body)["message"].toString()),
     ));
-    print(response.body);
-    throw Exception(response.body);
+    throw Exception("로그인 오류 코드${response.body}");
   }
 }
 
@@ -76,7 +76,6 @@ Future<UserInfo> UserProfileRequest(accessToken) async {
     log("회원정보가져오기 완료");
     return UserInfo.fromJson(_userData);
   } else {
-    log("회원정보가져오기 오류");
-    throw Exception(response.body);
+    throw Exception("회원정보가져오기 오류코드${response.body}");
   }
 }

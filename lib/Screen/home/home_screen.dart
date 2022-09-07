@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../userSetting/userSetting.dart';
 import 'calendartab/calender.dart';
+import 'calendartab/new_calander.dart';
+
 import 'home_drawer.dart';
 import 'hometab/hometab.dart';
 import 'hometab/profile_header/profile.dart';
@@ -43,7 +45,8 @@ class Home2 extends StatelessWidget {
             //physics: PageScrollPhysics(),
             children: [
               Tab1(),
-              Tab2(),
+              //Tab2(),
+              CalendarTab()
             ],
           ),
         ),

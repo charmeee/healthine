@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:healthin/Model/dictionary_model.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:convert';
-import '../../Model/models.dart';
+import '../../Model/routine_models.dart';
 
 // 내가봣을때 걍 유튜브링크 넘겨줘서 webview로 보는게 더 맞는거 가틈..
 
@@ -16,7 +17,7 @@ class HealthYoutubePlayer extends StatefulWidget {
 
 class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
   late YoutubePlayerController _controller;
-  Exercise? founddata;
+  DictionaryData? founddata;
   String Exercisename = "랫 풀 다운";
   Future<void> readJson() async {
     //json파일 읽어오기
@@ -28,7 +29,7 @@ class _HealthYoutubePlayerState extends State<HealthYoutubePlayer> {
       for (int i = 0; i < _alldata["exerciseType"].length; i++) {
         //print(_alldata["exerciseType"][0]["name"]);
         if (_alldata["exerciseType"][i]["name"].toString() == Exercisename) {
-          founddata = Exercise.fromJson(_alldata["exerciseType"][i]);
+          founddata = DictionaryData.fromJson(_alldata["exerciseType"][i]);
         }
       }
     });

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Service/routine_request_api.dart';
 
 class RoutineNotifier extends StateNotifier<List<RoutineData>> {
@@ -18,6 +18,20 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
       log(routinedata[0].name.toString());
       log("루틴데이터를 받아옴.");
     }
+  }
+
+  doRoutine(int index) {
+    List<RoutineData> routineList = [...state];
+    routineList = routineList.asMap().entries.map((e) {
+      if (e.key == index) {
+        e.value.doing = true;
+      }
+      // else {
+      //   e.value.doing = false;
+      // }
+      return e.value;
+    }).toList();
+    state = routineList;
   }
 
   changeRoutineOrder(data) {
@@ -41,17 +55,17 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     RoutineData routine = state[index];
     switch (props) {
       case "time":
-        routine.time = (routine.time ?? 0) + value;
-        log(routine.time.toString());
+        routine.totalTime = (routine.totalTime) + value;
+        log(routine.totalTime.toString());
         break;
       case "weight":
-        routine.weight = (routine.weight ?? 0) + value;
+        routine.weight = (routine.weight) + value;
         break;
       case "set":
-        routine.set = (routine.set ?? 0) + value;
+        routine.totalSet = (routine.totalSet) + value;
         break;
       case "num":
-        routine.num = (routine.num ?? 0) + value;
+        routine.numPerSet = (routine.numPerSet) + value;
         break;
     }
     state = [

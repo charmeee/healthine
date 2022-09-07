@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
-import 'package:healthin/Model/models.dart';
+import 'package:healthin/Model/routine_models.dart';
 
 Future<List<RoutineData>> readRoutineJson() async {
   //json파일 읽어오기
