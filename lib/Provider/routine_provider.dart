@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Service/routine_request_api.dart';
 
+//순서는 index
+
 class RoutineNotifier extends StateNotifier<List<RoutineData>> {
   RoutineNotifier([List<RoutineData>? initialRoutine])
       : super(initialRoutine ?? []) {
@@ -46,7 +48,7 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
 
   deleteRoutineData(index) {
     log("루틴데이터 삭제.");
-    state.removeAt(index); //이것도 바꿔야될듯.
+    state.removeAt(index);
   }
 
   editRoutineDataByIndex({index, required String props, required int value}) {

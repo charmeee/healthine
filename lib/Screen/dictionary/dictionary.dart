@@ -225,7 +225,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                                     numPerSet: 10,
                                     weight: 10,
                                     img:
-                                        "assets/img_exercise/${filteredDatasWatch[index].id}.png"));
+                                        "assets/exercise_img/${filteredDatasWatch[index].id}.png"));
                               } else {
                                 widget.removeRoutineData(
                                     filteredDatasWatch[index].name ?? "");

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/routine_models.dart';
-import 'package:healthin/Service/auth_request_api.dart';
-import 'package:healthin/Service/community_api.dart';
+import 'home/calendartab/new_calander.dart';
 import 'home/home_screen.dart';
+import 'home/not_use_home_screen.dart';
 import 'community/community_main_screen.dart';
 import 'diet/diet.dart';
 import 'qrscan/qrscanpage.dart';
@@ -27,8 +25,8 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _widgetOptions = <Widget>[
-      Home2(),
-      Diet(),
+      HomeScreen(),
+      CalendarTab(),
       QrScanPage(),
       Community(),
       Dictionary(addmode: false),
@@ -42,7 +40,8 @@ class _MyHomeState extends State<MyHome> {
             shape: CircularNotchedRectangle(),
             clipBehavior: Clip.antiAlias,
             child: BottomNavigationBar(
-              backgroundColor: Colors.indigo,
+              backgroundColor: Color(0xFF24292f),
+              elevation: 0,
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               onTap: (int index) {
@@ -70,9 +69,9 @@ class _MyHomeState extends State<MyHome> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.food_bank,
+                    Icons.calendar_today,
                   ),
-                  label: "식단",
+                  label: "운동 달력",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(

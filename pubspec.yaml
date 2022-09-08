@@ -57,6 +57,7 @@ dependencies:
   path_provider: ^2.0.0
   path: ^1.8.2
   uuid: ^3.0.6
+  carousel_slider: ^4.1.1
 
 
 dev_dependencies:
@@ -88,7 +89,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - testjsonfile/healthmachinedata.json
-     - assets/img_exercise/
+     - assets/exercise_img/
+     - assets/banner_img/
      - assets/
   #   - images/a_dot_ham.jpeg
 

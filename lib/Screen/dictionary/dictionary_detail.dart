@@ -24,7 +24,7 @@ class DictionaryDetail extends StatelessWidget {
               children: [
                 Text(founddata.name.toString()),
                 Text(founddata.enName.toString()),
-                Image.asset("assets/img_exercise/${founddata.id}.png")
+                Image.asset("assets/exercise_img/${founddata.id}.png")
               ],
             ),
             Column(

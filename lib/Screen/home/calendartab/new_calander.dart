@@ -17,85 +17,91 @@ class _CalendarTabState extends State<CalendarTab> {
   DateTime focusedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar(
-          locale: 'ko_KR',
-          focusedDay: focusedDay,
-          firstDay: DateTime(2020),
-          lastDay: DateTime(2100),
-          headerStyle: HeaderStyle(
-            titleCentered: true,
-            formatButtonVisible: false,
-            titleTextStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
-            ),
-          ),
-          calendarStyle: CalendarStyle(
-            outsideDecoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            defaultDecoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            weekendDecoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            selectedDecoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            todayDecoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            //markersColor: didhealthcolor,
-          ),
-          onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-            setState(() {
-              this.selectedDay = selectedDay;
-              this.focusedDay = selectedDay;
-            });
-          },
-          selectedDayPredicate: (DateTime date) {
-            log(selectedDay.toString());
-            log(date.toString());
-            return date.year == selectedDay.year &&
-                date.month == selectedDay.month &&
-                date.day == selectedDay.day;
-          },
-        ),
-        Container(
-          color: Colors.indigo,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '${selectedDay.year}년 ${selectedDay.month}월 ${selectedDay.day}일',
-                  style: TextStyle(color: Colors.white),
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('운동달력'),
+        backgroundColor: Color(0xffFF24292f),
+      ),
+      body: Column(
+        children: [
+          TableCalendar(
+            locale: 'ko_KR',
+            focusedDay: focusedDay,
+            firstDay: DateTime(2020),
+            lastDay: DateTime(2100),
+            headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonVisible: false,
+              titleTextStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("하체", style: TextStyle(color: Colors.white)),
-              )
-            ],
+            ),
+            calendarStyle: CalendarStyle(
+              outsideDecoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              defaultDecoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              weekendDecoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              selectedDecoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              todayDecoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              //markersColor: didhealthcolor,
+            ),
+            onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+              setState(() {
+                this.selectedDay = selectedDay;
+                this.focusedDay = selectedDay;
+              });
+            },
+            selectedDayPredicate: (DateTime date) {
+              log(selectedDay.toString());
+              log(date.toString());
+              return date.year == selectedDay.year &&
+                  date.month == selectedDay.month &&
+                  date.day == selectedDay.day;
+            },
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return CalendarEvents();
-              }),
-        ),
-      ],
+          Container(
+            color: Colors.indigo,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '${selectedDay.year}년 ${selectedDay.month}월 ${selectedDay.day}일',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("하체", style: TextStyle(color: Colors.white)),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return CalendarEvents();
+                }),
+          ),
+        ],
+      ),
     );
   }
 }

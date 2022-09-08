@@ -1,14 +1,19 @@
 import 'package:drift/drift.dart';
 
 class ExerciseRecords extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get type => text()();
-  IntColumn get reps => integer()();
-  IntColumn get sets => integer()();
+
+  TextColumn get status => text()();
+
+  IntColumn get doingTime => integer()();
   IntColumn get weight => integer()();
-  DateTimeColumn get date => dateTime()();
-  IntColumn get exerciseId => integer()();
-  @override
-  Set<Column> get primaryKey => {id};
+  IntColumn get doingSet => integer()();
+  IntColumn get doingNum => integer()();
+  IntColumn get numPerSet => integer()();
+  IntColumn get totalSet => integer()(); //전체세트
+  IntColumn get totalTime => integer()();
+
+  DateTimeColumn get date => dateTime().clientDefault(() => DateTime.now())();
 }

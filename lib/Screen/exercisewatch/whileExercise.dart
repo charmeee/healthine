@@ -53,8 +53,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         .firstWhere((element) => element.id == widget.routineid);
     if (widget.userExerciseId == null) {
       //전에 기록이없음
-      exerciseData =
-          UserExerciseData(name: routineData.name, type: routineData.type);
+      exerciseData = UserExerciseData(routineData: routineData);
     } else {
       //기록이있음
       exerciseData = ref
@@ -327,7 +326,8 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                                   .read(RoutineNotifierProvider.notifier)
                                   .editUserExerciseId(
                                       routineId: widget.routineid,
-                                      userExerciseId: exerciseData.id);
+                                      userExerciseId: exerciseData
+                                          .id); //routine에 연결된 userExerciseId를 업데이트
                             } else {
                               userExercisedRead.replace(
                                   exerciseData, widget.userExerciseId);
