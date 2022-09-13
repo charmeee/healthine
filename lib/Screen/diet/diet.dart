@@ -40,6 +40,11 @@ class _DietState extends State<Diet> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("식단"),
+          centerTitle: true,
+          backgroundColor: Color(0xFF24292f),
+        ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

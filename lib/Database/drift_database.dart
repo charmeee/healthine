@@ -15,7 +15,11 @@ class LocalDatabase extends _$LocalDatabase {
 
   Future<int> createExerciseRecord(ExerciseRecordsCompanion data) =>
       into(exerciseRecords).insert(data);
-
+  Future<ExerciseRecord> getExerciseRecordById(String id) =>
+      (select(exerciseRecords)..where((tbl) => tbl.id.equals(id))).getSingle();
+  Future<int> updateExerciseRecordById(
+          String id, ExerciseRecordsCompanion data) =>
+      (update(exerciseRecords)..where((tbl) => tbl.id.equals(id))).write(data);
   @override
   int get schemaVersion => 1;
 }

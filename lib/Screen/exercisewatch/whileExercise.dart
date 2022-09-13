@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Database/drift_database.dart';
 import 'package:healthin/Model/exerciserecord_model.dart';
+import 'package:healthin/Provider/local_database_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +59,30 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
       exerciseData = UserExerciseData(routineData: routineData);
     } else {
       //기록이있음
-      exerciseData = ref
-          .read(UserExercisedNotifierProvider)
-          .firstWhere((element) => element.id == widget.userExerciseId);
+      ref
+          .read(localDatabaseProvider)
+          .getExerciseRecordById(widget.userExerciseId)
+          .then((value) {
+        exerciseData = UserExerciseData(
+            routineData: RoutineData(
+                name: value.name,
+                type: value.type,
+                status: routineStatus.getByString(value.status),
+                totalTime: value.totalTime,
+                totalSet: value.totalSet,
+                numPerSet: value.numPerSet,
+                weight: value.weight),
+            doingSet: value.doingSet,
+            doingTime: value.doingTime,
+            doingNum: value.doingNum);
+      });
+
+      log("-----db에서 가져온 데이터-----");
+      log(exerciseData.toString());
+      //localdb에있는 정보를 가져옴.
+      // exerciseData = ref
+      //     .read(UserExercisedNotifierProvider)
+      //     .firstWhere((element) => element.id == widget.userExerciseId);
       _time = exerciseData.doingTime;
     }
     startTimer();
@@ -321,16 +345,51 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                             exerciseData.doingTime = _time;
 
                             if (widget.userExerciseId == null) {
-                              userExercisedRead.add(exerciseData);
+                              // userExercisedRead.add(exerciseData);
                               ref
-                                  .read(RoutineNotifierProvider.notifier)
-                                  .editUserExerciseId(
-                                      routineId: widget.routineid,
-                                      userExerciseId: exerciseData
-                                          .id); //routine에 연결된 userExerciseId를 업데이트
+                                  .read(localDatabaseProvider)
+                                  .createExerciseRecord(
+                                      ExerciseRecordsCompanion(
+                                    id: Value(exerciseData.id),
+                                    name: Value(exerciseData.name),
+                                    type: Value(exerciseData.type),
+                                    status:
+                                        Value(exerciseData.status.toString()),
+                                    doingTime: Value(exerciseData.doingTime),
+                                    weight: Value(exerciseData.weight),
+                                    doingSet: Value(exerciseData.doingSet),
+                                    doingNum: Value(exerciseData.doingNum),
+                                    numPerSet: Value(exerciseData.numPerSet),
+                                    totalSet: Value(exerciseData.totalSet),
+                                    totalTime: Value(exerciseData.totalTime),
+                                  ));
+                              // ref
+                              //     .read(RoutineNotifierProvider.notifier)
+                              //     .editUserExerciseId(
+                              //         routineId: widget.routineid,
+                              //         userExerciseId: exerciseData
+                              //             .id); //routine에 연결된 userExerciseId를 업데이트
                             } else {
-                              userExercisedRead.replace(
-                                  exerciseData, widget.userExerciseId);
+                              // userExercisedRead.replace(
+                              //     exerciseData, widget.userExerciseId);
+                              ref
+                                  .read(localDatabaseProvider)
+                                  .updateExerciseRecordById(
+                                      exerciseData.id,
+                                      ExerciseRecordsCompanion(
+                                        status: Value(
+                                            exerciseData.status.toString()),
+                                        doingTime:
+                                            Value(exerciseData.doingTime),
+                                        weight: Value(exerciseData.weight),
+                                        doingSet: Value(exerciseData.doingSet),
+                                        doingNum: Value(exerciseData.doingNum),
+                                        numPerSet:
+                                            Value(exerciseData.numPerSet),
+                                        totalSet: Value(exerciseData.totalSet),
+                                        totalTime:
+                                            Value(exerciseData.totalTime),
+                                      ));
                             }
                             _timer?.cancel();
                           });

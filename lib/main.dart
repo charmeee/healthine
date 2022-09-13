@@ -24,8 +24,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final database = LocalDatabase();
-
   runApp(ProviderScope(
     child: GestureDetector(
       onTap: () {
@@ -52,6 +50,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
+
     //status = true;
     initialization();
   }

@@ -2,7 +2,16 @@ import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
 
-enum routineStatus { before, doing, done }
+enum routineStatus {
+  before,
+  doing,
+  done;
+
+  factory routineStatus.getByString(String str) {
+    return routineStatus.values
+        .firstWhere((value) => value == str, orElse: () => routineStatus.doing);
+  }
+}
 
 class RoutineData {
   var id = uuid.v1();
@@ -40,16 +49,6 @@ class RoutineData {
         weight = json['weight'] ?? 10,
         totalTime = json['time'] ?? 10,
         img = json['img'];
-
-  // RoutineData.fromJson(Map<String, dynamic> json)
-  //     : name = json['name'],
-  //       type = json['type'],
-  //       totalSet = json['set'],
-  //       numPerSet = json['num'],
-  //       weight = json['weight'],
-  //       totalTime = json['time'],
-  //       doing = json['doing'] ?? false,
-  //       img = json['img'];
 
   putAerobicRoutine({name, type, totalTime, img}) {
     //유산소일때
