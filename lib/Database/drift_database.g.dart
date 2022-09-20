@@ -7,83 +7,31 @@ part of 'drift_database.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
-class ExerciseRecord extends DataClass implements Insertable<ExerciseRecord> {
+class Routine extends DataClass implements Insertable<Routine> {
   final String id;
-  final String name;
-  final String type;
-  final String status;
-  final int doingTime;
-  final int weight;
-  final int doingSet;
-  final int doingNum;
-  final int numPerSet;
-  final int totalSet;
-  final int totalTime;
-  final DateTime date;
-  const ExerciseRecord(
-      {required this.id,
-      required this.name,
-      required this.type,
-      required this.status,
-      required this.doingTime,
-      required this.weight,
-      required this.doingSet,
-      required this.doingNum,
-      required this.numPerSet,
-      required this.totalSet,
-      required this.totalTime,
-      required this.date});
+  final String routineName;
+  const Routine({required this.id, required this.routineName});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['name'] = Variable<String>(name);
-    map['type'] = Variable<String>(type);
-    map['status'] = Variable<String>(status);
-    map['doing_time'] = Variable<int>(doingTime);
-    map['weight'] = Variable<int>(weight);
-    map['doing_set'] = Variable<int>(doingSet);
-    map['doing_num'] = Variable<int>(doingNum);
-    map['num_per_set'] = Variable<int>(numPerSet);
-    map['total_set'] = Variable<int>(totalSet);
-    map['total_time'] = Variable<int>(totalTime);
-    map['date'] = Variable<DateTime>(date);
+    map['routine_name'] = Variable<String>(routineName);
     return map;
   }
 
-  ExerciseRecordsCompanion toCompanion(bool nullToAbsent) {
-    return ExerciseRecordsCompanion(
+  RoutinesCompanion toCompanion(bool nullToAbsent) {
+    return RoutinesCompanion(
       id: Value(id),
-      name: Value(name),
-      type: Value(type),
-      status: Value(status),
-      doingTime: Value(doingTime),
-      weight: Value(weight),
-      doingSet: Value(doingSet),
-      doingNum: Value(doingNum),
-      numPerSet: Value(numPerSet),
-      totalSet: Value(totalSet),
-      totalTime: Value(totalTime),
-      date: Value(date),
+      routineName: Value(routineName),
     );
   }
 
-  factory ExerciseRecord.fromJson(Map<String, dynamic> json,
+  factory Routine.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ExerciseRecord(
+    return Routine(
       id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      type: serializer.fromJson<String>(json['type']),
-      status: serializer.fromJson<String>(json['status']),
-      doingTime: serializer.fromJson<int>(json['doingTime']),
-      weight: serializer.fromJson<int>(json['weight']),
-      doingSet: serializer.fromJson<int>(json['doingSet']),
-      doingNum: serializer.fromJson<int>(json['doingNum']),
-      numPerSet: serializer.fromJson<int>(json['numPerSet']),
-      totalSet: serializer.fromJson<int>(json['totalSet']),
-      totalTime: serializer.fromJson<int>(json['totalTime']),
-      date: serializer.fromJson<DateTime>(json['date']),
+      routineName: serializer.fromJson<String>(json['routineName']),
     );
   }
   @override
@@ -91,194 +39,59 @@ class ExerciseRecord extends DataClass implements Insertable<ExerciseRecord> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'type': serializer.toJson<String>(type),
-      'status': serializer.toJson<String>(status),
-      'doingTime': serializer.toJson<int>(doingTime),
-      'weight': serializer.toJson<int>(weight),
-      'doingSet': serializer.toJson<int>(doingSet),
-      'doingNum': serializer.toJson<int>(doingNum),
-      'numPerSet': serializer.toJson<int>(numPerSet),
-      'totalSet': serializer.toJson<int>(totalSet),
-      'totalTime': serializer.toJson<int>(totalTime),
-      'date': serializer.toJson<DateTime>(date),
+      'routineName': serializer.toJson<String>(routineName),
     };
   }
 
-  ExerciseRecord copyWith(
-          {String? id,
-          String? name,
-          String? type,
-          String? status,
-          int? doingTime,
-          int? weight,
-          int? doingSet,
-          int? doingNum,
-          int? numPerSet,
-          int? totalSet,
-          int? totalTime,
-          DateTime? date}) =>
-      ExerciseRecord(
+  Routine copyWith({String? id, String? routineName}) => Routine(
         id: id ?? this.id,
-        name: name ?? this.name,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        doingTime: doingTime ?? this.doingTime,
-        weight: weight ?? this.weight,
-        doingSet: doingSet ?? this.doingSet,
-        doingNum: doingNum ?? this.doingNum,
-        numPerSet: numPerSet ?? this.numPerSet,
-        totalSet: totalSet ?? this.totalSet,
-        totalTime: totalTime ?? this.totalTime,
-        date: date ?? this.date,
+        routineName: routineName ?? this.routineName,
       );
   @override
   String toString() {
-    return (StringBuffer('ExerciseRecord(')
+    return (StringBuffer('Routine(')
           ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('type: $type, ')
-          ..write('status: $status, ')
-          ..write('doingTime: $doingTime, ')
-          ..write('weight: $weight, ')
-          ..write('doingSet: $doingSet, ')
-          ..write('doingNum: $doingNum, ')
-          ..write('numPerSet: $numPerSet, ')
-          ..write('totalSet: $totalSet, ')
-          ..write('totalTime: $totalTime, ')
-          ..write('date: $date')
+          ..write('routineName: $routineName')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, type, status, doingTime, weight,
-      doingSet, doingNum, numPerSet, totalSet, totalTime, date);
+  int get hashCode => Object.hash(id, routineName);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExerciseRecord &&
+      (other is Routine &&
           other.id == this.id &&
-          other.name == this.name &&
-          other.type == this.type &&
-          other.status == this.status &&
-          other.doingTime == this.doingTime &&
-          other.weight == this.weight &&
-          other.doingSet == this.doingSet &&
-          other.doingNum == this.doingNum &&
-          other.numPerSet == this.numPerSet &&
-          other.totalSet == this.totalSet &&
-          other.totalTime == this.totalTime &&
-          other.date == this.date);
+          other.routineName == this.routineName);
 }
 
-class ExerciseRecordsCompanion extends UpdateCompanion<ExerciseRecord> {
+class RoutinesCompanion extends UpdateCompanion<Routine> {
   final Value<String> id;
-  final Value<String> name;
-  final Value<String> type;
-  final Value<String> status;
-  final Value<int> doingTime;
-  final Value<int> weight;
-  final Value<int> doingSet;
-  final Value<int> doingNum;
-  final Value<int> numPerSet;
-  final Value<int> totalSet;
-  final Value<int> totalTime;
-  final Value<DateTime> date;
-  const ExerciseRecordsCompanion({
+  final Value<String> routineName;
+  const RoutinesCompanion({
     this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.type = const Value.absent(),
-    this.status = const Value.absent(),
-    this.doingTime = const Value.absent(),
-    this.weight = const Value.absent(),
-    this.doingSet = const Value.absent(),
-    this.doingNum = const Value.absent(),
-    this.numPerSet = const Value.absent(),
-    this.totalSet = const Value.absent(),
-    this.totalTime = const Value.absent(),
-    this.date = const Value.absent(),
+    this.routineName = const Value.absent(),
   });
-  ExerciseRecordsCompanion.insert({
+  RoutinesCompanion.insert({
     required String id,
-    required String name,
-    required String type,
-    required String status,
-    required int doingTime,
-    required int weight,
-    required int doingSet,
-    required int doingNum,
-    required int numPerSet,
-    required int totalSet,
-    required int totalTime,
-    this.date = const Value.absent(),
+    required String routineName,
   })  : id = Value(id),
-        name = Value(name),
-        type = Value(type),
-        status = Value(status),
-        doingTime = Value(doingTime),
-        weight = Value(weight),
-        doingSet = Value(doingSet),
-        doingNum = Value(doingNum),
-        numPerSet = Value(numPerSet),
-        totalSet = Value(totalSet),
-        totalTime = Value(totalTime);
-  static Insertable<ExerciseRecord> custom({
+        routineName = Value(routineName);
+  static Insertable<Routine> custom({
     Expression<String>? id,
-    Expression<String>? name,
-    Expression<String>? type,
-    Expression<String>? status,
-    Expression<int>? doingTime,
-    Expression<int>? weight,
-    Expression<int>? doingSet,
-    Expression<int>? doingNum,
-    Expression<int>? numPerSet,
-    Expression<int>? totalSet,
-    Expression<int>? totalTime,
-    Expression<DateTime>? date,
+    Expression<String>? routineName,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (type != null) 'type': type,
-      if (status != null) 'status': status,
-      if (doingTime != null) 'doing_time': doingTime,
-      if (weight != null) 'weight': weight,
-      if (doingSet != null) 'doing_set': doingSet,
-      if (doingNum != null) 'doing_num': doingNum,
-      if (numPerSet != null) 'num_per_set': numPerSet,
-      if (totalSet != null) 'total_set': totalSet,
-      if (totalTime != null) 'total_time': totalTime,
-      if (date != null) 'date': date,
+      if (routineName != null) 'routine_name': routineName,
     });
   }
 
-  ExerciseRecordsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? name,
-      Value<String>? type,
-      Value<String>? status,
-      Value<int>? doingTime,
-      Value<int>? weight,
-      Value<int>? doingSet,
-      Value<int>? doingNum,
-      Value<int>? numPerSet,
-      Value<int>? totalSet,
-      Value<int>? totalTime,
-      Value<DateTime>? date}) {
-    return ExerciseRecordsCompanion(
+  RoutinesCompanion copyWith({Value<String>? id, Value<String>? routineName}) {
+    return RoutinesCompanion(
       id: id ?? this.id,
-      name: name ?? this.name,
-      type: type ?? this.type,
-      status: status ?? this.status,
-      doingTime: doingTime ?? this.doingTime,
-      weight: weight ?? this.weight,
-      doingSet: doingSet ?? this.doingSet,
-      doingNum: doingNum ?? this.doingNum,
-      numPerSet: numPerSet ?? this.numPerSet,
-      totalSet: totalSet ?? this.totalSet,
-      totalTime: totalTime ?? this.totalTime,
-      date: date ?? this.date,
+      routineName: routineName ?? this.routineName,
     );
   }
 
@@ -287,6 +100,351 @@ class ExerciseRecordsCompanion extends UpdateCompanion<ExerciseRecord> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (routineName.present) {
+      map['routine_name'] = Variable<String>(routineName.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoutinesCompanion(')
+          ..write('id: $id, ')
+          ..write('routineName: $routineName')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RoutinesTable extends Routines with TableInfo<$RoutinesTable, Routine> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RoutinesTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  final VerificationMeta _routineNameMeta =
+      const VerificationMeta('routineName');
+  @override
+  late final GeneratedColumn<String> routineName = GeneratedColumn<String>(
+      'routine_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, routineName];
+  @override
+  String get aliasedName => _alias ?? 'routines';
+  @override
+  String get actualTableName => 'routines';
+  @override
+  VerificationContext validateIntegrity(Insertable<Routine> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('routine_name')) {
+      context.handle(
+          _routineNameMeta,
+          routineName.isAcceptableOrUnknown(
+              data['routine_name']!, _routineNameMeta));
+    } else if (isInserting) {
+      context.missing(_routineNameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  @override
+  Routine map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Routine(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      routineName: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}routine_name'])!,
+    );
+  }
+
+  @override
+  $RoutinesTable createAlias(String alias) {
+    return $RoutinesTable(attachedDatabase, alias);
+  }
+}
+
+class RoutineManual extends DataClass implements Insertable<RoutineManual> {
+  final String id;
+  final String routineId;
+  final String name;
+  final String type;
+  final String status;
+  final int weight;
+  final int goalNum;
+  final int goalSet;
+  final int goalTime;
+  final int nowSet;
+  final int didTime;
+  const RoutineManual(
+      {required this.id,
+      required this.routineId,
+      required this.name,
+      required this.type,
+      required this.status,
+      required this.weight,
+      required this.goalNum,
+      required this.goalSet,
+      required this.goalTime,
+      required this.nowSet,
+      required this.didTime});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['routine_id'] = Variable<String>(routineId);
+    map['name'] = Variable<String>(name);
+    map['type'] = Variable<String>(type);
+    map['status'] = Variable<String>(status);
+    map['weight'] = Variable<int>(weight);
+    map['goal_num'] = Variable<int>(goalNum);
+    map['goal_set'] = Variable<int>(goalSet);
+    map['goal_time'] = Variable<int>(goalTime);
+    map['now_set'] = Variable<int>(nowSet);
+    map['did_time'] = Variable<int>(didTime);
+    return map;
+  }
+
+  RoutineManualsCompanion toCompanion(bool nullToAbsent) {
+    return RoutineManualsCompanion(
+      id: Value(id),
+      routineId: Value(routineId),
+      name: Value(name),
+      type: Value(type),
+      status: Value(status),
+      weight: Value(weight),
+      goalNum: Value(goalNum),
+      goalSet: Value(goalSet),
+      goalTime: Value(goalTime),
+      nowSet: Value(nowSet),
+      didTime: Value(didTime),
+    );
+  }
+
+  factory RoutineManual.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RoutineManual(
+      id: serializer.fromJson<String>(json['id']),
+      routineId: serializer.fromJson<String>(json['routineId']),
+      name: serializer.fromJson<String>(json['name']),
+      type: serializer.fromJson<String>(json['type']),
+      status: serializer.fromJson<String>(json['status']),
+      weight: serializer.fromJson<int>(json['weight']),
+      goalNum: serializer.fromJson<int>(json['goalNum']),
+      goalSet: serializer.fromJson<int>(json['goalSet']),
+      goalTime: serializer.fromJson<int>(json['goalTime']),
+      nowSet: serializer.fromJson<int>(json['nowSet']),
+      didTime: serializer.fromJson<int>(json['didTime']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'routineId': serializer.toJson<String>(routineId),
+      'name': serializer.toJson<String>(name),
+      'type': serializer.toJson<String>(type),
+      'status': serializer.toJson<String>(status),
+      'weight': serializer.toJson<int>(weight),
+      'goalNum': serializer.toJson<int>(goalNum),
+      'goalSet': serializer.toJson<int>(goalSet),
+      'goalTime': serializer.toJson<int>(goalTime),
+      'nowSet': serializer.toJson<int>(nowSet),
+      'didTime': serializer.toJson<int>(didTime),
+    };
+  }
+
+  RoutineManual copyWith(
+          {String? id,
+          String? routineId,
+          String? name,
+          String? type,
+          String? status,
+          int? weight,
+          int? goalNum,
+          int? goalSet,
+          int? goalTime,
+          int? nowSet,
+          int? didTime}) =>
+      RoutineManual(
+        id: id ?? this.id,
+        routineId: routineId ?? this.routineId,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        weight: weight ?? this.weight,
+        goalNum: goalNum ?? this.goalNum,
+        goalSet: goalSet ?? this.goalSet,
+        goalTime: goalTime ?? this.goalTime,
+        nowSet: nowSet ?? this.nowSet,
+        didTime: didTime ?? this.didTime,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RoutineManual(')
+          ..write('id: $id, ')
+          ..write('routineId: $routineId, ')
+          ..write('name: $name, ')
+          ..write('type: $type, ')
+          ..write('status: $status, ')
+          ..write('weight: $weight, ')
+          ..write('goalNum: $goalNum, ')
+          ..write('goalSet: $goalSet, ')
+          ..write('goalTime: $goalTime, ')
+          ..write('nowSet: $nowSet, ')
+          ..write('didTime: $didTime')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, routineId, name, type, status, weight,
+      goalNum, goalSet, goalTime, nowSet, didTime);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RoutineManual &&
+          other.id == this.id &&
+          other.routineId == this.routineId &&
+          other.name == this.name &&
+          other.type == this.type &&
+          other.status == this.status &&
+          other.weight == this.weight &&
+          other.goalNum == this.goalNum &&
+          other.goalSet == this.goalSet &&
+          other.goalTime == this.goalTime &&
+          other.nowSet == this.nowSet &&
+          other.didTime == this.didTime);
+}
+
+class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
+  final Value<String> id;
+  final Value<String> routineId;
+  final Value<String> name;
+  final Value<String> type;
+  final Value<String> status;
+  final Value<int> weight;
+  final Value<int> goalNum;
+  final Value<int> goalSet;
+  final Value<int> goalTime;
+  final Value<int> nowSet;
+  final Value<int> didTime;
+  const RoutineManualsCompanion({
+    this.id = const Value.absent(),
+    this.routineId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.type = const Value.absent(),
+    this.status = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.goalNum = const Value.absent(),
+    this.goalSet = const Value.absent(),
+    this.goalTime = const Value.absent(),
+    this.nowSet = const Value.absent(),
+    this.didTime = const Value.absent(),
+  });
+  RoutineManualsCompanion.insert({
+    required String id,
+    required String routineId,
+    required String name,
+    required String type,
+    required String status,
+    required int weight,
+    required int goalNum,
+    required int goalSet,
+    required int goalTime,
+    required int nowSet,
+    required int didTime,
+  })  : id = Value(id),
+        routineId = Value(routineId),
+        name = Value(name),
+        type = Value(type),
+        status = Value(status),
+        weight = Value(weight),
+        goalNum = Value(goalNum),
+        goalSet = Value(goalSet),
+        goalTime = Value(goalTime),
+        nowSet = Value(nowSet),
+        didTime = Value(didTime);
+  static Insertable<RoutineManual> custom({
+    Expression<String>? id,
+    Expression<String>? routineId,
+    Expression<String>? name,
+    Expression<String>? type,
+    Expression<String>? status,
+    Expression<int>? weight,
+    Expression<int>? goalNum,
+    Expression<int>? goalSet,
+    Expression<int>? goalTime,
+    Expression<int>? nowSet,
+    Expression<int>? didTime,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (routineId != null) 'routine_id': routineId,
+      if (name != null) 'name': name,
+      if (type != null) 'type': type,
+      if (status != null) 'status': status,
+      if (weight != null) 'weight': weight,
+      if (goalNum != null) 'goal_num': goalNum,
+      if (goalSet != null) 'goal_set': goalSet,
+      if (goalTime != null) 'goal_time': goalTime,
+      if (nowSet != null) 'now_set': nowSet,
+      if (didTime != null) 'did_time': didTime,
+    });
+  }
+
+  RoutineManualsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? routineId,
+      Value<String>? name,
+      Value<String>? type,
+      Value<String>? status,
+      Value<int>? weight,
+      Value<int>? goalNum,
+      Value<int>? goalSet,
+      Value<int>? goalTime,
+      Value<int>? nowSet,
+      Value<int>? didTime}) {
+    return RoutineManualsCompanion(
+      id: id ?? this.id,
+      routineId: routineId ?? this.routineId,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      weight: weight ?? this.weight,
+      goalNum: goalNum ?? this.goalNum,
+      goalSet: goalSet ?? this.goalSet,
+      goalTime: goalTime ?? this.goalTime,
+      nowSet: nowSet ?? this.nowSet,
+      didTime: didTime ?? this.didTime,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (routineId.present) {
+      map['routine_id'] = Variable<String>(routineId.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -297,63 +455,61 @@ class ExerciseRecordsCompanion extends UpdateCompanion<ExerciseRecord> {
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
-    if (doingTime.present) {
-      map['doing_time'] = Variable<int>(doingTime.value);
-    }
     if (weight.present) {
       map['weight'] = Variable<int>(weight.value);
     }
-    if (doingSet.present) {
-      map['doing_set'] = Variable<int>(doingSet.value);
+    if (goalNum.present) {
+      map['goal_num'] = Variable<int>(goalNum.value);
     }
-    if (doingNum.present) {
-      map['doing_num'] = Variable<int>(doingNum.value);
+    if (goalSet.present) {
+      map['goal_set'] = Variable<int>(goalSet.value);
     }
-    if (numPerSet.present) {
-      map['num_per_set'] = Variable<int>(numPerSet.value);
+    if (goalTime.present) {
+      map['goal_time'] = Variable<int>(goalTime.value);
     }
-    if (totalSet.present) {
-      map['total_set'] = Variable<int>(totalSet.value);
+    if (nowSet.present) {
+      map['now_set'] = Variable<int>(nowSet.value);
     }
-    if (totalTime.present) {
-      map['total_time'] = Variable<int>(totalTime.value);
-    }
-    if (date.present) {
-      map['date'] = Variable<DateTime>(date.value);
+    if (didTime.present) {
+      map['did_time'] = Variable<int>(didTime.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('ExerciseRecordsCompanion(')
+    return (StringBuffer('RoutineManualsCompanion(')
           ..write('id: $id, ')
+          ..write('routineId: $routineId, ')
           ..write('name: $name, ')
           ..write('type: $type, ')
           ..write('status: $status, ')
-          ..write('doingTime: $doingTime, ')
           ..write('weight: $weight, ')
-          ..write('doingSet: $doingSet, ')
-          ..write('doingNum: $doingNum, ')
-          ..write('numPerSet: $numPerSet, ')
-          ..write('totalSet: $totalSet, ')
-          ..write('totalTime: $totalTime, ')
-          ..write('date: $date')
+          ..write('goalNum: $goalNum, ')
+          ..write('goalSet: $goalSet, ')
+          ..write('goalTime: $goalTime, ')
+          ..write('nowSet: $nowSet, ')
+          ..write('didTime: $didTime')
           ..write(')'))
         .toString();
   }
 }
 
-class $ExerciseRecordsTable extends ExerciseRecords
-    with TableInfo<$ExerciseRecordsTable, ExerciseRecord> {
+class $RoutineManualsTable extends RoutineManuals
+    with TableInfo<$RoutineManualsTable, RoutineManual> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ExerciseRecordsTable(this.attachedDatabase, [this._alias]);
+  $RoutineManualsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  final VerificationMeta _routineIdMeta = const VerificationMeta('routineId');
+  @override
+  late final GeneratedColumn<String> routineId = GeneratedColumn<String>(
+      'routine_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -370,69 +526,56 @@ class $ExerciseRecordsTable extends ExerciseRecords
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
       'status', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  final VerificationMeta _doingTimeMeta = const VerificationMeta('doingTime');
-  @override
-  late final GeneratedColumn<int> doingTime = GeneratedColumn<int>(
-      'doing_time', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _weightMeta = const VerificationMeta('weight');
   @override
   late final GeneratedColumn<int> weight = GeneratedColumn<int>(
       'weight', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _doingSetMeta = const VerificationMeta('doingSet');
+  final VerificationMeta _goalNumMeta = const VerificationMeta('goalNum');
   @override
-  late final GeneratedColumn<int> doingSet = GeneratedColumn<int>(
-      'doing_set', aliasedName, false,
+  late final GeneratedColumn<int> goalNum = GeneratedColumn<int>(
+      'goal_num', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _doingNumMeta = const VerificationMeta('doingNum');
+  final VerificationMeta _goalSetMeta = const VerificationMeta('goalSet');
   @override
-  late final GeneratedColumn<int> doingNum = GeneratedColumn<int>(
-      'doing_num', aliasedName, false,
+  late final GeneratedColumn<int> goalSet = GeneratedColumn<int>(
+      'goal_set', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _numPerSetMeta = const VerificationMeta('numPerSet');
+  final VerificationMeta _goalTimeMeta = const VerificationMeta('goalTime');
   @override
-  late final GeneratedColumn<int> numPerSet = GeneratedColumn<int>(
-      'num_per_set', aliasedName, false,
+  late final GeneratedColumn<int> goalTime = GeneratedColumn<int>(
+      'goal_time', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _totalSetMeta = const VerificationMeta('totalSet');
+  final VerificationMeta _nowSetMeta = const VerificationMeta('nowSet');
   @override
-  late final GeneratedColumn<int> totalSet = GeneratedColumn<int>(
-      'total_set', aliasedName, false,
+  late final GeneratedColumn<int> nowSet = GeneratedColumn<int>(
+      'now_set', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _totalTimeMeta = const VerificationMeta('totalTime');
+  final VerificationMeta _didTimeMeta = const VerificationMeta('didTime');
   @override
-  late final GeneratedColumn<int> totalTime = GeneratedColumn<int>(
-      'total_time', aliasedName, false,
+  late final GeneratedColumn<int> didTime = GeneratedColumn<int>(
+      'did_time', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _dateMeta = const VerificationMeta('date');
-  @override
-  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
-      'date', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        routineId,
         name,
         type,
         status,
-        doingTime,
         weight,
-        doingSet,
-        doingNum,
-        numPerSet,
-        totalSet,
-        totalTime,
-        date
+        goalNum,
+        goalSet,
+        goalTime,
+        nowSet,
+        didTime
       ];
   @override
-  String get aliasedName => _alias ?? 'exercise_records';
+  String get aliasedName => _alias ?? 'routine_manuals';
   @override
-  String get actualTableName => 'exercise_records';
+  String get actualTableName => 'routine_manuals';
   @override
-  VerificationContext validateIntegrity(Insertable<ExerciseRecord> instance,
+  VerificationContext validateIntegrity(Insertable<RoutineManual> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -440,6 +583,12 @@ class $ExerciseRecordsTable extends ExerciseRecords
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('routine_id')) {
+      context.handle(_routineIdMeta,
+          routineId.isAcceptableOrUnknown(data['routine_id']!, _routineIdMeta));
+    } else if (isInserting) {
+      context.missing(_routineIdMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -459,53 +608,41 @@ class $ExerciseRecordsTable extends ExerciseRecords
     } else if (isInserting) {
       context.missing(_statusMeta);
     }
-    if (data.containsKey('doing_time')) {
-      context.handle(_doingTimeMeta,
-          doingTime.isAcceptableOrUnknown(data['doing_time']!, _doingTimeMeta));
-    } else if (isInserting) {
-      context.missing(_doingTimeMeta);
-    }
     if (data.containsKey('weight')) {
       context.handle(_weightMeta,
           weight.isAcceptableOrUnknown(data['weight']!, _weightMeta));
     } else if (isInserting) {
       context.missing(_weightMeta);
     }
-    if (data.containsKey('doing_set')) {
-      context.handle(_doingSetMeta,
-          doingSet.isAcceptableOrUnknown(data['doing_set']!, _doingSetMeta));
+    if (data.containsKey('goal_num')) {
+      context.handle(_goalNumMeta,
+          goalNum.isAcceptableOrUnknown(data['goal_num']!, _goalNumMeta));
     } else if (isInserting) {
-      context.missing(_doingSetMeta);
+      context.missing(_goalNumMeta);
     }
-    if (data.containsKey('doing_num')) {
-      context.handle(_doingNumMeta,
-          doingNum.isAcceptableOrUnknown(data['doing_num']!, _doingNumMeta));
+    if (data.containsKey('goal_set')) {
+      context.handle(_goalSetMeta,
+          goalSet.isAcceptableOrUnknown(data['goal_set']!, _goalSetMeta));
     } else if (isInserting) {
-      context.missing(_doingNumMeta);
+      context.missing(_goalSetMeta);
     }
-    if (data.containsKey('num_per_set')) {
-      context.handle(
-          _numPerSetMeta,
-          numPerSet.isAcceptableOrUnknown(
-              data['num_per_set']!, _numPerSetMeta));
+    if (data.containsKey('goal_time')) {
+      context.handle(_goalTimeMeta,
+          goalTime.isAcceptableOrUnknown(data['goal_time']!, _goalTimeMeta));
     } else if (isInserting) {
-      context.missing(_numPerSetMeta);
+      context.missing(_goalTimeMeta);
     }
-    if (data.containsKey('total_set')) {
-      context.handle(_totalSetMeta,
-          totalSet.isAcceptableOrUnknown(data['total_set']!, _totalSetMeta));
+    if (data.containsKey('now_set')) {
+      context.handle(_nowSetMeta,
+          nowSet.isAcceptableOrUnknown(data['now_set']!, _nowSetMeta));
     } else if (isInserting) {
-      context.missing(_totalSetMeta);
+      context.missing(_nowSetMeta);
     }
-    if (data.containsKey('total_time')) {
-      context.handle(_totalTimeMeta,
-          totalTime.isAcceptableOrUnknown(data['total_time']!, _totalTimeMeta));
+    if (data.containsKey('did_time')) {
+      context.handle(_didTimeMeta,
+          didTime.isAcceptableOrUnknown(data['did_time']!, _didTimeMeta));
     } else if (isInserting) {
-      context.missing(_totalTimeMeta);
-    }
-    if (data.containsKey('date')) {
-      context.handle(
-          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+      context.missing(_didTimeMeta);
     }
     return context;
   }
@@ -513,49 +650,48 @@ class $ExerciseRecordsTable extends ExerciseRecords
   @override
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
-  ExerciseRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+  RoutineManual map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExerciseRecord(
+    return RoutineManual(
       id: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      routineId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}routine_id'])!,
       name: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       type: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
       status: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
-      doingTime: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}doing_time'])!,
       weight: attachedDatabase.options.types
           .read(DriftSqlType.int, data['${effectivePrefix}weight'])!,
-      doingSet: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}doing_set'])!,
-      doingNum: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}doing_num'])!,
-      numPerSet: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}num_per_set'])!,
-      totalSet: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}total_set'])!,
-      totalTime: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}total_time'])!,
-      date: attachedDatabase.options.types
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      goalNum: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}goal_num'])!,
+      goalSet: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}goal_set'])!,
+      goalTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}goal_time'])!,
+      nowSet: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}now_set'])!,
+      didTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}did_time'])!,
     );
   }
 
   @override
-  $ExerciseRecordsTable createAlias(String alias) {
-    return $ExerciseRecordsTable(attachedDatabase, alias);
+  $RoutineManualsTable createAlias(String alias) {
+    return $RoutineManualsTable(attachedDatabase, alias);
   }
 }
 
 abstract class _$LocalDatabase extends GeneratedDatabase {
   _$LocalDatabase(QueryExecutor e) : super(e);
-  late final $ExerciseRecordsTable exerciseRecords =
-      $ExerciseRecordsTable(this);
+  late final $RoutinesTable routines = $RoutinesTable(this);
+  late final $RoutineManualsTable routineManuals = $RoutineManualsTable(this);
   @override
   Iterable<TableInfo<Table, dynamic>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [exerciseRecords];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [routines, routineManuals];
 }

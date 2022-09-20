@@ -15,7 +15,6 @@ enum routineStatus {
 
 class RoutineData {
   var id = uuid.v1();
-  var userExerciseId;
   String name;
   String type;
   routineStatus status = routineStatus.before;
@@ -37,7 +36,6 @@ class RoutineData {
     this.weight = 10,
     this.totalTime = 10,
     this.img,
-    this.userExerciseId,
     this.status = routineStatus.before,
   });
   RoutineData.fromJson(Map<String, dynamic> json)

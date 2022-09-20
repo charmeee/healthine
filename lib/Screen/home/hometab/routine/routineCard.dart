@@ -105,15 +105,15 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
                       .changeRoutineStatus(_index, routineStatus.doing);
                 }
                 if (routineListWatch[_index].status != routineStatus.done) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WhileExercise(
-                                routineid: routineListWatch[_index].id,
-                                userExerciseId:
-                                    routineListWatch[_index].userExerciseId,
-                                type: routineListWatch[_index].type,
-                              )));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => WhileExercise(
+                  //               routineid: routineListWatch[_index].id,
+                  //               userExerciseId:
+                  //                   routineListWatch[_index].userExerciseId,
+                  //               type: routineListWatch[_index].type,
+                  //             )));
                 }
               },
               style: ElevatedButton.styleFrom(primary: Colors.black54),

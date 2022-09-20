@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
 
-class UserExerciseData extends RoutineData {
+class UserExerciseData {
   //운동기록이랑 운동 시계에서 ㅆㅁ
   //time 단위는 초
   var id = uuid.v1();
@@ -19,25 +19,16 @@ class UserExerciseData extends RoutineData {
   int restTime = 3; //휴식 시간 !
   int countInterver = 3; //운동 횟수 속도 !
 
+  RoutineData routineData;
+
   UserExerciseData(
-      {required routineData,
+      {required this.routineData,
       this.doingSet = 1,
       this.restTime = 3,
       this.countInterver = 3,
       this.doingTime = 0,
       this.doingNum = 1 //한총개수
-      })
-      : super(
-          name: routineData.name,
-          type: routineData.type,
-          status: routineData.status,
-          //유산소
-          totalTime: routineData.totalTime,
-          //근력운동
-          totalSet: routineData.totalSet,
-          numPerSet: routineData.numPerSet,
-          weight: routineData.weight,
-        );
+      });
 
   putAerobicWatchData({doingTime}) {
     // TODO: implement putAerobicRoutine

@@ -12,7 +12,7 @@ import 'Screen/auth/main_signin_screen.dart';
 import 'Screen/main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/database/drift_database.dart';
+import 'package:healthin/Database/drift_database.dart';
 import 'Service/auth_request_api.dart';
 
 void main() async {

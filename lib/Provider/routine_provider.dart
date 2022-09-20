@@ -101,20 +101,6 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
         if (item.id == routine.id) routine else item
     ];
   }
-
-  editUserExerciseId({required var routineId, required var userExerciseId}) {
-    log("editUserExerciseId");
-    RoutineData routine =
-        state.firstWhere((element) => element.id == routineId);
-    routine.userExerciseId = userExerciseId;
-    state = [
-      for (final item in state)
-        if (item.id == routine.id) routine else item
-    ];
-    for (var i in state) {
-      log(i.userExerciseId.toString());
-    }
-  }
 }
 
 //루틴리스트변경
