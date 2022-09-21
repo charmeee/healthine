@@ -9,10 +9,10 @@ import 'calendartab/new_calander.dart';
 
 import 'home_drawer.dart';
 import 'hometab/Inbody/InbodyCard.dart';
-import 'hometab/Todayexecise/todayExecisedCard.dart';
 import 'hometab/hometab.dart';
 import 'hometab/profile_header/profile.dart';
 import 'hometab/routine/routineCard.dart';
+import 'hometab/todayexecise/todayExecisedCard.dart';
 
 List<Map> manuButton = [
   {
@@ -68,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
   @override
   Widget build(BuildContext context) {
-    final List<String> tabs = <String>['홈', '달력'];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[50],

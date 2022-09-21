@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Provider/dictonary_provider.dart';
+import 'package:healthin/Provider/local_database_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import '../../Model/routine_models.dart';
 import 'dictionary_detail.dart';
@@ -33,6 +34,9 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   @override
   Widget build(BuildContext context) {
     final routineListRead = ref.read(RoutineNotifierProvider.notifier);
+    ref.watch(localDatabaseProvider).getRoutine().then((value) {
+      log(value.length.toString() + "개의 루틴을 불러왔습니다.");
+    });
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -51,7 +55,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
       bottomNavigationBar: routineList.isNotEmpty
           ? ElevatedButton(
               onPressed: () {
-                routineListRead.addRoutineData(routineList);
+                routineListRead.addRoutineData(routineList); //이걸 변경해야함.
                 Navigator.pop(context);
               },
               child: Text("루틴추가하기"))

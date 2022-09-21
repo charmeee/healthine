@@ -184,6 +184,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
   final String routineId;
   final String name;
   final String type;
+  final int order;
   final String status;
   final int weight;
   final int goalNum;
@@ -196,6 +197,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
       required this.routineId,
       required this.name,
       required this.type,
+      required this.order,
       required this.status,
       required this.weight,
       required this.goalNum,
@@ -210,6 +212,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
     map['routine_id'] = Variable<String>(routineId);
     map['name'] = Variable<String>(name);
     map['type'] = Variable<String>(type);
+    map['order'] = Variable<int>(order);
     map['status'] = Variable<String>(status);
     map['weight'] = Variable<int>(weight);
     map['goal_num'] = Variable<int>(goalNum);
@@ -226,6 +229,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
       routineId: Value(routineId),
       name: Value(name),
       type: Value(type),
+      order: Value(order),
       status: Value(status),
       weight: Value(weight),
       goalNum: Value(goalNum),
@@ -244,6 +248,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
       routineId: serializer.fromJson<String>(json['routineId']),
       name: serializer.fromJson<String>(json['name']),
       type: serializer.fromJson<String>(json['type']),
+      order: serializer.fromJson<int>(json['order']),
       status: serializer.fromJson<String>(json['status']),
       weight: serializer.fromJson<int>(json['weight']),
       goalNum: serializer.fromJson<int>(json['goalNum']),
@@ -261,6 +266,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
       'routineId': serializer.toJson<String>(routineId),
       'name': serializer.toJson<String>(name),
       'type': serializer.toJson<String>(type),
+      'order': serializer.toJson<int>(order),
       'status': serializer.toJson<String>(status),
       'weight': serializer.toJson<int>(weight),
       'goalNum': serializer.toJson<int>(goalNum),
@@ -276,6 +282,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
           String? routineId,
           String? name,
           String? type,
+          int? order,
           String? status,
           int? weight,
           int? goalNum,
@@ -288,6 +295,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
         routineId: routineId ?? this.routineId,
         name: name ?? this.name,
         type: type ?? this.type,
+        order: order ?? this.order,
         status: status ?? this.status,
         weight: weight ?? this.weight,
         goalNum: goalNum ?? this.goalNum,
@@ -303,6 +311,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
           ..write('routineId: $routineId, ')
           ..write('name: $name, ')
           ..write('type: $type, ')
+          ..write('order: $order, ')
           ..write('status: $status, ')
           ..write('weight: $weight, ')
           ..write('goalNum: $goalNum, ')
@@ -315,8 +324,8 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
   }
 
   @override
-  int get hashCode => Object.hash(id, routineId, name, type, status, weight,
-      goalNum, goalSet, goalTime, nowSet, didTime);
+  int get hashCode => Object.hash(id, routineId, name, type, order, status,
+      weight, goalNum, goalSet, goalTime, nowSet, didTime);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -325,6 +334,7 @@ class RoutineManual extends DataClass implements Insertable<RoutineManual> {
           other.routineId == this.routineId &&
           other.name == this.name &&
           other.type == this.type &&
+          other.order == this.order &&
           other.status == this.status &&
           other.weight == this.weight &&
           other.goalNum == this.goalNum &&
@@ -339,6 +349,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
   final Value<String> routineId;
   final Value<String> name;
   final Value<String> type;
+  final Value<int> order;
   final Value<String> status;
   final Value<int> weight;
   final Value<int> goalNum;
@@ -351,6 +362,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
     this.routineId = const Value.absent(),
     this.name = const Value.absent(),
     this.type = const Value.absent(),
+    this.order = const Value.absent(),
     this.status = const Value.absent(),
     this.weight = const Value.absent(),
     this.goalNum = const Value.absent(),
@@ -364,6 +376,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
     required String routineId,
     required String name,
     required String type,
+    required int order,
     required String status,
     required int weight,
     required int goalNum,
@@ -375,6 +388,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
         routineId = Value(routineId),
         name = Value(name),
         type = Value(type),
+        order = Value(order),
         status = Value(status),
         weight = Value(weight),
         goalNum = Value(goalNum),
@@ -387,6 +401,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
     Expression<String>? routineId,
     Expression<String>? name,
     Expression<String>? type,
+    Expression<int>? order,
     Expression<String>? status,
     Expression<int>? weight,
     Expression<int>? goalNum,
@@ -400,6 +415,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
       if (routineId != null) 'routine_id': routineId,
       if (name != null) 'name': name,
       if (type != null) 'type': type,
+      if (order != null) 'order': order,
       if (status != null) 'status': status,
       if (weight != null) 'weight': weight,
       if (goalNum != null) 'goal_num': goalNum,
@@ -415,6 +431,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
       Value<String>? routineId,
       Value<String>? name,
       Value<String>? type,
+      Value<int>? order,
       Value<String>? status,
       Value<int>? weight,
       Value<int>? goalNum,
@@ -427,6 +444,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
       routineId: routineId ?? this.routineId,
       name: name ?? this.name,
       type: type ?? this.type,
+      order: order ?? this.order,
       status: status ?? this.status,
       weight: weight ?? this.weight,
       goalNum: goalNum ?? this.goalNum,
@@ -451,6 +469,9 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
     }
     if (type.present) {
       map['type'] = Variable<String>(type.value);
+    }
+    if (order.present) {
+      map['order'] = Variable<int>(order.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -483,6 +504,7 @@ class RoutineManualsCompanion extends UpdateCompanion<RoutineManual> {
           ..write('routineId: $routineId, ')
           ..write('name: $name, ')
           ..write('type: $type, ')
+          ..write('order: $order, ')
           ..write('status: $status, ')
           ..write('weight: $weight, ')
           ..write('goalNum: $goalNum, ')
@@ -521,6 +543,11 @@ class $RoutineManualsTable extends RoutineManuals
   late final GeneratedColumn<String> type = GeneratedColumn<String>(
       'type', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  final VerificationMeta _orderMeta = const VerificationMeta('order');
+  @override
+  late final GeneratedColumn<int> order = GeneratedColumn<int>(
+      'order', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -562,6 +589,7 @@ class $RoutineManualsTable extends RoutineManuals
         routineId,
         name,
         type,
+        order,
         status,
         weight,
         goalNum,
@@ -601,6 +629,12 @@ class $RoutineManualsTable extends RoutineManuals
           _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
     } else if (isInserting) {
       context.missing(_typeMeta);
+    }
+    if (data.containsKey('order')) {
+      context.handle(
+          _orderMeta, order.isAcceptableOrUnknown(data['order']!, _orderMeta));
+    } else if (isInserting) {
+      context.missing(_orderMeta);
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
@@ -661,6 +695,8 @@ class $RoutineManualsTable extends RoutineManuals
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       type: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      order: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}order'])!,
       status: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
       weight: attachedDatabase.options.types

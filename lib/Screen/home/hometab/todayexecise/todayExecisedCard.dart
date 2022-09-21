@@ -18,6 +18,7 @@ class ExecisedCard extends ConsumerWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
+        child: Container(),
         // child: Column(
         //   crossAxisAlignment: CrossAxisAlignment.start,
         //   children: [
