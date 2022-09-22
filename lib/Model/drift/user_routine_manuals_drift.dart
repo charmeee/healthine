@@ -3,18 +3,15 @@ import 'package:uuid/uuid.dart';
 
 final _uuid = Uuid();
 
-class RoutineManuals extends Table {
+class UserRoutineManuals extends Table {
   TextColumn get id => text().clientDefault(() => _uuid.v4())();
   TextColumn get routineId => text()();
-  TextColumn get name => text()();
-  TextColumn get type => text()();
+  TextColumn get exerciseId => text()(); //운동 id ->dictionary에 나온 운동들의 id값.
   IntColumn get order => integer()();
-  //날짜.
 
   //진행여부
-  TextColumn get status => text()();
+  TextColumn get day => text()(); //기본 월~일
 
-  //근력
   //근력
   IntColumn get weight => integer()();
 

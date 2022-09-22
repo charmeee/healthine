@@ -34,9 +34,6 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   @override
   Widget build(BuildContext context) {
     final routineListRead = ref.read(RoutineNotifierProvider.notifier);
-    ref.watch(localDatabaseProvider).getRoutine().then((value) {
-      log(value.length.toString() + "개의 루틴을 불러왔습니다.");
-    });
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),

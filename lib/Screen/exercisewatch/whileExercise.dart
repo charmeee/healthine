@@ -63,18 +63,18 @@
 //           .then((value) {
 //         log("values" + value.toString());
 //
-//         // exerciseData = UserExerciseData(
-//         //     routineData: RoutineData(
-//         //         name: value.name,
-//         //         type: value.type,
-//         //         status: routineStatus.getByString(value.status),
-//         //         totalTime: value.totalTime,
-//         //         totalSet: value.totalSet,
-//         //         numPerSet: value.numPerSet,
-//         //         weight: value.weight),
-//         //     doingSet: value.doingSet,
-//         //     doingTime: value.doingTime,
-//         //     doingNum: value.doingNum);
+//         exerciseData = UserExerciseData(
+//             routineData: RoutineData(
+//                 name: value.name,
+//                 type: value.type,
+//                 status: routineStatus.getByString(value.status),
+//                 totalTime: value.totalTime,
+//                 totalSet: value.totalSet,
+//                 numPerSet: value.numPerSet,
+//                 weight: value.weight),
+//             doingSet: value.doingSet,
+//             doingTime: value.doingTime,
+//             doingNum: value.doingNum);
 //       });
 //
 //       log("-----db에서 가져온 데이터-----");

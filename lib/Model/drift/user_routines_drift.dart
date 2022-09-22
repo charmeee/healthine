@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 
 final _uuid = Uuid();
 
-class Routines extends Table {
+class UserRoutines extends Table {
   TextColumn get id => text().clientDefault(() => _uuid.v4())();
   TextColumn get routineName => text()();
 }
