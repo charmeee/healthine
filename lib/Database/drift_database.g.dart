@@ -10,12 +10,15 @@ part of 'drift_database.dart';
 class UserRoutine extends DataClass implements Insertable<UserRoutine> {
   final String id;
   final String routineName;
-  const UserRoutine({required this.id, required this.routineName});
+  final String day;
+  const UserRoutine(
+      {required this.id, required this.routineName, required this.day});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['routine_name'] = Variable<String>(routineName);
+    map['day'] = Variable<String>(day);
     return map;
   }
 
@@ -23,6 +26,7 @@ class UserRoutine extends DataClass implements Insertable<UserRoutine> {
     return UserRoutinesCompanion(
       id: Value(id),
       routineName: Value(routineName),
+      day: Value(day),
     );
   }
 
@@ -32,6 +36,7 @@ class UserRoutine extends DataClass implements Insertable<UserRoutine> {
     return UserRoutine(
       id: serializer.fromJson<String>(json['id']),
       routineName: serializer.fromJson<String>(json['routineName']),
+      day: serializer.fromJson<String>(json['day']),
     );
   }
   @override
@@ -40,58 +45,70 @@ class UserRoutine extends DataClass implements Insertable<UserRoutine> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'routineName': serializer.toJson<String>(routineName),
+      'day': serializer.toJson<String>(day),
     };
   }
 
-  UserRoutine copyWith({String? id, String? routineName}) => UserRoutine(
+  UserRoutine copyWith({String? id, String? routineName, String? day}) =>
+      UserRoutine(
         id: id ?? this.id,
         routineName: routineName ?? this.routineName,
+        day: day ?? this.day,
       );
   @override
   String toString() {
     return (StringBuffer('UserRoutine(')
           ..write('id: $id, ')
-          ..write('routineName: $routineName')
+          ..write('routineName: $routineName, ')
+          ..write('day: $day')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, routineName);
+  int get hashCode => Object.hash(id, routineName, day);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is UserRoutine &&
           other.id == this.id &&
-          other.routineName == this.routineName);
+          other.routineName == this.routineName &&
+          other.day == this.day);
 }
 
 class UserRoutinesCompanion extends UpdateCompanion<UserRoutine> {
   final Value<String> id;
   final Value<String> routineName;
+  final Value<String> day;
   const UserRoutinesCompanion({
     this.id = const Value.absent(),
     this.routineName = const Value.absent(),
+    this.day = const Value.absent(),
   });
   UserRoutinesCompanion.insert({
     this.id = const Value.absent(),
     required String routineName,
-  }) : routineName = Value(routineName);
+    required String day,
+  })  : routineName = Value(routineName),
+        day = Value(day);
   static Insertable<UserRoutine> custom({
     Expression<String>? id,
     Expression<String>? routineName,
+    Expression<String>? day,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (routineName != null) 'routine_name': routineName,
+      if (day != null) 'day': day,
     });
   }
 
   UserRoutinesCompanion copyWith(
-      {Value<String>? id, Value<String>? routineName}) {
+      {Value<String>? id, Value<String>? routineName, Value<String>? day}) {
     return UserRoutinesCompanion(
       id: id ?? this.id,
       routineName: routineName ?? this.routineName,
+      day: day ?? this.day,
     );
   }
 
@@ -104,6 +121,9 @@ class UserRoutinesCompanion extends UpdateCompanion<UserRoutine> {
     if (routineName.present) {
       map['routine_name'] = Variable<String>(routineName.value);
     }
+    if (day.present) {
+      map['day'] = Variable<String>(day.value);
+    }
     return map;
   }
 
@@ -111,7 +131,8 @@ class UserRoutinesCompanion extends UpdateCompanion<UserRoutine> {
   String toString() {
     return (StringBuffer('UserRoutinesCompanion(')
           ..write('id: $id, ')
-          ..write('routineName: $routineName')
+          ..write('routineName: $routineName, ')
+          ..write('day: $day')
           ..write(')'))
         .toString();
   }
@@ -136,8 +157,13 @@ class $UserRoutinesTable extends UserRoutines
   late final GeneratedColumn<String> routineName = GeneratedColumn<String>(
       'routine_name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  final VerificationMeta _dayMeta = const VerificationMeta('day');
   @override
-  List<GeneratedColumn> get $columns => [id, routineName];
+  late final GeneratedColumn<String> day = GeneratedColumn<String>(
+      'day', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, routineName, day];
   @override
   String get aliasedName => _alias ?? 'user_routines';
   @override
@@ -158,6 +184,12 @@ class $UserRoutinesTable extends UserRoutines
     } else if (isInserting) {
       context.missing(_routineNameMeta);
     }
+    if (data.containsKey('day')) {
+      context.handle(
+          _dayMeta, day.isAcceptableOrUnknown(data['day']!, _dayMeta));
+    } else if (isInserting) {
+      context.missing(_dayMeta);
+    }
     return context;
   }
 
@@ -171,6 +203,8 @@ class $UserRoutinesTable extends UserRoutines
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       routineName: attachedDatabase.options.types
           .read(DriftSqlType.string, data['${effectivePrefix}routine_name'])!,
+      day: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}day'])!,
     );
   }
 
@@ -186,7 +220,6 @@ class UserRoutineManual extends DataClass
   final String routineId;
   final String exerciseId;
   final int order;
-  final String day;
   final int weight;
   final int goalNum;
   final int goalSet;
@@ -198,7 +231,6 @@ class UserRoutineManual extends DataClass
       required this.routineId,
       required this.exerciseId,
       required this.order,
-      required this.day,
       required this.weight,
       required this.goalNum,
       required this.goalSet,
@@ -212,7 +244,6 @@ class UserRoutineManual extends DataClass
     map['routine_id'] = Variable<String>(routineId);
     map['exercise_id'] = Variable<String>(exerciseId);
     map['order'] = Variable<int>(order);
-    map['day'] = Variable<String>(day);
     map['weight'] = Variable<int>(weight);
     map['goal_num'] = Variable<int>(goalNum);
     map['goal_set'] = Variable<int>(goalSet);
@@ -228,7 +259,6 @@ class UserRoutineManual extends DataClass
       routineId: Value(routineId),
       exerciseId: Value(exerciseId),
       order: Value(order),
-      day: Value(day),
       weight: Value(weight),
       goalNum: Value(goalNum),
       goalSet: Value(goalSet),
@@ -246,7 +276,6 @@ class UserRoutineManual extends DataClass
       routineId: serializer.fromJson<String>(json['routineId']),
       exerciseId: serializer.fromJson<String>(json['exerciseId']),
       order: serializer.fromJson<int>(json['order']),
-      day: serializer.fromJson<String>(json['day']),
       weight: serializer.fromJson<int>(json['weight']),
       goalNum: serializer.fromJson<int>(json['goalNum']),
       goalSet: serializer.fromJson<int>(json['goalSet']),
@@ -263,7 +292,6 @@ class UserRoutineManual extends DataClass
       'routineId': serializer.toJson<String>(routineId),
       'exerciseId': serializer.toJson<String>(exerciseId),
       'order': serializer.toJson<int>(order),
-      'day': serializer.toJson<String>(day),
       'weight': serializer.toJson<int>(weight),
       'goalNum': serializer.toJson<int>(goalNum),
       'goalSet': serializer.toJson<int>(goalSet),
@@ -278,7 +306,6 @@ class UserRoutineManual extends DataClass
           String? routineId,
           String? exerciseId,
           int? order,
-          String? day,
           int? weight,
           int? goalNum,
           int? goalSet,
@@ -290,7 +317,6 @@ class UserRoutineManual extends DataClass
         routineId: routineId ?? this.routineId,
         exerciseId: exerciseId ?? this.exerciseId,
         order: order ?? this.order,
-        day: day ?? this.day,
         weight: weight ?? this.weight,
         goalNum: goalNum ?? this.goalNum,
         goalSet: goalSet ?? this.goalSet,
@@ -305,7 +331,6 @@ class UserRoutineManual extends DataClass
           ..write('routineId: $routineId, ')
           ..write('exerciseId: $exerciseId, ')
           ..write('order: $order, ')
-          ..write('day: $day, ')
           ..write('weight: $weight, ')
           ..write('goalNum: $goalNum, ')
           ..write('goalSet: $goalSet, ')
@@ -317,7 +342,7 @@ class UserRoutineManual extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, routineId, exerciseId, order, day, weight,
+  int get hashCode => Object.hash(id, routineId, exerciseId, order, weight,
       goalNum, goalSet, goalTime, nowSet, didTime);
   @override
   bool operator ==(Object other) =>
@@ -327,7 +352,6 @@ class UserRoutineManual extends DataClass
           other.routineId == this.routineId &&
           other.exerciseId == this.exerciseId &&
           other.order == this.order &&
-          other.day == this.day &&
           other.weight == this.weight &&
           other.goalNum == this.goalNum &&
           other.goalSet == this.goalSet &&
@@ -341,7 +365,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
   final Value<String> routineId;
   final Value<String> exerciseId;
   final Value<int> order;
-  final Value<String> day;
   final Value<int> weight;
   final Value<int> goalNum;
   final Value<int> goalSet;
@@ -353,7 +376,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
     this.routineId = const Value.absent(),
     this.exerciseId = const Value.absent(),
     this.order = const Value.absent(),
-    this.day = const Value.absent(),
     this.weight = const Value.absent(),
     this.goalNum = const Value.absent(),
     this.goalSet = const Value.absent(),
@@ -366,7 +388,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
     required String routineId,
     required String exerciseId,
     required int order,
-    required String day,
     required int weight,
     required int goalNum,
     required int goalSet,
@@ -376,7 +397,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
   })  : routineId = Value(routineId),
         exerciseId = Value(exerciseId),
         order = Value(order),
-        day = Value(day),
         weight = Value(weight),
         goalNum = Value(goalNum),
         goalSet = Value(goalSet),
@@ -388,7 +408,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
     Expression<String>? routineId,
     Expression<String>? exerciseId,
     Expression<int>? order,
-    Expression<String>? day,
     Expression<int>? weight,
     Expression<int>? goalNum,
     Expression<int>? goalSet,
@@ -401,7 +420,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
       if (routineId != null) 'routine_id': routineId,
       if (exerciseId != null) 'exercise_id': exerciseId,
       if (order != null) 'order': order,
-      if (day != null) 'day': day,
       if (weight != null) 'weight': weight,
       if (goalNum != null) 'goal_num': goalNum,
       if (goalSet != null) 'goal_set': goalSet,
@@ -416,7 +434,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
       Value<String>? routineId,
       Value<String>? exerciseId,
       Value<int>? order,
-      Value<String>? day,
       Value<int>? weight,
       Value<int>? goalNum,
       Value<int>? goalSet,
@@ -428,7 +445,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
       routineId: routineId ?? this.routineId,
       exerciseId: exerciseId ?? this.exerciseId,
       order: order ?? this.order,
-      day: day ?? this.day,
       weight: weight ?? this.weight,
       goalNum: goalNum ?? this.goalNum,
       goalSet: goalSet ?? this.goalSet,
@@ -452,9 +468,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
     }
     if (order.present) {
       map['order'] = Variable<int>(order.value);
-    }
-    if (day.present) {
-      map['day'] = Variable<String>(day.value);
     }
     if (weight.present) {
       map['weight'] = Variable<int>(weight.value);
@@ -484,7 +497,6 @@ class UserRoutineManualsCompanion extends UpdateCompanion<UserRoutineManual> {
           ..write('routineId: $routineId, ')
           ..write('exerciseId: $exerciseId, ')
           ..write('order: $order, ')
-          ..write('day: $day, ')
           ..write('weight: $weight, ')
           ..write('goalNum: $goalNum, ')
           ..write('goalSet: $goalSet, ')
@@ -524,11 +536,6 @@ class $UserRoutineManualsTable extends UserRoutineManuals
   late final GeneratedColumn<int> order = GeneratedColumn<int>(
       'order', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  final VerificationMeta _dayMeta = const VerificationMeta('day');
-  @override
-  late final GeneratedColumn<String> day = GeneratedColumn<String>(
-      'day', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   final VerificationMeta _weightMeta = const VerificationMeta('weight');
   @override
   late final GeneratedColumn<int> weight = GeneratedColumn<int>(
@@ -565,7 +572,6 @@ class $UserRoutineManualsTable extends UserRoutineManuals
         routineId,
         exerciseId,
         order,
-        day,
         weight,
         goalNum,
         goalSet,
@@ -604,12 +610,6 @@ class $UserRoutineManualsTable extends UserRoutineManuals
           _orderMeta, order.isAcceptableOrUnknown(data['order']!, _orderMeta));
     } else if (isInserting) {
       context.missing(_orderMeta);
-    }
-    if (data.containsKey('day')) {
-      context.handle(
-          _dayMeta, day.isAcceptableOrUnknown(data['day']!, _dayMeta));
-    } else if (isInserting) {
-      context.missing(_dayMeta);
     }
     if (data.containsKey('weight')) {
       context.handle(_weightMeta,
@@ -664,8 +664,6 @@ class $UserRoutineManualsTable extends UserRoutineManuals
           .read(DriftSqlType.string, data['${effectivePrefix}exercise_id'])!,
       order: attachedDatabase.options.types
           .read(DriftSqlType.int, data['${effectivePrefix}order'])!,
-      day: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}day'])!,
       weight: attachedDatabase.options.types
           .read(DriftSqlType.int, data['${effectivePrefix}weight'])!,
       goalNum: attachedDatabase.options.types

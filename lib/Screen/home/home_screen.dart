@@ -57,6 +57,16 @@ List<Map> manuButton = [
   },
 ];
 
+List<String> day = [
+  "월",
+  "화",
+  "수",
+  "목",
+  "금",
+  "토",
+  "일",
+];
+
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
 
@@ -72,22 +82,46 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        title: Text(
-          'Healthin',
-          style: TextStyle(color: Colors.black),
+        centerTitle: false,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              '전민지님',
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              '  환영합니다.',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w300,
+                fontSize: 15,
+              ),
+            ),
+          ],
         ),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              color: Colors.black54,
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return IconButton(
+        //       icon: const Icon(Icons.menu),
+        //       color: Colors.black54,
+        //       onPressed: () {
+        //         Scaffold.of(context).openDrawer();
+        //       },
+        //     );
+        //   },
+        // ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserSetting()),
+              );
+            },
+            icon: Icon(Icons.person, color: Colors.black54),
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(
@@ -104,50 +138,165 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Column(
               children: [
-                CarouselSlider(
-                    options: CarouselOptions(
-                        viewportFraction: 1,
-                        enlargeCenterPage: true,
-                        scrollDirection: Axis.horizontal,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            _current = index;
-                          });
-                        }),
-                    items: [1, 2, 3, 4].map((i) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            child: Image.asset(
-                              './assets/banner_img/img$i.png',
-                              fit: BoxFit.fill,
-                              height: 200,
-                            ),
-                          );
-                        },
-                      );
-                    }).toList()),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
+                Container(
+                  // color: Colors.red,
+                  height: 90,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [1, 2, 3, 4].map((i) {
-                      int index = [1, 2, 3, 4].indexOf(i);
-                      return Container(
-                        width: 10,
-                        height: 10,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _current == index
-                              ? Colors.indigo
-                              : Colors.grey[400],
-                        ),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List<Widget>.generate(day.length, (index) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                              height: 25,
+                              child: index == 5
+                                  ? Image.asset(
+                                      'assets/banner_img/running.png',
+                                      fit: BoxFit.fill,
+                                    )
+                                  : null),
+                          Container(
+                            height: 15,
+                            width: 15,
+                            margin: EdgeInsets.all(10),
+                            // child: Text(day[index]),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (index == 2 || index == 3)
+                                  ? Colors.greenAccent
+                                  : null,
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(day[index]),
+                          ),
+                        ],
                       );
-                    }).toList(),
+                    }),
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "오늘의 루틴",
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Container(
+                  height: 250,
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                  child: Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("루틴을 추가해 보세요."),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.add),
+                          iconSize: 50,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 70,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    './assets/banner_img/img2.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "운동리포트",
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text("루틴을 추가해 보세요."),
+                        Container(
+                          height: 50,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // CarouselSlider(
+                //     options: CarouselOptions(
+                //         viewportFraction: 1,
+                //         enlargeCenterPage: true,
+                //         scrollDirection: Axis.horizontal,
+                //         onPageChanged: (index, reason) {
+                //           setState(() {
+                //             _current = index;
+                //           });
+                //         }),
+                //     items: [1, 2, 3, 4].map((i) {
+                //       return Builder(
+                //         builder: (BuildContext context) {
+                //           return SizedBox(
+                //             height: 30,
+                //             child: Image.asset(
+                //               './assets/banner_img/img$i.png',
+                //               fit: BoxFit.cover,
+                //               height: 20,
+                //             ),
+                //           );
+                //         },
+                //       );
+                //     }).toList()),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 10),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [1, 2, 3, 4].map((i) {
+                //       int index = [1, 2, 3, 4].indexOf(i);
+                //       return Container(
+                //         width: 10,
+                //         height: 10,
+                //         margin:
+                //             EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                //         decoration: BoxDecoration(
+                //           shape: BoxShape.circle,
+                //           color: _current == index
+                //               ? Colors.indigo
+                //               : Colors.grey[400],
+                //         ),
+                //       );
+                //     }).toList(),
+                //   ),
+                // ),
               ],
             ),
             GridView.count(
@@ -247,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      drawer: HomeDrawer(),
+      // drawer: HomeDrawer(),
     );
   }
 

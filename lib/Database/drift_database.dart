@@ -8,9 +8,12 @@ import 'package:healthin/Model/drift/user_routines_drift.dart';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 //private 값까지 불러올 수 있음., 사실상 한파일로 인식하는듯한느뀜
 part 'drift_database.g.dart';
+
+final _uuid = Uuid();
 
 @DriftDatabase(tables: [UserRoutines, UserRoutineManuals, UserExerciseRecords])
 class LocalDatabase extends _$LocalDatabase {

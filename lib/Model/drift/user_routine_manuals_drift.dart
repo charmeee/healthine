@@ -9,9 +9,6 @@ class UserRoutineManuals extends Table {
   TextColumn get exerciseId => text()(); //운동 id ->dictionary에 나온 운동들의 id값.
   IntColumn get order => integer()();
 
-  //진행여부
-  TextColumn get day => text()(); //기본 월~일
-
   //근력
   IntColumn get weight => integer()();
 
