@@ -93,6 +93,7 @@ class _QRViewExampleState extends State<QrScanPage> {
     if (Platform.isAndroid) {
       log("camera permison");
       final cameraPermision = await Permission.camera.request();
+      log("cameraPermision : " + cameraPermision.isGranted.toString());
       if (cameraPermision.isGranted) {
         return true;
       }
@@ -138,6 +139,7 @@ class _QRViewExampleState extends State<QrScanPage> {
     setState(() {
       this.controller = controller;
     });
+    controller.resumeCamera();
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;

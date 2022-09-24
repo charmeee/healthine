@@ -38,7 +38,6 @@ dependencies:
   qr_flutter: ^4.0.0
   percent_indicator: ^4.2.2
   syncfusion_flutter_charts: ^20.2.36
-  qr_code_scanner: ^1.0.0
   youtube_player_iframe: ^2.3.0
   table_calendar: ^3.0.6
   flutter_native_splash: ^2.2.6
@@ -60,6 +59,7 @@ dependencies:
   carousel_slider: ^4.1.1
   flutter_secure_storage: ^6.0.0
   permission_handler: ^10.0.1
+  qr_code_scanner: ^1.0.1
 
 
 dev_dependencies:
