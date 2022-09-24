@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../userSetting/userSetting.dart';
 import 'calendartab/calender.dart';
-import 'calendartab/new_calander.dart';
+import '../calender/new_calander.dart';
 
 import 'home_drawer.dart';
 import 'hometab/hometab.dart';

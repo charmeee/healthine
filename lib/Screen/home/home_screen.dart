@@ -5,7 +5,7 @@ import 'package:healthin/Screen/report/report_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../userSetting/userSetting.dart';
 import 'calendartab/calender.dart';
-import 'calendartab/new_calander.dart';
+import '../calender/new_calander.dart';
 
 import 'home_drawer.dart';
 import 'hometab/Inbody/InbodyCard.dart';
@@ -213,6 +213,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                // Container(
+                //   width: MediaQuery.of(context).size.width,
+                //   padding: EdgeInsets.symmetric(horizontal: 20),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.stretch,
+                //     children: [
+                //       ElevatedButton(
+                //         onPressed: () {},
+                //         child: Text("루틴 시작하기"),
+                //         style: ButtonStyle(),
+                //       ),
+                //       ElevatedButton(
+                //         onPressed: () {},
+                //         child: Text("루틴 시작하기"),
+                //         style: ButtonStyle(),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
                   height: 70,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -244,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text("루틴을 추가해 보세요."),
+                        Text("운동을 시작해 보세요"),
                         Container(
                           height: 50,
                         ),
@@ -252,6 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+
                 // CarouselSlider(
                 //     options: CarouselOptions(
                 //         viewportFraction: 1,
@@ -365,33 +388,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  RoutineCard(), //오늘의 루틴
-                  InbodyCard(), //인바디 차트
-                  ExecisedCard(),
-                  Container(
-                    height: 50,
-                    padding: EdgeInsets.all(4),
-                    child: ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(primary: Colors.black54),
-                        child: const Text(
-                          "리포트 보기",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Report()));
-                        }),
-                  )
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                RoutineCard(), //오늘의 루틴
+                InbodyCard(), //인바디 차트
+                ExecisedCard(),
+                Container(
+                  height: 50,
+                  padding: EdgeInsets.all(4),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(primary: Colors.black54),
+                      child: const Text(
+                        "리포트 보기",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Report()));
+                      }),
+                )
+              ],
             )
           ],
         ),

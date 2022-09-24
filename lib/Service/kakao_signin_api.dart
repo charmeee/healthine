@@ -1,7 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
+import 'package:path/path.dart';
+import 'package:http/http.dart' as http;
 
 import 'social_api.dart';
+
+var loginUrl = Uri.parse('https://api.be-healthy.life/auth/login');
 
 class KakaoLogin implements SocialLogin {
   @override
@@ -9,7 +15,12 @@ class KakaoLogin implements SocialLogin {
     try {
       if (await isKakaoTalkInstalled()) {
         try {
-          await UserApi.instance.loginWithKakaoTalk();
+          final kakaoTalkToken = await UserApi.instance.loginWithKakaoTalk();
+          var response = await http.post(loginUrl, body: {
+            "accessToken": kakaoTalkToken.accessToken,
+            "vendor": "kakao"
+          });
+          log("카카오톡계정/server_response:" + response.body);
           print('카카오톡으로 로그인 성공');
           return true;
         } catch (error) {
@@ -22,8 +33,14 @@ class KakaoLogin implements SocialLogin {
           }
           // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
           try {
-            await UserApi.instance.loginWithKakaoAccount();
+            final kakaoToken = await UserApi.instance.loginWithKakaoAccount();
+
             print('카카오계정으로 로그인 성공');
+            var response = await http.post(loginUrl, body: {
+              "accessToken": kakaoToken.accessToken,
+              "vendor": "kakao"
+            });
+            log("카카오계정/server_response:" + response.body);
             return true;
           } catch (error) {
             print('카카오계정으로 로그인 실패 $error');

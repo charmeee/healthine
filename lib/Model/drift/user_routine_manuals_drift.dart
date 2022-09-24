@@ -17,9 +17,4 @@ class UserRoutineManuals extends Table {
   IntColumn get goalSet => integer()();
   IntColumn get goalTime => integer()(); //전체세트
 
-  //근력
-  IntColumn get nowSet => integer()();
-
-  //유산소
-  IntColumn get didTime => integer()();
 }

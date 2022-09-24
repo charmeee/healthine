@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:healthin/Model/dictionary_model.dart';
 import 'package:healthin/Screen/dictionary/dictionary_detail.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //import '../exercisewatch/whileExercise.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -35,6 +36,13 @@ class _QRViewExampleState extends State<QrScanPage> {
       controller!.pauseCamera();
     }
     controller!.resumeCamera();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
   }
 
   @override
@@ -79,6 +87,17 @@ class _QRViewExampleState extends State<QrScanPage> {
         ],
       ),
     );
+  }
+
+  Future<bool> init() async {
+    if (Platform.isAndroid) {
+      log("camera permison");
+      final cameraPermision = await Permission.camera.request();
+      if (cameraPermision.isGranted) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget _buildQrView(BuildContext context) {

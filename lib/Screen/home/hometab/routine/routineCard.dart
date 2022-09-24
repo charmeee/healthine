@@ -41,99 +41,96 @@ class _RoutineCardState extends ConsumerState<RoutineCard> {
   Widget build(BuildContext context) {
     final routineListWatch = ref.watch(RoutineNotifierProvider);
 
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: const Text(
-              "오늘의 루틴",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          child: const Text(
+            "오늘의 루틴",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(
-            height: 250,
-            child: PageView.builder(
-              itemCount: routineListWatch.length,
-              controller: PageController(viewportFraction: 0.7),
-              onPageChanged: (int index) => setState(() => _index = index),
-              itemBuilder: (BuildContext context, int index) {
-                return Transform.scale(
-                  scale: index == _index ? 1 : 0.9,
-                  child: Card(
-                    elevation: 6,
-                    color:
-                        routineListWatch[index].status != routineStatus.before
-                            ? Colors.green[100]
-                            : Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Image.asset(
-                          routineListWatch[index].img.toString(),
-                          height: 170,
-                        ),
-                        Text(
-                          routineListWatch[index].name.toString(),
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          routineListWatch[index].type.toString() == "유산소"
-                              ? routineListWatch[index].totalTime.toString()
-                              : "${routineListWatch[index].weight}kg ${routineListWatch[index].numPerSet}회 ${routineListWatch[index].totalSet}세트",
-                          style: TextStyle(fontSize: 16),
-                        )
-                      ],
-                    ),
+        ),
+        SizedBox(
+          height: 250,
+          child: PageView.builder(
+            itemCount: routineListWatch.length,
+            controller: PageController(viewportFraction: 0.7),
+            onPageChanged: (int index) => setState(() => _index = index),
+            itemBuilder: (BuildContext context, int index) {
+              return Transform.scale(
+                scale: index == _index ? 1 : 0.9,
+                child: Card(
+                  elevation: 6,
+                  color: routineListWatch[index].status != routineStatus.before
+                      ? Colors.green[100]
+                      : Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.asset(
+                        routineListWatch[index].img.toString(),
+                        height: 170,
+                      ),
+                      Text(
+                        routineListWatch[index].name.toString(),
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        routineListWatch[index].type.toString() == "유산소"
+                            ? routineListWatch[index].totalTime.toString()
+                            : "${routineListWatch[index].weight}kg ${routineListWatch[index].numPerSet}회 ${routineListWatch[index].totalSet}세트",
+                        style: TextStyle(fontSize: 16),
+                      )
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                log(routineListWatch[_index].status.toString());
-                if (routineListWatch[_index].status == routineStatus.before) {
-                  ref
-                      .read(RoutineNotifierProvider.notifier)
-                      .changeRoutineStatus(_index, routineStatus.doing);
-                }
-                if (routineListWatch[_index].status != routineStatus.done) {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => WhileExercise(
-                  //               routineid: routineListWatch[_index].id,
-                  //               userExerciseId:
-                  //                   routineListWatch[_index].userExerciseId,
-                  //               type: routineListWatch[_index].type,
-                  //             )));
-                }
-              },
-              style: ElevatedButton.styleFrom(primary: Colors.black54),
-              child: Text("루틴 시작하기"),
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            onPressed: () {
+              log(routineListWatch[_index].status.toString());
+              if (routineListWatch[_index].status == routineStatus.before) {
+                ref
+                    .read(RoutineNotifierProvider.notifier)
+                    .changeRoutineStatus(_index, routineStatus.doing);
+              }
+              if (routineListWatch[_index].status != routineStatus.done) {
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => WhileExercise(
+                //               routineid: routineListWatch[_index].id,
+                //               userExerciseId:
+                //                   routineListWatch[_index].userExerciseId,
+                //               type: routineListWatch[_index].type,
+                //             )));
+              }
+            },
+            style: ElevatedButton.styleFrom(primary: Colors.black54),
+            child: Text("루틴 시작하기"),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                //routineListWatch[index]
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RoutineSetting()));
-              },
-              style: ElevatedButton.styleFrom(primary: Colors.black54),
-              child: Text("루틴 수정하기"),
-            ),
-          )
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            onPressed: () {
+              //routineListWatch[index]
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RoutineSetting()));
+            },
+            style: ElevatedButton.styleFrom(primary: Colors.black54),
+            child: Text("루틴 수정하기"),
+          ),
+        )
+      ],
     );
   }
 }
