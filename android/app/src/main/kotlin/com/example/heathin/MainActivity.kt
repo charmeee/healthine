@@ -1,4 +1,4 @@
-package com.example.healthin
+package com.example.heathin
 
 import io.flutter.embedding.android.FlutterActivity
 

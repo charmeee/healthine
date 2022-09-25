@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:812774997300:android:f54fc34659e0796bb4b961",
         "android_client_info": {
-          "package_name": "com.example.healthin"
+          "package_name": "com.example.heathin"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "812774997300-ssr1q1d8m9d0ukcjdrbduslevu31vv17.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.healthin",
+            "package_name": "com.example.heathin",
             "certificate_hash": "4dd52986181894318a99a79637d859902dd5ce24"
           }
         },

@@ -31,7 +31,7 @@ class MainSignIn extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              EmailSignIn(),
+              // EmailSignIn(),
               SizedBox(
                 height: 20,
               ),
@@ -74,16 +74,38 @@ class MainSignIn extends ConsumerWidget {
               SizedBox(
                 height: 20,
               ),
-              TextButton(
+              TextButton.icon(
                 style: TextButton.styleFrom(
-                    backgroundColor: Colors.black54,
-                    padding: EdgeInsets.all(20)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUp()));
+                    backgroundColor: Colors.yellowAccent,
+                    padding: EdgeInsets.symmetric(vertical: 15)),
+                icon: Icon(
+                  Icons.message,
+                  color: Colors.black,
+                ),
+                onPressed: () async {
+                  ref.read(loginStateProvider.notifier).state =
+                      await kakaoLogin.login();
+                  if (ref.read(loginStateProvider.notifier).state) {
+                    User user = await UserApi.instance.me();
+                    log("카카오 유저아이디" + user.id.toString());
+                  }
                 },
-                child: Text("회원가입하기", style: TextStyle(color: Colors.white)),
+                label:
+                    Text("카카오톡으로 로그인", style: TextStyle(color: Colors.black)),
               ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // TextButton(
+              //   style: TextButton.styleFrom(
+              //       backgroundColor: Colors.black54,
+              //       padding: EdgeInsets.all(20)),
+              //   onPressed: () {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => SignUp()));
+              //   },
+              //   child: Text("회원가입하기", style: TextStyle(color: Colors.white)),
+              // ),
             ],
           ),
         ),
