@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/Const/const.dart';
 import 'calender/new_calander.dart';
 import 'home/home_screen.dart';
 import 'home/not_use_home_screen.dart';
@@ -40,7 +41,7 @@ class _MyHomeState extends State<MyHome> {
             shape: CircularNotchedRectangle(),
             clipBehavior: Clip.antiAlias,
             child: BottomNavigationBar(
-              backgroundColor: Color(0xFF24292f),
+              backgroundColor: primaryColor,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,

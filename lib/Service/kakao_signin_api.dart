@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'social_api.dart';
 
 var loginUrl = Uri.parse('https://api.be-healthy.life/auth/login');
+final storage = new FlutterSecureStorage();
 
 class KakaoLogin implements SocialLogin {
   @override
@@ -16,13 +19,23 @@ class KakaoLogin implements SocialLogin {
       if (await isKakaoTalkInstalled()) {
         try {
           final kakaoTalkToken = await UserApi.instance.loginWithKakaoTalk();
+          log("kakaoTalkToken: ${kakaoTalkToken.accessToken}");
+
           var response = await http.post(loginUrl, body: {
             "accessToken": kakaoTalkToken.accessToken,
             "vendor": "kakao"
           });
           log("카카오톡계정/server_response:" + response.body);
-          print('카카오톡으로 로그인 성공');
-          return true;
+          if (response.statusCode == 201) {
+            await storage.write(
+                key: "accessToken",
+                value: jsonDecode(response.body)["accessToken"]);
+            log('카카오톡으로 로그인 성공');
+            return true;
+          } else {
+            log(response.body);
+            return false;
+          }
         } catch (error) {
           print('카카오톡으로 로그인 실패 $error');
           // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
@@ -34,14 +47,22 @@ class KakaoLogin implements SocialLogin {
           // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
           try {
             final kakaoToken = await UserApi.instance.loginWithKakaoAccount();
+            log("kakaoTalkToken: ${kakaoToken.accessToken}");
 
-            print('카카오계정으로 로그인 성공');
             var response = await http.post(loginUrl, body: {
               "accessToken": kakaoToken.accessToken,
               "vendor": "kakao"
             });
             log("카카오계정/server_response:" + response.body);
-            return true;
+            if (response.statusCode == 201) {
+              await storage.write(
+                  key: "accessToken",
+                  value: jsonDecode(response.body)["accessToken"]);
+              return true;
+            } else {
+              log(response.body);
+              return false;
+            }
           } catch (error) {
             print('카카오계정으로 로그인 실패 $error');
             return false;

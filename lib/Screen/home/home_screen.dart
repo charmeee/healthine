@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:healthin/Screen/diet/diet.dart';
 import 'package:healthin/Screen/report/report_screen.dart';
+import 'package:healthin/Screen/routineSetting/routineList_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../userSetting/userSetting.dart';
 import 'calendartab/calender.dart';
@@ -205,7 +206,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text("루틴을 추가해 보세요."),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RoutineList()),
+                            );
+                          },
                           icon: Icon(Icons.add),
                           iconSize: 50,
                         )

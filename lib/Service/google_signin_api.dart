@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'social_api.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -12,7 +14,11 @@ class GoogleLogin implements SocialLogin {
       var googleLoginResult = await _googleSignIn.signIn();
       if (googleLoginResult != null) {
         var ggauth = await googleLoginResult.authentication;
-        if (ggauth != null) {}
+        if (ggauth != null) {
+          log("ggauth.accessToken: ${ggauth.accessToken}");
+          log("ggauth.idToken: ${ggauth.idToken}");
+          return true;
+        }
         //SignInRequest(googleLoginResult.email, "fiowfef", context);
         return true;
       } else {
