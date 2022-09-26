@@ -6,14 +6,14 @@ import 'package:healthin/Service/auth_request_api.dart';
 
 import '../../Provider/user_provider.dart';
 
-class SignUp extends ConsumerStatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+class SignUpScreen extends ConsumerStatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUpScreen> createState() => _SignUpState();
 }
 
-class _SignUpState extends ConsumerState<SignUp> {
+class _SignUpState extends ConsumerState<SignUpScreen> {
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();

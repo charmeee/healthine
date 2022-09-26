@@ -3,12 +3,37 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Const/const.dart';
 import 'package:healthin/Model/user_model.dart';
 import 'package:healthin/Provider/user_provider.dart';
+import 'package:healthin/Service/social_api.dart';
 import 'package:http/http.dart' as http;
 import '../Model/routine_models.dart';
 
 //밑의 api를 다 provider에 넣어가지고
+
+Future<LoginState> sendVendorToken(
+    String venderAccessToken, String vendor) async {
+  try {
+    final response = await dio.post("https://api.be-healthy.life/auth/login",
+        data: {"accessToken": venderAccessToken, "vendor": vendor});
+    log("kakaoTalkToken{ data:${response.data}, statusCode:${response.statusCode} }");
+    if (response.statusCode == 201) {
+      storage.delete(key: "accessToken");
+      storage.write(key: "accessToken", value: response.data["accessToken"]);
+      if (response.data["isFreshman"] == true) {
+        return LoginState(isLogin: true, isFreshman: true);
+      }
+      return LoginState(isLogin: true, isFreshman: false);
+    } else {
+      log("server cant login");
+      return LoginState(isLogin: false, isFreshman: false);
+    }
+  } catch (e) {
+    log("kakaoTalkToken{ error:$e }");
+    return LoginState(isLogin: false, isFreshman: false);
+  }
+}
 
 Future<UserInfo> UserCreateRequest(username, password, name, nickname,
     phoneNumber, BuildContext context) async {

@@ -1,4 +1,10 @@
 abstract class SocialLogin {
-  Future<bool> login();
+  Future<LoginState> login();
   Future<bool> logout();
+}
+
+class LoginState {
+  bool isLogin = false;
+  bool isFreshman = false;
+  LoginState({required this.isLogin, required this.isFreshman});
 }

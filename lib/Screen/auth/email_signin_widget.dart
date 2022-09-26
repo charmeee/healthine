@@ -32,61 +32,61 @@ class _EmailSignInState extends ConsumerState<EmailSignIn> {
         SizedBox(
           height: 20,
         ),
-        Form(
-            child: Theme(
-          data: ThemeData(
-              primaryColor: Colors.indigo,
-              inputDecorationTheme: InputDecorationTheme(
-                  labelStyle: TextStyle(
-                color: Colors.indigo,
-                fontSize: 15,
-              ))),
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextField(
-                  controller: _idController,
-                  decoration: InputDecoration(labelText: '아이디를 입력해주세요'),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(labelText: '비밀번호를 입력해주세요'),
-                  keyboardType: TextInputType.text,
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                TextButton(
-                    onPressed: () {
-                      try {
-                        LoginRequest(_idController.text,
-                                _passwordController.text, context)
-                            .then((value) {
-                          ref.read(loginStateProvider.notifier).state = true;
-                          ref
-                              .read(userStateProvider.notifier)
-                              .state
-                              .accessToken = value.accessToken;
-                        });
-                      } catch (e) {
-                        log("로그인 에러");
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.indigo,
-                      padding: EdgeInsets.all(20),
-                    ),
-                    child: Text("로그인하기", style: TextStyle(color: Colors.white)))
-              ],
-            ),
-          ),
-        )),
+        // Form(
+        //     child: Theme(
+        //   data: ThemeData(
+        //       primaryColor: Colors.indigo,
+        //       inputDecorationTheme: InputDecorationTheme(
+        //           labelStyle: TextStyle(
+        //         color: Colors.indigo,
+        //         fontSize: 15,
+        //       ))),
+        //   child: Container(
+        //     child: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.stretch,
+        //       children: [
+        //         TextField(
+        //           controller: _idController,
+        //           decoration: InputDecoration(labelText: '아이디를 입력해주세요'),
+        //           keyboardType: TextInputType.emailAddress,
+        //         ),
+        //         SizedBox(
+        //           height: 10,
+        //         ),
+        //         TextField(
+        //           controller: _passwordController,
+        //           obscureText: true,
+        //           decoration: InputDecoration(labelText: '비밀번호를 입력해주세요'),
+        //           keyboardType: TextInputType.text,
+        //         ),
+        //         SizedBox(
+        //           height: 30,
+        //         ),
+        //         TextButton(
+        //             onPressed: () {
+        //               try {
+        //                 LoginRequest(_idController.text,
+        //                         _passwordController.text, context)
+        //                     .then((value) {
+        //                   ref.read(loginStateProvider.notifier).state = true;
+        //                   ref
+        //                       .read(userStateProvider.notifier)
+        //                       .state
+        //                       .accessToken = value.accessToken;
+        //                 });
+        //               } catch (e) {
+        //                 log("로그인 에러");
+        //               }
+        //             },
+        //             style: TextButton.styleFrom(
+        //               backgroundColor: Colors.indigo,
+        //               padding: EdgeInsets.all(20),
+        //             ),
+        //             child: Text("로그인하기", style: TextStyle(color: Colors.white)))
+        //       ],
+        //     ),
+        //   ),
+        // )),
       ],
     );
   }

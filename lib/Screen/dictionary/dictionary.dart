@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Provider/dictonary_provider.dart';
-import 'package:healthin/Provider/local_database_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import '../../Model/routine_models.dart';
 import 'dictionary_detail.dart';
@@ -188,7 +187,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
   @override
   Widget build(BuildContext context) {
     // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
-    final filteredDatasWatch = ref.watch(filteredDatas);
+    final filteredDatasWatch = ref.watch(filteredDictionaryDatas);
     return Expanded(
       child: Container(
         child: filteredDatasWatch == null || filteredDatasWatch.isEmpty

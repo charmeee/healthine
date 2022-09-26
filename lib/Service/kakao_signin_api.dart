@@ -8,91 +8,53 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 
+import 'auth_request_api.dart';
 import 'social_api.dart';
 
-var loginUrl = Uri.parse('https://api.be-healthy.life/auth/login');
 final storage = FlutterSecureStorage();
 
 class KakaoLogin implements SocialLogin {
   @override
-  Future<bool> login() async {
+  Future<LoginState> login() async {
     try {
       if (await isKakaoTalkInstalled()) {
         try {
           final kakaoTalkToken = await UserApi.instance.loginWithKakaoTalk();
           log("kakaoTalkToken: ${kakaoTalkToken.accessToken}");
-          var response = await http.post(loginUrl, body: {
-            "accessToken": kakaoTalkToken.accessToken,
-            "vendor": "kakao"
-          });
-          log("카카오계정/server_response:" + response.body);
-          if (response.statusCode == 201) {
-            await storage.write(
-                key: "accessToken",
-                value: jsonDecode(response.body)["accessToken"]);
-            log("kakaoTalkToken{ data:${response} }");
-            return true;
-          } else {
-            log(response.body);
-            return false;
-          }
-          // dio.post("https://api.be-healthy.life/auth/login", data: {
-          //   "accessToken": kakaoTalkToken.accessToken,
-          //   "socialType": "kakao"
-          // }).then((value) {
-          //   log("kakaoTalkToken{ data:${value.data}, statusCode:${value.statusCode} }");
-          //   storage.write(key: "accessToken", value: value.data["accessToken"]);
-          //   return true;
-          // }).catchError((e) {
-          //   log("loginsServerError: ${e.toString()}");
-          // });
-          return false;
+          return await sendVendorToken(kakaoTalkToken.accessToken, "kakao");
         } catch (error) {
           print('카카오톡으로 로그인 실패 $error');
           // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
           // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
           if (error is PlatformException && error.code == 'CANCELED') {
             print('디바이스 권한 요청 화면에서 로그인을 취소한 경우');
-            return false;
+            return LoginState(isLogin: false, isFreshman: false);
           }
           // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
           try {
             final kakaoToken = await UserApi.instance.loginWithKakaoAccount();
-            log("kakaoTalkToken: ${kakaoToken.accessToken}");
-
-            var response = await http.post(loginUrl, body: {
-              "accessToken": kakaoToken.accessToken,
-              "vendor": "kakao"
-            });
-            log("카카오계정/server_response:" + response.body);
-            if (response.statusCode == 201) {
-              await storage.write(
-                  key: "accessToken",
-                  value: jsonDecode(response.body)["accessToken"]);
-
-              return true;
-            } else {
-              log(response.body);
-              return false;
-            }
+            log("kakaoToken: ${kakaoToken.accessToken}");
+            return await sendVendorToken(
+                kakaoToken.accessToken.toString(), "kakao");
           } catch (error) {
             print('카카오계정으로 로그인 실패 $error');
-            return false;
+            return LoginState(isLogin: false, isFreshman: false);
           }
         }
       } else {
         try {
           print('카카오계정으로 로그인 성공');
-          await UserApi.instance.loginWithKakaoAccount();
-          return true;
+          final kakaoToken = await UserApi.instance.loginWithKakaoAccount();
+          return await sendVendorToken(
+              kakaoToken.accessToken.toString(), "kakao");
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
-          return false;
+          return LoginState(isLogin: false, isFreshman: false);
         }
       }
     } catch (e) {
       print(e);
-      return false;
+      return LoginState(isLogin: false, isFreshman: false);
     }
   }
 

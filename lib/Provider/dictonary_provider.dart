@@ -8,7 +8,7 @@ import 'package:healthin/Service/dictionary_api.dart';
 final searchBynameProvider = StateProvider<String?>((ref) => null);
 final searchBytypeProvider = StateProvider<String?>((ref) => null);
 
-final filteredDatas = Provider<List<DictionaryData>>((ref) {
+final filteredDictionaryDatas = Provider<List<DictionaryData>>((ref) {
   final String? filtername = ref.watch(searchBynameProvider); //string으로 들어감.
   final String? filtertype = ref.watch(searchBytypeProvider); //string으로 들어갈것.
   final List<DictionaryData> dictionarys =

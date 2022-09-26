@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthin/Service/community_api.dart';
+import 'Const/const.dart';
 import 'firebase_options.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
@@ -12,7 +13,6 @@ import 'Screen/auth/main_signin_screen.dart';
 import 'Screen/main_layout.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Database/drift_database.dart';
 import 'Service/auth_request_api.dart';
 
 void main() async {
@@ -23,7 +23,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  dio.interceptors.add(
+    CustomInterceptor(),
+  );
   runApp(ProviderScope(
     child: GestureDetector(
       onTap: () {
