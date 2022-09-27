@@ -1,11 +1,16 @@
 //import 'dart:html';
 import 'dart:developer';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthin/Service/community_api.dart';
-import 'Const/const.dart';
+import 'Service/dio/dio_handling.dart';
+import 'Service/dio/dio_main.dart';
 import 'firebase_options.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -26,6 +31,11 @@ void main() async {
   dio.interceptors.add(
     CustomInterceptor(),
   );
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+  String appDocPath = appDocDir.path;
+  var cj = PersistCookieJar(
+      ignoreExpires: true, storage: FileStorage(appDocPath + "/.cookies/"));
+  dio.interceptors.add(CookieManager(cj));
   runApp(ProviderScope(
     child: GestureDetector(
       onTap: () {

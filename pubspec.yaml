@@ -61,6 +61,7 @@ dependencies:
   permission_handler: ^10.0.1
   qr_code_scanner: ^1.0.1
   dio: ^4.0.6
+  dio_cookie_manager: ^2.0.0
 
 
 dev_dependencies:
