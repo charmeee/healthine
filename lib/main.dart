@@ -8,7 +8,6 @@ import 'Service/dio/dio_main.dart';
 import 'firebase_options.dart';
 import 'package:healthin/Provider/user_provider.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -28,14 +27,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  dio.interceptors.add(
-    CustomInterceptor(),
-  );
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String appDocPath = appDocDir.path;
   var cj = PersistCookieJar(
-      ignoreExpires: true, storage: FileStorage(appDocPath + "/.cookies/"));
-  dio.interceptors.add(CookieManager(cj));
+      ignoreExpires: true, storage: FileStorage("$appDocPath/.cookies/"));
+  dio.interceptors.add(
+    CustomInterceptor(cj),
+  );
   runApp(ProviderScope(
     child: GestureDetector(
       onTap: () {
