@@ -52,7 +52,7 @@ class _UserSettingState extends ConsumerState<UserSetting> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              _userinfo.name.toString(),
+              _userinfo.nickname.toString(),
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -66,11 +66,6 @@ class _UserSettingState extends ConsumerState<UserSetting> {
                   ListTile(
                     leading: Text("아이디"),
                     title: Text(_userinfo.username.toString()),
-                  ),
-                  ListTile(
-                    leading: Text("전화번호"),
-                    title: Text(_userinfo.phoneNumber.toString()),
-                    trailing: Icon(Icons.edit),
                   ),
                   ListTile(
                     leading: Text("닉네임"),

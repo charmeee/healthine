@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Const/const.dart';
@@ -17,7 +18,7 @@ import '../Model/routine_models.dart';
 Future<LoginState> sendVendorToken(
     String venderAccessToken, String vendor) async {
   try {
-    final response = await dio.post("https://api.be-healthy.life/auth/login",
+    final response = await dio.post("/auth/login",
         data: {"accessToken": venderAccessToken, "vendor": vendor});
     log("kakaoTalkToken{ data:${response.data}, statusCode:${response.statusCode} }");
     if (response.statusCode == 201) {
@@ -56,10 +57,7 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
     log("회원가입완료.");
 
     return UserInfo(
-        username: username.toString(),
-        name: name.toString(),
-        nickname: nickname.toString(),
-        phoneNumber: phoneNumber.toString());
+        username: username.toString(), nickname: nickname.toString());
   } else {
     log(response.body);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -69,40 +67,48 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
   }
 }
 
-Future<UserInfo> LoginRequest(username, password, context) async {
-  log('login attempt: $username with $password');
-  var url = Uri.parse('https://api.be-healthy.life/auth/login');
-  var response = await http.post(url, body: {
-    "username": username.toString(), //아이디
-    "password": password.toString(),
-  });
-  if (response.statusCode == 201) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("$username님 로그인되었습니다."),
-    ));
-    log("로그인완료.");
-    log(response.body.toString());
-    return UserInfo(
-        username: username,
-        accessToken: jsonDecode(response.body)["accessToken"]);
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(jsonDecode(response.body)["message"].toString()),
-    ));
-    throw Exception("로그인 오류 코드${response.body}");
+Future<UserInfo> UserProfileRequest() async {
+  try {
+    final response = await dio.get("/users/profile",
+        options: Options(headers: {"Authorization": "true"}));
+    if (response.statusCode == 200) {
+      return UserInfo(
+        id: response.data["id"],
+        username: response.data["username"],
+        nickname: response.data["nickname"],
+        userEmail: response.data["userEmail"],
+        gender: response.data["gender"],
+        ageRange: response.data["ageRange"],
+      );
+    } else {
+      throw Exception("회원정보가져오기 오류코드${response.data}");
+    }
+  } catch (e) {
+    throw Exception("회원정보가져오기 오류코드${e}");
   }
+  // var url = Uri.parse('https://api.be-healthy.life/auth/profile');
+  // log("access: $accessToken");
+  // final response =
+  //     await http.get(url, headers: {"Authorization": "Bearer $accessToken"});
+  // if (response.statusCode == 200) {
+  //   var _userData = json.decode(response.body);
+  //   log("회원정보가져오기 완료");
+  //   return UserInfo.fromJson(_userData);
+  // } else {
+  //   throw Exception("회원정보가져오기 오류코드${response.body}");
+  // }
 }
 
-Future<UserInfo> UserProfileRequest(accessToken) async {
-  var url = Uri.parse('https://api.be-healthy.life/auth/profile');
-  log("access: $accessToken");
-  final response =
-      await http.get(url, headers: {"Authorization": "Bearer $accessToken"});
-  if (response.statusCode == 200) {
-    var _userData = json.decode(response.body);
-    log("회원정보가져오기 완료");
-    return UserInfo.fromJson(_userData);
-  } else {
-    throw Exception("회원정보가져오기 오류코드${response.body}");
+Future<void> UserUpdateRequest(UserInfo userInfo) async {
+  //type, value
+  try {
+    final response = await dio.patch("/users/${userInfo.id}",
+        options: Options(headers: {"Authorization": "true"}),
+        data: {"nickname": userInfo.nickname});
+    if (response.statusCode != 200) {
+      throw Exception("UserUpdateRequest 오류코드${response.data}");
+    }
+  } catch (e) {
+    throw Exception("UserUpdateRequest 오류코드${e}");
   }
 }

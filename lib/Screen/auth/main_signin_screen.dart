@@ -73,6 +73,7 @@ class MainSignIn extends ConsumerWidget {
                 color: Colors.black,
               ),
               onPressed: () async {
+                //util로해서 만드는게 나을듯?
                 LoginState loginState = await kakaoLogin.login();
                 ref.read(loginStateProvider.notifier).state =
                     loginState.isLogin;

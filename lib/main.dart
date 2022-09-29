@@ -86,12 +86,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
     //MainSignIn은 로그인 페이지'
-    if (user.accessToken != null) {
-      UserProfileRequest(user.accessToken).then((value) {
-        ref.read(userStateProvider.notifier).state = value;
-      });
-      //getComunnityData(user.accessToken);
-    }
+
     return isLogined ? MyHome() : MainSignIn();
   }
 }

@@ -10,7 +10,7 @@ class CustomInterceptor extends Interceptor {
 
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    log('[REQ] [${options.method}] ${options.uri} cookie:${options.headers}');
+    log('[REQ] [${options.method}] ${options.uri} headers:${options.headers}');
 
     //쿠키 넣는 파트
     cookieJar.loadForRequest(options.uri).then((cookies) {

@@ -41,7 +41,7 @@ class Profile extends ConsumerWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    user.name.toString(),
+                                    user.nickname.toString(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 )

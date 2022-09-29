@@ -14,8 +14,42 @@ final userStateProvider = StateProvider<UserInfo>((ref) {
   return UserInfo();
 });
 
-final httpAccessHeader = Provider((ref) {
-  return {
-    "Authorization": "Bearer ${ref.watch(userStateProvider).accessToken}"
-  };
+//userno
+
+class UserProfileNotifier extends StateNotifier<UserInfo> {
+  UserProfileNotifier([UserInfo? initialUser])
+      : super(initialUser ?? UserInfo()) {
+    log("userProfile 초기화");
+  }
+
+  getUserProfile() async {
+    log("userProfile 받아오기");
+    state = await UserProfileRequest();
+  }
+
+  updateUserProfile(String nickname) async {
+    UserInfo userInfo = state;
+    userInfo.nickname = nickname;
+    log("닉넴 변경");
+    UserUpdateRequest(userInfo);
+  }
+
+  deleteUserProfile() async {
+    log("회원탈퇴");
+    state = UserInfo(
+        id: null,
+        nickname: null,
+        username: null,
+        userEmail: null,
+        ageRange: null,
+        gender: null);
+  }
+}
+
+final UserProfileNotifierProvider =
+    StateNotifierProvider<UserProfileNotifier, UserInfo>((ref) {
+  if (ref.watch(loginStateProvider) == true) {
+    UserProfileNotifier().getUserProfile();
+  }
+  return UserProfileNotifier();
 });

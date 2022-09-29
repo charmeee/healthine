@@ -12,6 +12,7 @@ import 'auth_request_api.dart';
 import 'social_api.dart';
 
 final storage = FlutterSecureStorage();
+List<String> serviceTerms = ['account_email', 'gender', 'age_range'];
 
 class KakaoLogin implements SocialLogin {
   @override
@@ -19,7 +20,8 @@ class KakaoLogin implements SocialLogin {
     try {
       if (await isKakaoTalkInstalled()) {
         try {
-          final kakaoTalkToken = await UserApi.instance.loginWithKakaoTalk();
+          final kakaoTalkToken = await UserApi.instance
+              .loginWithKakaoTalk(serviceTerms: serviceTerms);
           log("kakaoTalkToken: ${kakaoTalkToken.accessToken}");
           return await sendVendorToken(kakaoTalkToken.accessToken, "kakao");
         } catch (error) {
@@ -30,7 +32,7 @@ class KakaoLogin implements SocialLogin {
             print('디바이스 권한 요청 화면에서 로그인을 취소한 경우');
             return LoginState(isLogin: false, isFreshman: false);
           }
-          // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
+          // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인ㅌ
           try {
             final kakaoToken = await UserApi.instance.loginWithKakaoAccount();
             log("kakaoToken: ${kakaoToken.accessToken}");
