@@ -6,7 +6,7 @@ import 'package:healthin/Model/community_model.dart';
 import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Provider/community_provider.dart';
 
-import 'community_detail_screen.dart';
+// import 'community_detail_screen.dart';
 import 'communiuty_write_screen.dart';
 
 enum CommunityListFilter {
@@ -21,8 +21,8 @@ class Community extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ref를 사용해 프로바이더 구독(listen)하기
-    List<CommunityBoardsList> CommunityList =
-        ref.watch(CommunityListNotifierProvider);
+    // List<CommunityBoardsType> CommunityList =
+    //     ref.watch(CommunityListNotifierProvider);
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -41,27 +41,27 @@ class Community extends ConsumerWidget {
         body: TabBarView(
           children: [
             Container(
-              child: ListView.separated(
-                itemCount: CommunityList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(CommunityList[index].title),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Communitydetail(
-                                  id: CommunityList[index].id)));
-                    },
-                    trailing: Text(CommunityList[index].nickname),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  height: 10,
-                  color: Colors.indigo,
+                // child: ListView.separated(
+                //   itemCount: CommunityList.length,
+                //   itemBuilder: (context, index) {
+                //     return ListTile(
+                //       title: Text(CommunityList[index].title),
+                //       onTap: () {
+                //         Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (context) => Communitydetail(
+                //                     id: CommunityList[index].id)));
+                //       },
+                //       trailing: Text(CommunityList[index].slug),
+                //     );
+                //   },
+                //   separatorBuilder: (BuildContext context, int index) => Divider(
+                //     height: 10,
+                //     color: Colors.indigo,
+                //   ),
+                // ),
                 ),
-              ),
-            ),
             Container(color: Colors.yellow),
             Container(
               color: Colors.greenAccent,

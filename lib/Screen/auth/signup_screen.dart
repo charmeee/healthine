@@ -17,9 +17,21 @@ class SignUpScreen extends ConsumerStatefulWidget {
 class _SignUpState extends ConsumerState<SignUpScreen> {
   final _nicknameController = TextEditingController();
 
-  void _performLogin(BuildContext context) {
+  Future<void> _performLogin(BuildContext context) async {
     String nickname = _nicknameController.text;
     try {
+      final result = await ref
+          .read(userProfileNotifierProvider.notifier)
+          .updateUserProfile(nickname);
+      if (result) {
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('닉네임 변경 실패'),
+          ),
+        );
+      }
       //fetch user nickname
     } catch (e) {
       print("회원가입실패");
@@ -32,12 +44,12 @@ class _SignUpState extends ConsumerState<SignUpScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref.read(UserProfileNotifierProvider.notifier).getUserProfile();
+    ref.read(userProfileNotifierProvider.notifier).getUserProfile();
   }
 
   @override
   Widget build(BuildContext context) {
-    UserInfo userInfo = ref.watch(UserProfileNotifierProvider);
+    UserInfo userInfo = ref.watch(userProfileNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

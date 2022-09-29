@@ -69,7 +69,7 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
 
 Future<UserInfo> UserProfileRequest() async {
   try {
-    final response = await dio.get("/users/profile",
+    final response = await dio.get("/auth/profile",
         options: Options(headers: {"Authorization": "true"}));
     if (response.statusCode == 200) {
       return UserInfo(
@@ -99,7 +99,7 @@ Future<UserInfo> UserProfileRequest() async {
   // }
 }
 
-Future<void> UserUpdateRequest(UserInfo userInfo) async {
+Future<bool> UserUpdateRequest(UserInfo userInfo) async {
   //type, value
   try {
     final response = await dio.patch("/users/${userInfo.id}",
@@ -107,6 +107,8 @@ Future<void> UserUpdateRequest(UserInfo userInfo) async {
         data: {"nickname": userInfo.nickname});
     if (response.statusCode != 200) {
       throw Exception("UserUpdateRequest 오류코드${response.data}");
+    } else {
+      return true;
     }
   } catch (e) {
     throw Exception("UserUpdateRequest 오류코드${e}");

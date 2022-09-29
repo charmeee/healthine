@@ -26,7 +26,7 @@ class CustomInterceptor extends Interceptor {
     });
 
     //해더 변환하는 파트
-    if (options.headers['accessToken'] == 'true') {
+    if (options.headers['Authorization'] == 'true') {
       // 헤더 삭제
       options.headers.remove('accessToken');
 
@@ -34,8 +34,9 @@ class CustomInterceptor extends Interceptor {
 
       // 실제 토큰으로 대체
       options.headers.addAll({
-        'authorization': 'Bearer $token',
+        'Authorization': 'Bearer $token',
       });
+      log("header: ${options.headers}");
     }
     return handler.next(options);
   }

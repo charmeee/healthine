@@ -8,12 +8,6 @@ import 'package:healthin/Service/auth_request_api.dart';
 //로그인 여부
 final loginStateProvider = StateProvider<bool>((ref) => false);
 
-//사용자 정보
-final userStateProvider = StateProvider<UserInfo>((ref) {
-  log("userState 변경");
-  return UserInfo();
-});
-
 //userno
 
 class UserProfileNotifier extends StateNotifier<UserInfo> {
@@ -23,15 +17,19 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
   }
 
   getUserProfile() async {
-    log("userProfile 받아오기");
+    log("******userProfile 받아오기******");
     state = await UserProfileRequest();
+    log(state.id.toString());
+    log(state.username.toString());
+    log(state.nickname.toString());
+    log("*****************************");
   }
 
-  updateUserProfile(String nickname) async {
+  Future<bool> updateUserProfile(String nickname) async {
     UserInfo userInfo = state;
     userInfo.nickname = nickname;
     log("닉넴 변경");
-    UserUpdateRequest(userInfo);
+    return UserUpdateRequest(userInfo);
   }
 
   deleteUserProfile() async {
@@ -46,10 +44,7 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
   }
 }
 
-final UserProfileNotifierProvider =
+final userProfileNotifierProvider =
     StateNotifierProvider<UserProfileNotifier, UserInfo>((ref) {
-  if (ref.watch(loginStateProvider) == true) {
-    UserProfileNotifier().getUserProfile();
-  }
   return UserProfileNotifier();
 });

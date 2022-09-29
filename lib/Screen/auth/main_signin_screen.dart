@@ -19,7 +19,6 @@ class MainSignIn extends ConsumerWidget {
   // Future<void> googleSignIn(context) async {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //bool isLogined = ref.watch(loginStateProvider);
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40),
@@ -77,7 +76,7 @@ class MainSignIn extends ConsumerWidget {
                 LoginState loginState = await kakaoLogin.login();
                 ref.read(loginStateProvider.notifier).state =
                     loginState.isLogin;
-                if (loginState.isFreshman) {
+                if (loginState.isFreshman == false) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(

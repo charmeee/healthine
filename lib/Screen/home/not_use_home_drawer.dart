@@ -12,7 +12,7 @@ class HomeDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     log("빌드시작");
-    final _userdata = ref.watch(userStateProvider);
+    final _userdata = ref.watch(userProfileNotifierProvider);
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(

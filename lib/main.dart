@@ -80,8 +80,10 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     //changeStatus();
     final isLogined = ref.watch(loginStateProvider);
-    final user = ref.watch(userStateProvider);
-
+    final userProfile = ref.watch(userProfileNotifierProvider.notifier);
+    if (isLogined == true) {
+      userProfile.getUserProfile();
+    }
     print("메인 status ${isLogined}");
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
