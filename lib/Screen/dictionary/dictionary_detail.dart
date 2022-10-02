@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/Const/const.dart';
 import 'package:healthin/Model/dictionary_model.dart';
 import 'package:healthin/Model/routine_models.dart';
 
@@ -12,8 +13,8 @@ class DictionaryDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.indigo,
-        title: Text(founddata.name.toString()),
+        backgroundColor: primaryColor,
+        title: Text(founddata.title.toString()),
       ),
       body: Container(
         child: Column(
@@ -22,14 +23,28 @@ class DictionaryDetail extends StatelessWidget {
           children: [
             Column(
               children: [
-                Text(founddata.name.toString()),
-                Text(founddata.enName.toString()),
+                Text(
+                  founddata.title.toString(),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+                Text(founddata.enTitle.toString()),
                 Image.asset("assets/exercise_img/${founddata.id}.png")
               ],
             ),
-            Column(
-                children:
-                    founddata.content!.map((item) => Text('- $item')).toList()),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: founddata.description!
+                      .map((item) => Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              '$item',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ))
+                      .toList()),
+            ),
           ],
         ),
       ),

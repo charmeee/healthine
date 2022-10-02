@@ -67,12 +67,20 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   void initialization() async {
     // This is where you can initialize the resources needed by your app while
-    // the splash screen is displayed.  Remove the following example because
+    // the splash screen is displayed.  Remove the following example becauseㄴ
     // delaying the user experience is a bad design practice!
     // ignore_for_file: avoid_print
     //정보가다받아와질때까지 delay 넣어주면될듯
     initializeDateFormatting();
-    await Future.delayed(const Duration(milliseconds: 200));
+    try {
+      await ref.read(userProfileNotifierProvider.notifier).getUserProfile();
+      ref.read(loginStateProvider.notifier).state = true;
+      log("자동로그인성공");
+    } catch (e) {
+      ref.read(loginStateProvider.notifier).state = false;
+      print(e);
+      log("자동로그인 실패");
+    }
     FlutterNativeSplash.remove();
   }
 

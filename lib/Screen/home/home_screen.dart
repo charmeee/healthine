@@ -1,9 +1,15 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/user_model.dart';
+import 'package:healthin/Screen/dictionary/qr_dicctionary.dart';
 import 'package:healthin/Screen/diet/diet.dart';
 import 'package:healthin/Screen/report/report_screen.dart';
 import 'package:healthin/Screen/routineSetting/routineList_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../Provider/user_provider.dart';
 import '../userSetting/userSetting.dart';
 import 'calendartab/calender.dart';
 import '../calender/new_calander.dart';
@@ -67,17 +73,14 @@ List<String> day = [
   "일",
 ];
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _current = 0;
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    UserInfo user = ref.watch(userProfileNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
@@ -87,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '전민지님',
+              user.nickname != null ? '${user.nickname}님' : '',
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
@@ -219,25 +222,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                // Container(
-                //   width: MediaQuery.of(context).size.width,
-                //   padding: EdgeInsets.symmetric(horizontal: 20),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.stretch,
-                //     children: [
-                //       ElevatedButton(
-                //         onPressed: () {},
-                //         child: Text("루틴 시작하기"),
-                //         style: ButtonStyle(),
-                //       ),
-                //       ElevatedButton(
-                //         onPressed: () {},
-                //         child: Text("루틴 시작하기"),
-                //         style: ButtonStyle(),
-                //       ),
-                //     ],
-                //   ),
-                // ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QrDictionary(
+                                      equipmentId:
+                                          'c63d9b90-59bf-4303-b24c-43ff72323216',
+                                    )),
+                          );
+                        },
+                        child: Text("사전"),
+                        style: ButtonStyle(),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text("루틴 시작하기"),
+                        style: ButtonStyle(),
+                      ),
+                    ],
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),

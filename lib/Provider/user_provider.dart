@@ -18,7 +18,8 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
 
   getUserProfile() async {
     log("******userProfile 받아오기******");
-    state = await UserProfileRequest();
+    UserInfo userInfo = await userProfileRequest();
+    state = userInfo;
     log(state.id.toString());
     log(state.username.toString());
     log(state.nickname.toString());
@@ -46,5 +47,8 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
 
 final userProfileNotifierProvider =
     StateNotifierProvider<UserProfileNotifier, UserInfo>((ref) {
+  // ref.watch(loginStateProvider) == true
+  //     ? UserProfileNotifier().getUserProfile()
+  //     : null;
   return UserProfileNotifier();
 });

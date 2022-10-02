@@ -72,10 +72,6 @@ class _UserSettingState extends ConsumerState<UserSetting> {
                     title: Text(_userinfo.nickname.toString()),
                     trailing: Icon(Icons.edit),
                   ),
-                  ListTile(
-                    leading: Text("등록핼스장"),
-                    title: Text("관악관악헬스"),
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(

@@ -68,7 +68,7 @@ Future<UserInfo> UserCreateRequest(username, password, name, nickname,
   }
 }
 
-Future<UserInfo> UserProfileRequest() async {
+Future<UserInfo> userProfileRequest() async {
   try {
     final response = await dio.get("/auth/profile",
         options: Options(headers: {"Authorization": "true"}));

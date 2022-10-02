@@ -19,7 +19,7 @@ final filteredDictionaryDatas = Provider<List<DictionaryData>>((ref) {
   } else {
     if (filtername != null) {
       filteredDictionarys.addAll(dictionarys.where((data) =>
-          data.name!.toLowerCase().contains(filtername.toLowerCase())));
+          data.title.toLowerCase().contains(filtername.toLowerCase())));
     }
     if (filtertype != null) {
       filteredDictionarys
@@ -37,10 +37,10 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
   }
 
   getDictionary() async {
-    List<DictionaryData> dictionaryData = await readDictionaryJson();
+    List<DictionaryData> dictionaryData = await getDicionaryList();
     if (dictionaryData.isNotEmpty) {
       state = dictionaryData;
-      log(state[0].name.toString());
+      log(state[0].title.toString());
       log("사전데이터를 받아옴.");
     }
   }

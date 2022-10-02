@@ -1,26 +1,27 @@
 class DictionaryData {
-  int? id;
-  String? name;
-  String? enName;
-  String? type;
-  int? difficulty;
-  List? content;
-  List? precautions;
+  String id;
+  String title;
+  String enTitle;
+  String type;
+  // int? difficulty;
+  List? description;
+  // List? precautions;
 
-  DictionaryData(
-      {this.id,
-      this.name,
-      this.enName,
-      this.type,
-      this.difficulty,
-      this.content,
-      this.precautions});
+  DictionaryData({
+    required this.id,
+    required this.title,
+    required this.enTitle,
+    required this.type,
+    // this.difficulty,
+    this.description,
+    //this.precautions
+  });
   DictionaryData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        name = json['name'],
-        enName = json['enName'],
+        title = json['title'],
+        enTitle = json['enTitle'],
         type = json['type'],
-        difficulty = json['difficulty'],
-        content = json['content'],
-        precautions = json['precautions'];
+        // difficulty = json['difficulty'],
+        description = json['description'].split('\n');
+  //precautions = json['precautions'];
 }

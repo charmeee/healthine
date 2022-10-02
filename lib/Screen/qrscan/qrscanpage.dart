@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:healthin/Model/dictionary_model.dart';
 import 'package:healthin/Screen/dictionary/dictionary_detail.dart';
+import 'package:healthin/Screen/dictionary/qr_dicctionary.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 //import '../exercisewatch/whileExercise.dart';
@@ -122,19 +123,6 @@ class _QRViewExampleState extends State<QrScanPage> {
     );
   }
 
-  Future<List<DictionaryData>> readJson() async {
-    //json파일 읽어오기
-    List<DictionaryData> alldata = [];
-    final String response =
-        await rootBundle.loadString('testjsonfile/healthmachinedata.json');
-    //print(response.runtimeType);w
-    Map<String, dynamic> _alldata = await jsonDecode(response);
-    alldata = [
-      ..._alldata["exerciseType"].map((item) => DictionaryData.fromJson(item))
-    ];
-    return alldata;
-  }
-
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
@@ -143,22 +131,16 @@ class _QRViewExampleState extends State<QrScanPage> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
-        if (scanData != null) {
+        if (result != null) {
           //widget.addDidexercise(result!.code.toString());
           this.controller!.dispose();
-          //Navigator.pop(context);
-          readJson().then((value) {
-            DictionaryData founddata = value.firstWhere(
-                (element) => element.id == int.parse(result!.code.toString()));
-            if (founddata != null) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DictionaryDetail(
-                            founddata: founddata,
-                          )));
-            }
-          });
+          //Navigator.pop(context);//QrDictionary
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => QrDictionary(
+                        equipmentId: result!.code.toString(),
+                      )));
         }
       });
     });

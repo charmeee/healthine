@@ -214,25 +214,25 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                     trailing: widget.addmode
                         ? Checkbox(
                             value: widget.routineList.any((item) =>
-                                item.name == filteredDatasWatch[index].name),
+                                item.name == filteredDatasWatch[index].title),
                             onChanged: (value) {
                               log(widget.routineList.length.toString());
                               log("체크박스 value" + value.toString());
                               if (value!) {
                                 widget.addRoutineData(RoutineData(
-                                    name: filteredDatasWatch[index].name ?? "",
-                                    type: filteredDatasWatch[index].type ?? "",
+                                    name: filteredDatasWatch[index].title,
+                                    type: filteredDatasWatch[index].type,
                                     numPerSet: 10,
                                     weight: 10,
                                     img:
                                         "assets/exercise_img/${filteredDatasWatch[index].id}.png"));
                               } else {
                                 widget.removeRoutineData(
-                                    filteredDatasWatch[index].name ?? "");
+                                    filteredDatasWatch[index].title);
                               }
                             })
                         : null,
-                    title: Text(filteredDatasWatch[index].name.toString()),
+                    title: Text(filteredDatasWatch[index].title.toString()),
                   );
                 },
                 itemCount: filteredDatasWatch.length,
