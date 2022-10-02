@@ -76,7 +76,7 @@ class MainSignIn extends ConsumerWidget {
                 LoginState loginState = await kakaoLogin.login();
                 ref.read(loginStateProvider.notifier).state =
                     loginState.isLogin;
-                if (loginState.isFreshman == false) {
+                if (loginState.isFreshman) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:healthin/Model/community_model.dart';
 import 'package:http/http.dart' as http;
@@ -8,18 +9,59 @@ import 'package:healthin/Model/routine_models.dart';
 
 import 'dio/dio_main.dart';
 
-//게시글 목록 조회
-Future<List<CommunityBoardList>> getCommunityBoardList(
-    int page, int limit, String boardId) async {
+//게시글 정보 조회
+Future<CommunityBoard> getCommunityBoardData(
+    String boardId, String postId) async {
   try {
-    final response =
-        await dio.get("/boards/$boardId/posts?page=$page&limit=$limit");
+    final response = await dio.get("/boards/${boardId}/posts/${postId}",
+        options: Options(headers: {"Authorization": "true"}));
     if (response.statusCode == 200) {
       log("게시글 목록 조회 완료");
-      List<CommunityBoardList> communityBoardList = [];
+
+      return CommunityBoard.fromJson(response.data);
+    } else {
+      log("커뮤니티 정보가져오기 오류");
+      throw Exception(response.data);
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
+//게시글 댓글 조회
+Future<CommunityBoardComment> getCommunityBoardComment(
+    String boardId, String postId) async {
+  ///boards/{boardId}/posts/{postId}/comments
+  try {
+    final response = await dio.get(
+        "/boards/${boardId}/posts/${postId}/comments",
+        options: Options(headers: {"Authorization": "true"}));
+    if (response.statusCode == 200) {
+      log("게시글 목록 조회 완료");
+
+      return CommunityBoardComment.fromJson(response.data);
+    } else {
+      log("커뮤니티 정보가져오기 오류");
+      throw Exception(response.data);
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
+//게시글 목록 조회
+Future<List<CommunityBoard>> getCommunityBoardList(
+    int page, int limit, String boardId) async {
+  try {
+    final response = await dio.get(
+        "/boards/$boardId/posts?page=$page&limit=$limit",
+        options: Options(headers: {"Authorization": "true"}));
+    if (response.statusCode == 200) {
+      log("게시글 목록 조회 완료");
+      List<CommunityBoard> communityBoardList = [];
       try {
         communityBoardList = [
-          ...response.data.map((item) => CommunityBoardList.fromJson(item))
+          ...response.data.map((item) => CommunityBoard.fromJson(item))
         ];
         return communityBoardList;
       } catch (e) {
@@ -37,14 +79,16 @@ Future<List<CommunityBoardList>> getCommunityBoardList(
 //커뮤니티 분류 정보
 Future<List<CommunityBoardsType>> getCommunityBoardsType() async {
   try {
-    final response = await dio.get("/boards");
+    final response = await dio.get("/boards",
+        options: Options(headers: {"Authorization": "true"}));
     if (response.statusCode == 200) {
       log("커뮤니티 분류 정보가져오기 완료");
+      log(response.data["items"].toString());
       List<CommunityBoardsType> communityBoardsTypeList = [];
       try {
-        communityBoardsTypeList = [
-          ...response.data.map((item) => CommunityBoardsType.fromJson(item))
-        ];
+        for (var item in response.data["items"]) {
+          communityBoardsTypeList.add(CommunityBoardsType.fromJson(item));
+        }
         return communityBoardsTypeList;
       } catch (e) {
         throw Exception(e);
@@ -59,13 +103,13 @@ Future<List<CommunityBoardsType>> getCommunityBoardsType() async {
   }
 }
 
-Future<CommunityBoardList> readCommmunityDataJson(String id) async {
+Future<CommunityBoard> readCommmunityDataJson(String id) async {
   //json파일 읽어오기
   final String response =
       await rootBundle.loadString('testjsonfile/healthmachinedata.json');
   Map<String, dynamic> _alldata = await jsonDecode(response);
-  CommunityBoardList alldata;
-  alldata = CommunityBoardList.fromJson(_alldata["community"].firstWhere(
+  CommunityBoard alldata;
+  alldata = CommunityBoard.fromJson(_alldata["community"].firstWhere(
       (item) => item["id"] == id,
       orElse: () => Exception("맞는 id 값이 없음")));
   return alldata;

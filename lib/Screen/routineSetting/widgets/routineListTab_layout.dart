@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/Screen/routineSetting/routineSetting_screen.dart';
 
 class RoutineListTabLayout extends StatefulWidget {
   const RoutineListTabLayout({Key? key}) : super(key: key);
@@ -16,7 +17,8 @@ class _RoutineListTabLayoutState extends State<RoutineListTabLayout> {
       children: List.generate(100, (index) {
         return GestureDetector(
           onTap: () {
-            print('tapped');
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => RoutineSetting()));
           },
           child: Container(
               margin: EdgeInsets.all(10),

@@ -22,6 +22,7 @@ Future<LoginState> sendVendorToken(
         data: {"accessToken": venderAccessToken, "vendor": vendor});
     log("kakaoTalkToken{ data:${response.data}, statusCode:${response.statusCode} }");
     if (response.statusCode == 201) {
+      log("access token 발급 완료  ${response.data["accessToken"]}");
       storage.delete(key: "accessToken");
       storage.write(key: "accessToken", value: response.data["accessToken"]);
       if (response.data["isFreshman"] == true) {

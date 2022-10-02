@@ -1,108 +1,132 @@
-// /*
-// 필요한것
-// 전체페이지 List 형태
-// id
-// nickname
-// title
-// content
-//   img / text
-// comment
-//   nickname/ comment_content
-// */
-// //add page.
-// //edit page
-// //delete page
-//
-// //add comment
-// //delete comment
-// import 'dart:developer';
-//
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:healthin/Model/community_model.dart';
-// import 'package:healthin/Service/community_api.dart';
-//
-// class CommunityDataNotifier extends StateNotifier<CommunityBoardList?> {
-//   CommunityDataNotifier([CommunityBoardList? initialCommunity])
-//       : super(initialCommunity) {}
-//
-//   getComunnity(String id) async {
-//     CommunityBoardList dictionaryData = await readCommmunityDataJson(id);
-//     state = dictionaryData;
-//     log(state!.title.toString());
-//     log("커뮤니티데이터를 받아옴.");
-//   }
-//
-//   // //페이지를 추가한다
-//   // void addPage(CommunityBoardData data) {
-//   //   state = [...state, data];
-//   //   log("페이지 추가");
-//   //   log(state.length.toString());
-//   // }
-//   void addComment(String id, String nickname, String text) {
-//     if (state != null) {
-//       CommunityBoardList temp = state!;
-//       temp.comment.add({"id": id, "nickname": nickname, "text": text});
-//       state = temp;
-//     }
-//   }
-//
-//   //페이지 수정
-//   void editPage(String id, String title, String content) {
-//     if (state!.id == id) {
-//       state!.content = content;
-//       state!.title = title;
-//     }
-//   }
-//   //페이지 삭제
-//
-//   // //댓글을 추가한다
-//   // void addComment(int id, myNickname, String commentContent) {
-//   //   for (final community in state) {
-//   //     if (community.id == id) {
-//   //       community.comment = [...?community.comment, commentContent];
-//   //       log("댓글 추가 : $commentContent");
-//   //     }
-//   //   }
-//   // }
-//   //댓글 삭제
-//   //댓글 수정
-// }
-//
-// final CommunityDataNotifierProvider =
-//     StateNotifierProvider<CommunityDataNotifier, CommunityBoardList?>(
-//         (ref) => CommunityDataNotifier());
-//
-// class CommunityListNotifier extends StateNotifier<List<CommunityBoardsType>> {
-//   CommunityListNotifier([List<CommunityBoardsType>? initialCommunity])
-//       : super(initialCommunity ?? []) {
-//     log("커뮤니티리스트데이터 가져오기실행");
-//     getComunnityList();
-//   }
-//
-//   getComunnityList() async {
-//     List<CommunityBoardsType> dictionaryList = await readCommmunityListJson();
-//     if (dictionaryList.isNotEmpty) {
-//       state = dictionaryList;
-//       log(state[0].title.toString());
-//       log("커뮤니티리스트데이터를 받아옴.");
-//     }
-//   }
-//
-//   //페이지를 추가한다
-//   void addPage(CommunityBoardsType data) {
-//     state = [...state, data];
-//     log("페이지 추가");
-//     log(state.length.toString());
-//   }
-//
-//   //페이지 수정
-//
-//   //페이지 삭제
-//
-// //댓글 삭제
-// //댓글 수정
-// }
-//
-// final CommunityListNotifierProvider =
-//     StateNotifierProvider<CommunityListNotifier, List<CommunityBoardsType>>(
-//         (ref) => CommunityListNotifier());
+import 'dart:developer';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/community_model.dart';
+import 'package:healthin/Service/community_api.dart';
+
+//현재 boardId
+final currentBoardIdProvider = StateProvider<String>((ref) {
+  List<CommunityBoardsType> boardType = ref.watch(communityBoardsTypeProvider);
+  if (boardType.isNotEmpty) {
+    log("현재보드아이디를 가져옴");
+    return boardType[0].id;
+  }
+  return "";
+});
+//현재 postId
+final currentPostIdProvider = StateProvider<String>((ref) => "");
+//게시판 종류 알려주는 프로바이더
+final communityBoardsTypeProvider = StateNotifierProvider<
+    CommunityBoardsTypeNotifier,
+    List<CommunityBoardsType>>((ref) => CommunityBoardsTypeNotifier());
+
+//그 종류의 게시판 목록 알려주는 프로바이더
+final communityBoardsListProvider =
+    StateNotifierProvider<CommunityBoardsListNotifier, CommunityBoardsList>(
+        (ref) {
+  String boardId = ref.watch(currentBoardIdProvider);
+  log("현재 게시판 아이디 : $boardId");
+  return CommunityBoardsListNotifier(boardId: boardId);
+});
+//하나의 게시글 정보 알려주는 프로바이더
+final communityBoardDataProvider =
+    StateNotifierProvider<CommunityBoardDataNotifier, CommunityBoardData>(
+        (ref) {
+  String boardId = ref.watch(currentBoardIdProvider);
+  String postId = ref.watch(currentPostIdProvider);
+  return CommunityBoardDataNotifier(boardId: boardId, postId: postId);
+});
+
+class CommunityBoardsTypeNotifier
+    extends StateNotifier<List<CommunityBoardsType>> {
+  CommunityBoardsTypeNotifier([List<CommunityBoardsType>? initialBoardsType])
+      : super(initialBoardsType ?? []) {
+    log("CommunityBoardsType 초기화");
+    getType();
+  }
+
+  getType() async {
+    log("******CommunityBoardsType 받아오기******");
+    state = await getCommunityBoardsType();
+    log("*****************************");
+  }
+  //addtype // deletetype // edittype 등이 올 수 있음
+}
+
+class CommunityBoardsListNotifier extends StateNotifier<CommunityBoardsList> {
+  String boardId;
+  CommunityBoardsListNotifier(
+      {required this.boardId, CommunityBoardsList? initialBoardsList})
+      : super(initialBoardsList ??
+            CommunityBoardsList(boards: [], boardId: boardId, nowPage: 1)) {
+    log("CommunityBoardsList 초기화");
+    getBoardsList(1);
+  }
+  getBoardsList(int page) async {
+    log("******CommunityBoards 받아오기******");
+    List<CommunityBoard> boards =
+        await getCommunityBoardList(page, state.limit, boardId);
+    log(boards.toString());
+    CommunityBoardsList temp = state;
+    temp.boards = boards;
+    state = temp;
+    log("*****************************");
+  }
+  //
+  // addBoards(List<CommunityBoards> data) {
+  //   log("CommunityBoards 추가.");
+  //   state = [...state, ...data];
+  // }
+  //
+  // deleteBoards(index) {
+  //   log("CommunityBoards 삭제.");
+  //   state.removeAt(index); //이것도 바꿔야될듯.
+  // }
+
+  // editBoards({index, required String props, required int value}) {
+  //   log("CommunityBoards 편집.");
+  //   CommunityBoards communityBoardsData = state[index];
+  //   communityBoardsData[props] = value;
+  //   state[index] = communityBoardsData;
+  // }
+}
+
+class CommunityBoardDataNotifier extends StateNotifier<CommunityBoardData> {
+  String postId;
+
+  String boardId;
+
+  CommunityBoardDataNotifier(
+      {required this.boardId,
+      required this.postId,
+      CommunityBoardData? initialBoardData})
+      : super(initialBoardData ?? CommunityBoardData()) {
+    log("CommunityBoardData 초기화");
+  }
+
+  getBoardData() async {
+    CommunityBoard boardData = await getCommunityBoardData(boardId, postId);
+    CommunityBoardComment commentData =
+        await getCommunityBoardComment(boardId, postId);
+    log("******CommunityBoardData 받아오기******");
+    state = CommunityBoardData(boardData: boardData, comments: [commentData]);
+    log("*****************************");
+  }
+  //
+  // addBoardData(CommunityBoardData data) {
+  //   log("CommunityBoardData 추가.");
+  //   state = data;
+  // }
+  //
+  // deleteBoardData() {
+  //   log("CommunityBoardData 삭제.");
+  //   state = CommunityBoardData();
+  // }
+  //
+  // editBoardData({required String props, required int value}) {
+  //   log("CommunityBoardData 편집.");
+  //   CommunityBoardData communityBoardData = state;
+  //   communityBoardData[props] = value;
+  //   state = communityBoardData;
+  // }
+}

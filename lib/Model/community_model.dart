@@ -1,43 +1,61 @@
+class CommunityBoardsType {
+  //provider
+  //게시글 분류 목록
+  //boards
+  //id list ,page,
+  String id;
+  String slug;
+  String title;
+  String? description;
+  CommunityBoardsType(
+      {required this.id,
+      required this.slug,
+      required this.title,
+      this.description});
+  CommunityBoardsType.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        slug = json['slug'],
+        title = json['title'],
+        description = json['description'];
+}
+
+class CommunityBoardsList {
+  //provider
+  String boardId;
+  int nowPage = 1;
+  int limit = 20;
+  List<CommunityBoard> boards;
+  CommunityBoardsList(
+      {required this.nowPage,
+      this.limit = 20,
+      required this.boardId,
+      required this.boards});
+  CommunityBoardsList.fromJson(Map<String, dynamic> json)
+      : nowPage = json['nowPage'],
+        limit = json['limit'],
+        boardId = json['boardId'],
+        boards = (json['boards'] as List<dynamic>)
+            .map((e) => CommunityBoard.fromJson(e))
+            .toList();
+}
+
 //CommunityBoardData
 class CommunityBoardData {
-  // [
-  // {
-  // "id": "string",
-  // "content": "string",
-  // "author": "string",
-  // "createdAt": "2022-09-29T06:58:40.791Z",
-  // "updatedAt": "2022-09-29T06:58:40.791Z"
-  // }
-  // ]
-  //boards/{boardId}/posts/{postId}/comments
+  CommunityBoard? boardData;
+  List<CommunityBoardComment>? comments;
 
-  String id;
-  String title;
-  String content;
-  String author;
-  String createdAt;
-  String? updatedAt;
-
-  CommunityBoardData({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.author,
-    required this.createdAt,
-    this.updatedAt,
-  });
+  CommunityBoardData({this.boardData, this.comments});
   //boards/{boardId}/posts/{postId}
-  // {
-  // "id": "string",
-  // "title": "string",
-  // "content": "string",
-  // "author": "string",
-  // "createdAt": "2022-09-29T07:00:58.827Z",
-  // "updatedAt": "2022-09-29T07:00:58.827Z"
-  // }
+
+  CommunityBoardData.fromJson(Map<String, dynamic> json)
+      : boardData = CommunityBoard.fromJson(json['boardData']),
+        comments = (json['comments'] as List<dynamic>)
+            .map((e) => CommunityBoardComment.fromJson(e))
+            .toList();
 }
 
 class CommunityBoardComment {
+  //boards/{boardId}/posts/{postId}/comments
   String id;
   String content;
   String author;
@@ -50,57 +68,37 @@ class CommunityBoardComment {
     required this.createdAt,
     this.updatedAt,
   });
+  CommunityBoardComment.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        content = json['content'],
+        author = json['author'],
+        createdAt = DateTime.parse(json['createdAt']),
+        updatedAt = json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'])
+            : null;
 }
 
-class CommunityBoardList {
+class CommunityBoard {
   //게시글 목록 조회
-  // [
-  // {
-  // "id": "string",
-  // "title": "string",
-  // "content": "string",
-  // "author": "string",
-  // "createdAt": "2022-09-29T05:08:47.333Z",
-  // "updatedAt": "2022-09-29T05:08:47.333Z"
-  // }
-  // ]
+  //boards/{boardId}/posts
   String id;
   String author;
   String title;
   String content;
   DateTime createdAt;
   DateTime? updatedAt;
-  CommunityBoardList(
+  CommunityBoard(
       {required this.id,
       required this.author,
       required this.title,
       required this.content,
       required this.createdAt,
       this.updatedAt});
-  CommunityBoardList.fromJson(Map<String, dynamic> json)
+  CommunityBoard.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         author = json['author'],
         title = json['title'],
         content = json['content'],
         createdAt = json['createdAt'],
         updatedAt = json['updatedAt'];
-}
-
-class CommunityBoardsType {
-  //게시글 분류 목록
-  //id list ,page,
-  String id;
-  String slug;
-  String title;
-  String? description = "all";
-  CommunityBoardsType(
-      {required this.id,
-      required this.slug,
-      required this.title,
-      this.description});
-  CommunityBoardsType.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        slug = json['slug'],
-        title = json['title'],
-        description = json['description'];
 }

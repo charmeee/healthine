@@ -28,6 +28,13 @@ class _RoutineListState extends State<RoutineList>
         appBar: AppBar(
           backgroundColor: primaryColor,
           title: Text("루틴 목록"),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.edit),
+            ),
+            IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+          ],
           bottom: TabBar(
             tabs: [
               Container(
@@ -52,6 +59,11 @@ class _RoutineListState extends State<RoutineList>
             unselectedLabelColor: Colors.white,
             controller: _tabController,
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.add),
+          backgroundColor: Colors.greenAccent,
         ),
         body: TabBarView(
           children: [
