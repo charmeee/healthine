@@ -94,7 +94,7 @@ class HomeScreen extends ConsumerWidget {
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               '  환영합니다.',
               style: TextStyle(
                 color: Colors.black,
@@ -222,34 +222,34 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => QrDictionary(
-                                      equipmentId:
-                                          'c63d9b90-59bf-4303-b24c-43ff72323216',
-                                    )),
-                          );
-                        },
-                        child: Text("사전"),
-                        style: ButtonStyle(),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: Text("루틴 시작하기"),
-                        style: ButtonStyle(),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   width: MediaQuery.of(context).size.width,
+                //   padding: EdgeInsets.symmetric(horizontal: 20),
+                //   child: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.stretch,
+                //     children: [
+                //       ElevatedButton(
+                //         onPressed: () {
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //                 builder: (context) => QrDictionary(
+                //                       equipmentId:
+                //                           'c63d9b90-59bf-4303-b24c-43ff72323216',
+                //                     )),
+                //           );
+                //         },
+                //         child: Text("사전"),
+                //         style: ButtonStyle(),
+                //       ),
+                //       ElevatedButton(
+                //         onPressed: () {},
+                //         child: Text("루틴 시작하기"),
+                //         style: ButtonStyle(),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 SizedBox(
                   height: 10,
                 ),

@@ -16,8 +16,8 @@ Future<CommunityBoard> getCommunityBoardData(
     final response = await dio.get("/boards/${boardId}/posts/${postId}",
         options: Options(headers: {"Authorization": "true"}));
     if (response.statusCode == 200) {
-      log("게시글 목록 조회 완료");
-
+      log("게시글 정보 조회 완료");
+      log(response.data.toString());
       return CommunityBoard.fromJson(response.data);
     } else {
       log("커뮤니티 정보가져오기 오류");
@@ -29,7 +29,7 @@ Future<CommunityBoard> getCommunityBoardData(
 }
 
 //게시글 댓글 조회
-Future<CommunityBoardComment> getCommunityBoardComment(
+Future<List<CommunityBoardComment>> getCommunityBoardComment(
     String boardId, String postId) async {
   ///boards/{boardId}/posts/{postId}/comments
   try {
@@ -37,11 +37,41 @@ Future<CommunityBoardComment> getCommunityBoardComment(
         "/boards/${boardId}/posts/${postId}/comments",
         options: Options(headers: {"Authorization": "true"}));
     if (response.statusCode == 200) {
-      log("게시글 목록 조회 완료");
-
-      return CommunityBoardComment.fromJson(response.data);
+      log("게시글 댓글 조회 완료");
+      List<CommunityBoardComment> communityBoardCommentList = [];
+      log(response.data.toString());
+      try {
+        for (var item in response.data) {
+          communityBoardCommentList.add(CommunityBoardComment.fromJson(item));
+        }
+        return communityBoardCommentList;
+      } catch (e) {
+        throw Exception(e);
+      }
     } else {
-      log("커뮤니티 정보가져오기 오류");
+      log("게시글 댓글 가져오기 오류");
+      throw Exception(response.data);
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
+//게시글 댓글 조회
+Future<void> postCommunityBoardComment(
+    String boardId, String postId, String content) async {
+  ///boards/{boardId}/posts/{postId}/comments
+  try {
+    final response = await dio.post("/boards/$boardId/posts/$postId/comments",
+        options: Options(headers: {"Authorization": "true"}),
+        data: {
+          "content": content,
+        });
+    log(response.data["items"].toString());
+    if (response.statusCode == 200) {
+      log("게시글 댓글 보내기 완료");
+    } else {
+      log("게시글 댓글 보내기 오류");
       throw Exception(response.data);
     }
   } catch (e) {
@@ -60,9 +90,10 @@ Future<List<CommunityBoard>> getCommunityBoardList(
       log("게시글 목록 조회 완료");
       List<CommunityBoard> communityBoardList = [];
       try {
-        communityBoardList = [
-          ...response.data.map((item) => CommunityBoard.fromJson(item))
-        ];
+        log(response.data["items"].toString());
+        for (var item in response.data["items"]) {
+          communityBoardList.add(CommunityBoard.fromJson(item));
+        }
         return communityBoardList;
       } catch (e) {
         throw Exception(e);
@@ -101,30 +132,4 @@ Future<List<CommunityBoardsType>> getCommunityBoardsType() async {
   } catch (e) {
     throw Exception(e);
   }
-}
-
-Future<CommunityBoard> readCommmunityDataJson(String id) async {
-  //json파일 읽어오기
-  final String response =
-      await rootBundle.loadString('testjsonfile/healthmachinedata.json');
-  Map<String, dynamic> _alldata = await jsonDecode(response);
-  CommunityBoard alldata;
-  alldata = CommunityBoard.fromJson(_alldata["community"].firstWhere(
-      (item) => item["id"] == id,
-      orElse: () => Exception("맞는 id 값이 없음")));
-  return alldata;
-}
-
-Future<List<CommunityBoardsType>> readCommmunityListJson() async {
-  //json파일 읽어오기
-  final String response =
-      await rootBundle.loadString('testjsonfile/healthmachinedata.json');
-  Map<String, dynamic> _alldata = await jsonDecode(response);
-  List<CommunityBoardsType> alldata = [];
-  alldata = [
-    ..._alldata["communityList"]
-        .map((item) => CommunityBoardsType.fromJson(item))
-  ];
-
-  return alldata;
 }

@@ -29,6 +29,7 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
   Future<bool> updateUserProfile(String nickname) async {
     UserInfo userInfo = state;
     userInfo.nickname = nickname;
+    state = userInfo;
     log("닉넴 변경");
     return UserUpdateRequest(userInfo);
   }

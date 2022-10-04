@@ -34,7 +34,19 @@ class _QrDictionaryState extends State<QrDictionary> {
         dictionaryList = tmp;
       });
     } catch (e) {
-      Navigator.pop(context);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("알림"),
+                content: Text("기구에 연결된 메뉴얼이 없습니다."),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("확인"))
+                ],
+              ));
       log(e.toString());
     }
   }

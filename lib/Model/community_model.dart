@@ -4,14 +4,11 @@ class CommunityBoardsType {
   //boards
   //id list ,page,
   String id;
-  String slug;
+  String? slug;
   String title;
   String? description;
   CommunityBoardsType(
-      {required this.id,
-      required this.slug,
-      required this.title,
-      this.description});
+      {required this.id, this.slug, required this.title, this.description});
   CommunityBoardsType.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         slug = json['slug'],
@@ -99,6 +96,6 @@ class CommunityBoard {
         author = json['author'],
         title = json['title'],
         content = json['content'],
-        createdAt = json['createdAt'],
-        updatedAt = json['updatedAt'];
+        createdAt = DateTime.parse(json['createdAt']),
+        updatedAt = DateTime.parse(json['updatedAt']);
 }

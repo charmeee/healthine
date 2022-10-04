@@ -132,9 +132,7 @@ class _QRViewExampleState extends State<QrScanPage> {
       setState(() {
         result = scanData;
         if (result != null) {
-          //widget.addDidexercise(result!.code.toString());
           this.controller!.dispose();
-          //Navigator.pop(context);//QrDictionary
           Navigator.push(
               context,
               MaterialPageRoute(

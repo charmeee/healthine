@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Const/const.dart';
 import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Model/user_model.dart';
 import 'package:healthin/Provider/user_provider.dart';
@@ -33,7 +36,7 @@ class _UserSettingState extends ConsumerState<UserSetting> {
           icon: Icon(Icons.backspace),
         ),
         title: Text("사용자 설정"),
-        backgroundColor: Colors.indigo,
+        backgroundColor: primaryColor,
       ),
       body: Column(
         children: [
@@ -60,17 +63,61 @@ class _UserSettingState extends ConsumerState<UserSetting> {
             height: 10,
           ),
           Form(
-              key: this.formKey,
+              key: formKey,
               child: Column(
                 children: [
-                  ListTile(
-                    leading: Text("아이디"),
-                    title: Text(_userinfo.username.toString()),
-                  ),
+                  // ListTile(
+                  //   leading: Text("아이디"),
+                  //   title: Text(_userinfo.username.toString()),
+                  // ),
                   ListTile(
                     leading: Text("닉네임"),
                     title: Text(_userinfo.nickname.toString()),
-                    trailing: Icon(Icons.edit),
+                    trailing: IconButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("닉네임 변경"),
+                                  content: TextFormField(
+                                    onSaved: (value) {
+                                      log(value.toString());
+                                      ref
+                                          .read(userProfileNotifierProvider
+                                              .notifier)
+                                          .updateUserProfile(value!);
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: "변경할 닉네임을 입력하세요",
+                                    ),
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "닉네임을 입력하세요";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("취소")),
+                                    TextButton(
+                                        onPressed: () {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            formKey.currentState!.save();
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Text("확인")),
+                                  ],
+                                );
+                              });
+                        },
+                        icon: Icon(Icons.edit)),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),

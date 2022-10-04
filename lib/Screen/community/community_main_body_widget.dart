@@ -4,27 +4,58 @@ import 'package:healthin/Model/community_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
-class MainbodyLayout extends ConsumerWidget {
-  const MainbodyLayout({Key? key}) : super(key: key);
+import 'package:healthin/Service/community_api.dart';
+
+import 'community_detail_screen.dart';
+
+class CommunityMainBodyLayout extends StatefulWidget {
+  final String boardId;
+
+  const CommunityMainBodyLayout({Key? key, required this.boardId})
+      : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final communityBoardsList = ref.watch(communityBoardsListProvider);
-    return communityBoardsList.boards.isEmpty
+  State<CommunityMainBodyLayout> createState() =>
+      _CommunityMainBodyLayoutState();
+}
+
+class _CommunityMainBodyLayoutState extends State<CommunityMainBodyLayout> {
+  int nowPage = 1;
+  int limit = 20;
+  List<CommunityBoard> boards = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getBoardList(nowPage);
+  }
+
+  getBoardList(int page) async {
+    List<CommunityBoard> tmp =
+        await getCommunityBoardList(page, limit, widget.boardId);
+    setState(() {
+      boards = [...tmp];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return boards.isEmpty
         ? Center(child: CircularProgressIndicator())
         : ListView.separated(
-            itemCount: communityBoardsList.boards.length,
+            itemCount: boards.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(communityBoardsList.boards[index].title),
+                title: Text(boards[index].title),
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => Communitydetail(
-                  //             id: CommunityList[index].id)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CommunityDetail(
+                              boardId: widget.boardId,
+                              postId: boards[index].id)));
                 },
-                trailing: Text(communityBoardsList.boards[index].author),
+                trailing: Text(boards[index].author),
               );
             },
             separatorBuilder: (BuildContext context, int index) => Divider(
