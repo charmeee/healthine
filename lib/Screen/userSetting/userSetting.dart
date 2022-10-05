@@ -123,7 +123,7 @@ class _UserSettingState extends ConsumerState<UserSetting> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                       onPressed: () {},
-                      child: Text("비밀번호 변경"),
+                      child: Text("로그아웃"),
                       style: ElevatedButton.styleFrom(primary: Colors.indigo),
                     ),
                   )
@@ -133,34 +133,4 @@ class _UserSettingState extends ConsumerState<UserSetting> {
       ),
     );
   }
-
-  // renderTextFormField({
-  //   required String label,
-  //   required FormFieldSetter onSaved,
-  //   required FormFieldValidator validator,
-  // }) {
-  //   assert(onSaved != null);
-  //   assert(validator != null);
-  //
-  //   return Column(
-  //     children: [
-  //       Row(
-  //         children: [
-  //           Text(
-  //             label,
-  //             style: TextStyle(
-  //               fontSize: 12.0,
-  //               fontWeight: FontWeight.w700,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       TextFormField(
-  //         onSaved: onSaved,
-  //         validator: validator,
-  //       ),
-  //       Container(height: 16.0),
-  //     ],
-  //   );
-  // }
 }
