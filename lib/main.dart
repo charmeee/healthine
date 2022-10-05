@@ -73,6 +73,11 @@ class _MyAppState extends ConsumerState<MyApp> {
     //정보가다받아와질때까지 delay 넣어주면될듯
     initializeDateFormatting();
     try {
+      await refreshTokenRequest();
+    } catch (e) {
+      print(e);
+    }
+    try {
       await ref.read(userProfileNotifierProvider.notifier).getUserProfile();
       ref.read(loginStateProvider.notifier).state = true;
       log("자동로그인성공");

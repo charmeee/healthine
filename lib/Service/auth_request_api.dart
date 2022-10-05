@@ -39,35 +39,6 @@ Future<LoginState> sendVendorToken(
   }
 }
 
-Future<UserInfo> UserCreateRequest(username, password, name, nickname,
-    phoneNumber, BuildContext context) async {
-  print('SignUp attempt: $username with $password');
-  var url = Uri.parse('https://api.be-healthy.life/users');
-  var response = await http.post(url, body: {
-    "username": username.toString(), //아디디
-    "password": password.toString(),
-    "name": name.toString(),
-    "nickname": nickname.toString(),
-    "phoneNumber": phoneNumber.toString()
-  });
-
-  if (response.statusCode == 201) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("$name님 회원가입되셨습니다."),
-    ));
-    log("회원가입완료.");
-
-    return UserInfo(
-        username: username.toString(), nickname: nickname.toString());
-  } else {
-    log(response.body);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(jsonDecode(response.body)["message"].toString()),
-    ));
-    throw Exception("회원관리오류코드${response.body}");
-  }
-}
-
 Future<UserInfo> userProfileRequest() async {
   try {
     final response = await dio.get("/auth/profile",
@@ -87,17 +58,21 @@ Future<UserInfo> userProfileRequest() async {
   } catch (e) {
     throw Exception("회원정보가져오기 오류코드${e}");
   }
-  // var url = Uri.parse('https://api.be-healthy.life/auth/profile');
-  // log("access: $accessToken");
-  // final response =
-  //     await http.get(url, headers: {"Authorization": "Bearer $accessToken"});
-  // if (response.statusCode == 200) {
-  //   var _userData = json.decode(response.body);
-  //   log("회원정보가져오기 완료");
-  //   return UserInfo.fromJson(_userData);
-  // } else {
-  //   throw Exception("회원정보가져오기 오류코드${response.body}");
-  // }
+}
+
+Future<void> refreshTokenRequest() async {
+  try {
+    final response = await dio.patch("/auth/refresh", data: {});
+    if (response.statusCode == 200) {
+      log("refresh token 발급 완료  ${response.data["accessToken"]}");
+      storage.delete(key: "accessToken");
+      storage.write(key: "accessToken", value: response.data["accessToken"]);
+    } else {
+      log("server cant refresh");
+    }
+  } catch (e) {
+    log("refreshTokenRequest{ error:$e }");
+  }
 }
 
 Future<bool> UserUpdateRequest(UserInfo userInfo) async {

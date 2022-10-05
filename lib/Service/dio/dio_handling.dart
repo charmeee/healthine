@@ -4,20 +4,25 @@ import 'package:dio/dio.dart';
 import 'package:healthin/Database/secureStorage.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
+import '../auth_request_api.dart';
+import 'dio_main.dart';
+
 class CustomInterceptor extends Interceptor {
   final CookieJar cookieJar;
   CustomInterceptor(this.cookieJar);
 
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    log('[REQ] [${options.method}] ${options.uri} headers:${options.headers}');
+    log('[REQ] [${options.method}] ${options.uri}');
 
     //쿠키 넣는 파트
     cookieJar.loadForRequest(options.uri).then((cookies) {
       var cookie = getCookies(cookies);
+
       log('onRequest | cookie: $cookie');
       if (cookie.isNotEmpty) {
         options.headers[HttpHeaders.cookieHeader] = cookie;
+        log('onRequest | headers: ${options.headers} body:${options.data}');
       }
     }).catchError((e, stackTrace) {
       var err = DioError(requestOptions: options, error: e);
@@ -55,8 +60,9 @@ class CustomInterceptor extends Interceptor {
   }
 
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    log('[ERR] [${err.response?.statusCode}] ${err.requestOptions.uri} ${err.message}');
+    log('[ERR] [${err.response?.statusCode}] ${err.requestOptions.uri} ${err.message} ~-~:${err.response?.data["message"]}');
     if (err.response != null) {
+      //Unauthorized 에러 -> refreshToken으로 재요청 -> 실패시 로그아웃
       _saveCookies(err.response!)
           .then((_) => handler.next(err))
           .catchError((e, stackTrace) {
@@ -66,6 +72,35 @@ class CustomInterceptor extends Interceptor {
         );
         _err.stackTrace = stackTrace;
       });
+      if (err.response!.statusCode == 401 &&
+          err.response!.data["message"] == "Unauthorized") {
+        log("Unauthorized handler 실행");
+        RequestOptions requestOptions = err.requestOptions;
+        // dio.interceptors.requestLock.lock();
+        // dio.interceptors.responseLock.lock();
+        try {
+          await refreshTokenRequest(); //api
+          log("refreshTokenRequest 성공");
+        } catch (e) {
+          log("error: $e");
+          return null;
+        }
+        final opts = new Options(method: requestOptions.method);
+        dio.options.headers["Accept"] = "*/*";
+        // dio.interceptors.requestLock.unlock();
+        // dio.interceptors.responseLock.unlock();
+        final response = await dio.request(requestOptions.path,
+            options: opts,
+            cancelToken: requestOptions.cancelToken,
+            onReceiveProgress: requestOptions.onReceiveProgress,
+            data: requestOptions.data,
+            queryParameters: requestOptions.queryParameters);
+        if (response != null) {
+          handler.resolve(response);
+        } else {
+          return null;
+        }
+      }
     } else {
       handler.next(err);
     }
