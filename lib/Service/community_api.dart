@@ -28,6 +28,26 @@ Future<CommunityBoard> getCommunityBoardData(
   }
 }
 
+///boards/{boardId}/posts
+Future<bool> postCommunityBoardData(
+    String boardId, String title, String content) async {
+  try {
+    final response = await dio.post("/boards/${boardId}/posts",
+        options: Options(headers: {"Authorization": "true"}),
+        data: {"title": title, "content": content});
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      log("게시글 정보 조회 완료");
+      log(response.data.toString());
+      return true;
+    } else {
+      log("커뮤니티 정보가져오기 오류");
+      throw Exception(response.data);
+    }
+  } catch (e) {
+    throw Exception(e);
+  }
+}
+
 //게시글 댓글 조회
 Future<List<CommunityBoardComment>> getCommunityBoardComment(
     String boardId, String postId) async {
@@ -41,7 +61,7 @@ Future<List<CommunityBoardComment>> getCommunityBoardComment(
       List<CommunityBoardComment> communityBoardCommentList = [];
       log(response.data.toString());
       try {
-        for (var item in response.data) {
+        for (var item in response.data["items"]) {
           communityBoardCommentList.add(CommunityBoardComment.fromJson(item));
         }
         return communityBoardCommentList;
@@ -57,7 +77,7 @@ Future<List<CommunityBoardComment>> getCommunityBoardComment(
   }
 }
 
-//게시글 댓글 조회
+//게시글 댓글 보내기
 Future<void> postCommunityBoardComment(
     String boardId, String postId, String content) async {
   ///boards/{boardId}/posts/{postId}/comments
@@ -67,8 +87,8 @@ Future<void> postCommunityBoardComment(
         data: {
           "content": content,
         });
-    log(response.data["items"].toString());
-    if (response.statusCode == 200) {
+    log("comment post response : ${response.data}");
+    if (response.statusCode == 201) {
       log("게시글 댓글 보내기 완료");
     } else {
       log("게시글 댓글 보내기 오류");

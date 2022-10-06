@@ -16,16 +16,10 @@ class UserSetting extends ConsumerStatefulWidget {
 
 class _UserSettingState extends ConsumerState<UserSetting> {
   final formKey = GlobalKey<FormState>();
-  @override
-  late UserInfo _userinfo;
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _userinfo = ref.read(userProfileNotifierProvider);
-  }
 
   @override
   Widget build(BuildContext context) {
+    UserInfo _userinfo = ref.watch(userProfileNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,73 +56,75 @@ class _UserSettingState extends ConsumerState<UserSetting> {
           SizedBox(
             height: 10,
           ),
-          Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  // ListTile(
-                  //   leading: Text("아이디"),
-                  //   title: Text(_userinfo.username.toString()),
-                  // ),
-                  ListTile(
-                    leading: Text("닉네임"),
-                    title: Text(_userinfo.nickname.toString()),
-                    trailing: IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("닉네임 변경"),
-                                  content: TextFormField(
-                                    onSaved: (value) {
-                                      log(value.toString());
-                                      ref
-                                          .read(userProfileNotifierProvider
-                                              .notifier)
-                                          .updateUserProfile(value!);
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: "변경할 닉네임을 입력하세요",
-                                    ),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return "닉네임을 입력하세요";
-                                      }
-                                      return null;
-                                    },
+          Column(
+            children: [
+              ListTile(
+                leading: Text("닉네임"),
+                title: Text(_userinfo.nickname.toString()),
+                trailing: IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Form(
+                              key: formKey,
+                              child: AlertDialog(
+                                title: Text("닉네임 변경"),
+                                content: TextFormField(
+                                  onSaved: (value) async {
+                                    log(value.toString());
+                                    if (await ref
+                                        .read(userProfileNotifierProvider
+                                            .notifier)
+                                        .updateUserProfile(value!)) {
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: "변경할 닉네임을 입력하세요",
                                   ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text("취소")),
-                                    TextButton(
-                                        onPressed: () {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            formKey.currentState!.save();
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                        child: Text("확인")),
-                                  ],
-                                );
-                              });
-                        },
-                        icon: Icon(Icons.edit)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text("로그아웃"),
-                      style: ElevatedButton.styleFrom(primary: Colors.indigo),
-                    ),
-                  )
-                ],
-              ))
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "닉네임을 입력하세요";
+                                    }
+                                    if (value.length > 10) {
+                                      return "닉네임은 10자 이하로 입력하세요";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("취소")),
+                                  TextButton(
+                                      onPressed: () {
+                                        if (formKey.currentState!.validate()) {
+                                          log("닉네임 변경");
+                                          formKey.currentState!.save();
+                                          //Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: Text("확인")),
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    icon: Icon(Icons.edit)),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text("로그아웃"),
+                  style: ElevatedButton.styleFrom(primary: Colors.indigo),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

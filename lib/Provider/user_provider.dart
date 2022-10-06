@@ -27,11 +27,21 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
   }
 
   Future<bool> updateUserProfile(String nickname) async {
-    UserInfo userInfo = state;
-    userInfo.nickname = nickname;
-    state = userInfo;
-    log("닉넴 변경");
-    return UserUpdateRequest(userInfo);
+    UserInfo userInfo = UserInfo(
+        id: state.id,
+        username: state.username,
+        nickname: nickname,
+        userEmail: state.userEmail,
+        ageRange: state.ageRange,
+        gender: state.gender);
+    bool result = await UserUpdateRequest(userInfo);
+    if (result) {
+      state = userInfo;
+      log("$nickname로 닉넴 변경 ");
+      return true;
+    } else {
+      return false;
+    }
   }
 
   deleteUserProfile() async {

@@ -18,28 +18,29 @@ enum CommunityListFilter {
   completed,
 } //나중에 카테고리 별 분류할 예정
 
-class Community extends StatefulWidget {
+class Community extends ConsumerStatefulWidget {
   const Community({Key? key}) : super(key: key);
 
   @override
-  State<Community> createState() => _CommunityState();
+  ConsumerState<Community> createState() => _CommunityState();
 }
 
-class _CommunityState extends State<Community> {
+class _CommunityState extends ConsumerState<Community> {
   List<CommunityBoardsType> boardType = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initType();
+    init();
   }
 
-  initType() async {
+  init() async {
     List<CommunityBoardsType> tmp = await getCommunityBoardsType();
     setState(() {
       boardType = tmp;
     });
+    await ref.read(communityProvider.notifier).initCommunityBoards(tmp);
   }
 
   @override
@@ -71,7 +72,8 @@ class _CommunityState extends State<Community> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CommunityWrite()));
+                          builder: (context) =>
+                              CommunityWrite(boardType: boardType)));
                 },
                 child: Icon(
                   Icons.edit,

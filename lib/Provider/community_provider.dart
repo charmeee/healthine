@@ -1,9 +1,52 @@
-// import 'dart:developer';
-//
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:healthin/Model/community_model.dart';
-// import 'package:healthin/Service/community_api.dart';
-//
+import 'dart:developer';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/community_model.dart';
+import 'package:healthin/Service/community_api.dart';
+
+final communityProvider =
+    StateNotifierProvider<CommunityBoardsNotifier, List<CommunityBoardsList>>(
+        (ref) => CommunityBoardsNotifier());
+
+class CommunityBoardsNotifier extends StateNotifier<List<CommunityBoardsList>> {
+  CommunityBoardsNotifier() : super([]);
+  //받은type으로 init을해.
+  initCommunityBoards(List<CommunityBoardsType> types) async {
+    List<CommunityBoardsList> list = [];
+    for (var element in types) {
+      List<CommunityBoard> boards =
+          await getCommunityBoardList(1, 20, element.id);
+      list.add(
+          CommunityBoardsList(boardId: element.id, nowPage: 1, boards: boards));
+    }
+    state = list;
+  }
+
+  reloadBoard(String boardId) async {
+    List<CommunityBoardsList> list = [...state];
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].boardId == boardId) {
+        list[i].boards = await getCommunityBoardList(1, 20, boardId);
+        list[i].nowPage = 1;
+        state = list;
+        return;
+      }
+    }
+  }
+
+  getMoreBoard(String boardId) async {
+    List<CommunityBoardsList> list = [...state];
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].boardId == boardId) {
+        list[i].boards =
+            await getCommunityBoardList(list[i].nowPage + 1, 20, boardId);
+        list[i].nowPage = list[i].nowPage + 1;
+        state = list;
+        return;
+      }
+    }
+  }
+}
 // //현재 boardId
 // final currentBoardIdProvider = StateProvider<String>((ref) {
 //   List<CommunityBoardsType> boardType = ref.watch(communityBoardsTypeProvider);

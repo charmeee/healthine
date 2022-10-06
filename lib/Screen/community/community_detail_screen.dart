@@ -35,6 +35,12 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
     getComment();
   }
 
+  @override
+  dispose() {
+    _Controller.dispose();
+    super.dispose();
+  }
+
   getBoard() async {
     CommunityBoard tmp =
         await getCommunityBoardData(widget.boardId, widget.postId);
@@ -117,8 +123,7 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                               try {
                                 await postCommunityBoardComment(widget.boardId,
                                     widget.postId, _Controller.text);
-                                await getCommunityBoardComment(
-                                    widget.boardId, widget.postId);
+                                await getComment();
                               } catch (e) {
                                 log(e.toString());
                                 showDialog(

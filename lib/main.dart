@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthin/Service/community_api.dart';
+import 'Database/secureStorage.dart';
 import 'Service/dio/dio_handling.dart';
 import 'Service/dio/dio_main.dart';
 import 'firebase_options.dart';
@@ -60,7 +61,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-
     //status = true;
     initialization();
   }
@@ -72,11 +72,6 @@ class _MyAppState extends ConsumerState<MyApp> {
     // ignore_for_file: avoid_print
     //정보가다받아와질때까지 delay 넣어주면될듯
     initializeDateFormatting();
-    try {
-      await refreshTokenRequest();
-    } catch (e) {
-      print(e);
-    }
     try {
       await ref.read(userProfileNotifierProvider.notifier).getUserProfile();
       ref.read(loginStateProvider.notifier).state = true;

@@ -75,31 +75,45 @@ class CustomInterceptor extends Interceptor {
       if (err.response!.statusCode == 401 &&
           err.response!.data["message"] == "Unauthorized") {
         log("Unauthorized handler 실행");
-        RequestOptions requestOptions = err.requestOptions;
+        //나중에 queuedIndicator로 바꿔야함
+        // RequestOptions requestOptions = err.requestOptions;
         // dio.interceptors.requestLock.lock();
         // dio.interceptors.responseLock.lock();
-        try {
-          await refreshTokenRequest(); //api
-          log("refreshTokenRequest 성공");
-        } catch (e) {
-          log("error: $e");
-          return null;
-        }
-        final opts = new Options(method: requestOptions.method);
-        dio.options.headers["Accept"] = "*/*";
-        // dio.interceptors.requestLock.unlock();
-        // dio.interceptors.responseLock.unlock();
-        final response = await dio.request(requestOptions.path,
-            options: opts,
-            cancelToken: requestOptions.cancelToken,
-            onReceiveProgress: requestOptions.onReceiveProgress,
-            data: requestOptions.data,
-            queryParameters: requestOptions.queryParameters);
-        if (response != null) {
-          handler.resolve(response);
-        } else {
-          return null;
-        }
+        // try {
+        //   dio.interceptors.requestLock.unlock();
+        //   dio.interceptors.responseLock.unlock();
+        //   await refreshTokenRequest(); //api
+        //   log("refreshTokenRequest 성공");
+        //   final opts = new Options(method: requestOptions.method);
+        //   dio.options.headers["Accept"] = "*/*";
+        //   try {
+        //     final response = await dio.request(requestOptions.path,
+        //         options: opts,
+        //         cancelToken: requestOptions.cancelToken,
+        //         onReceiveProgress: requestOptions.onReceiveProgress,
+        //         data: requestOptions.data,
+        //         queryParameters: requestOptions.queryParameters);
+        //     log("refresh 후 response: $response");
+        //     if (response.statusCode == 200 || response.statusCode == 201) {
+        //       handler.resolve(response);
+        //     } else {
+        //       return null;
+        //     }
+        //   } catch (e) {
+        //     log("refreshTokenRequest 실패");
+        //     await storage.deleteAll();
+        //     return handler.reject(err);
+        //   }
+        // } catch (e) {
+        //   log("error: $e");
+        //   // dio.interceptors.requestLock.unlock();
+        //   // dio.interceptors.responseLock.unlock();
+        //   return null;
+        // }
+        //
+        // // dio.interceptors.requestLock.unlock();
+        // // dio.interceptors.responseLock.unlock();
+
       }
     } else {
       handler.next(err);
