@@ -14,7 +14,12 @@ import 'community_detail_body_widget.dart';
 class CommunityDetail extends ConsumerStatefulWidget {
   final String boardId;
   final String postId;
-  const CommunityDetail({Key? key, required this.postId, required this.boardId})
+  final String boardTitle;
+  const CommunityDetail(
+      {Key? key,
+      required this.postId,
+      required this.boardId,
+      required this.boardTitle})
       : super(key: key);
 
   @override
@@ -68,12 +73,20 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.indigo,
+            title: Text(widget.boardTitle + ' 게시판'),
+            centerTitle: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () {},
+              )
+            ],
           ),
           body: Container(
             width: MediaQuery.of(context).size.width,

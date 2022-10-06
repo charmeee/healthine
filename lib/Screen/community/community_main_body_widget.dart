@@ -9,9 +9,11 @@ import 'package:healthin/Service/community_api.dart';
 import 'community_detail_screen.dart';
 
 class CommunityMainBodyLayout extends ConsumerWidget {
-  const CommunityMainBodyLayout({Key? key, required this.boardId})
+  const CommunityMainBodyLayout(
+      {Key? key, required this.boardId, required this.boardTitle})
       : super(key: key);
   final String boardId;
+  final String boardTitle;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     List<CommunityBoardsList> allBoards = ref.watch(communityProvider);
@@ -28,7 +30,7 @@ class CommunityMainBodyLayout extends ConsumerWidget {
       return RefreshIndicator(
         key: refreshKey,
         onRefresh: () async {
-          await Future.delayed(Duration(milliseconds: 1500));
+          await ref.read(communityProvider.notifier).reloadBoard(boardId);
           log("refresh");
         },
         child: ListView.separated(
@@ -41,7 +43,10 @@ class CommunityMainBodyLayout extends ConsumerWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CommunityDetail(
-                            boardId: boardId, postId: nowBoards[index].id)));
+                              boardId: boardId,
+                              postId: nowBoards[index].id,
+                              boardTitle: boardTitle,
+                            )));
               },
               trailing: Text(nowBoards[index].author),
             );

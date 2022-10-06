@@ -29,10 +29,37 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
       itemCount: widget.comments.length + 2,
       itemBuilder: (context, index) {
         if (index == 0) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(widget.board.title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(widget.board.title,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+              ),
+              SizedBox(
+                height: 20,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(widget.board.author),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2.0, horizontal: 4),
+                      child: const VerticalDivider(
+                        color: Colors.indigo,
+                        width: 10,
+                      ),
+                    ),
+                    Text(
+                      widget.board.updatedAt.toString(),
+                      style: TextStyle(color: Colors.grey),
+                    )
+                  ],
+                ),
+              ),
+            ],
           );
         } else if (index == 1) {
           return Container(

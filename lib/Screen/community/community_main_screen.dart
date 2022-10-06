@@ -62,7 +62,10 @@ class _CommunityState extends ConsumerState<Community> {
               body: TabBarView(
                 children: [
                   for (int i = 0; i < boardType.length; i++)
-                    CommunityMainBodyLayout(boardId: boardType[i].id),
+                    CommunityMainBodyLayout(
+                      boardId: boardType[i].id,
+                      boardTitle: boardType[i].title,
+                    ),
                 ],
               ),
               floatingActionButton: FloatingActionButton(
