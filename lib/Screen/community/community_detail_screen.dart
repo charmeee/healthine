@@ -73,47 +73,48 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.indigo,
-            title: Text(widget.boardTitle + ' 게시판'),
+            title: Text('${widget.boardTitle} 게시판'),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             actions: [
               IconButton(
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 onPressed: () {},
               )
             ],
           ),
           body: Container(
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
                     child: board == null
-                        ? Center(child: CircularProgressIndicator())
+                        ? const Center(child: CircularProgressIndicator())
                         : CommunityDetailBody(
                             board: board!,
                             comments: comments,
                             user: user,
                           )),
                 Container(
-                    margin: EdgeInsets.only(top: 8),
-                    padding: EdgeInsets.all(8),
+                    margin: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.all(8),
                     child: Row(
                       children: [
                         Expanded(
                             child: TextField(
                           controller: _Controller,
-                          decoration: InputDecoration(labelText: "댓글을 입력해주세요"),
+                          decoration:
+                              const InputDecoration(labelText: "댓글을 입력해주세요"),
                         )),
                         IconButton(
-                          icon: Icon(Icons.send),
+                          icon: const Icon(Icons.send),
                           onPressed: () async {
                             if (user.nickname == null) {
                               log("로그인이 필요합니다");
@@ -121,11 +122,11 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
-                                        title: Text("로그인이 필요한 서비스입니다"),
-                                        content: Text("로그인을 해주세요"),
+                                        title: const Text("로그인이 필요한 서비스입니다"),
+                                        content: const Text("로그인을 해주세요"),
                                         actions: [
                                           ElevatedButton(
-                                            child: Text("확인"),
+                                            child: const Text("확인"),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
@@ -143,11 +144,11 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                                     context: context,
                                     builder: (BuildContext context) =>
                                         AlertDialog(
-                                          title: Text("댓글 작성에 실패했습니다"),
-                                          content: Text("잠시 후 다시 시도해주세요"),
+                                          title: const Text("댓글 작성에 실패했습니다"),
+                                          content: const Text("잠시 후 다시 시도해주세요"),
                                           actions: [
                                             ElevatedButton(
-                                              child: Text("확인"),
+                                              child: const Text("확인"),
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
@@ -158,7 +159,6 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
 
                               setState(() {
                                 _Controller.text = "";
-                                //_Controller.text
                               });
                             }
                             // ref

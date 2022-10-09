@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../userSetting/userSetting.dart';
-import 'calendartab/calender.dart';
-import '../calender/new_calander.dart';
+import '../Screen/userSetting/userSetting.dart';
+import '../Screen/home/calendartab/calender.dart';
+import '../Screen/calender/new_calander.dart';
 
 import 'not_use_home_drawer.dart';
-import 'hometab/hometab.dart';
-import 'hometab/profile_header/profile.dart';
+import '../Screen/home/hometab/hometab.dart';
+import '../Screen/home/hometab/profile_header/profile.dart';
 
 class Home2 extends StatelessWidget {
   Home2({Key? key}) : super(key: key);

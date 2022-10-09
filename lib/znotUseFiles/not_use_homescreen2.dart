@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/Screen/home/hometab/Inbody/inbodychart.dart';
 
-import 'hometab/Inbody/inbodychart.dart';
-import 'hometab/profile_header/profile.dart';
+import '../Screen/home/hometab/profile_header/profile.dart';
 
 class Home1 extends StatelessWidget {
   Home1({Key? key, required this.didexercise}) : super(key: key);
