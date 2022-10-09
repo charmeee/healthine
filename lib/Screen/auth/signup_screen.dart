@@ -1,43 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Model/user_model.dart';
 
 import 'package:healthin/Service/auth_request_api.dart';
 
 import '../../Provider/user_provider.dart';
 
-class SignUp extends ConsumerStatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+class SignUpScreen extends ConsumerStatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SignUp> createState() => _SignUpState();
+  ConsumerState<SignUpScreen> createState() => _SignUpState();
 }
 
-class _SignUpState extends ConsumerState<SignUp> {
-  final _idController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _phoneController = TextEditingController();
+class _SignUpState extends ConsumerState<SignUpScreen> {
   final _nicknameController = TextEditingController();
 
-  void _performLogin(BuildContext context) {
-    String username = _idController.text;
-    String password = _passwordController.text;
-    String name = _nameController.text;
-    String phoneNumber = _phoneController.text;
+  Future<void> _performLogin(BuildContext context) async {
     String nickname = _nicknameController.text;
     try {
-      UserCreateRequest(
-              username, password, name, nickname, phoneNumber, context)
-          .then((value) {
-        ref.read(loginStateProvider.notifier).state = true;
-        //ref.read(userState.notifier).state = value;
-        LoginRequest(username, password, context).then((value) {
-          ref.read(userStateProvider.notifier).state.accessToken =
-              value.accessToken;
-          Navigator.pop(context);
-        });
-      });
+      final result = await ref
+          .read(userProfileNotifierProvider.notifier)
+          .updateUserProfile(nickname);
+      if (result) {
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('닉네임 변경 실패'),
+          ),
+        );
+      }
+      //fetch user nickname
     } catch (e) {
       print("회원가입실패");
     }
@@ -46,7 +41,15 @@ class _SignUpState extends ConsumerState<SignUp> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref.read(userProfileNotifierProvider.notifier).getUserProfile();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    UserInfo userInfo = ref.watch(userProfileNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -85,42 +88,6 @@ class _SignUpState extends ConsumerState<SignUp> {
                 padding: EdgeInsets.all(40),
                 child: Column(
                   children: [
-                    TextField(
-                      controller: _idController,
-                      decoration: InputDecoration(labelText: '아이디를 입력해주세요'),
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(labelText: '비밀번호를 입력해주세요'),
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: _nameController,
-                      decoration: InputDecoration(labelText: '성함을 입력해주세요'),
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: _phoneController,
-                      decoration: InputDecoration(labelText: '전화번호를 입력해주세요'),
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     TextField(
                       controller: _nicknameController,
                       decoration: InputDecoration(labelText: '닉네임을 입력해주세요'),

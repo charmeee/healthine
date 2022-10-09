@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Model/routine_models.dart';
-import 'package:healthin/Service/auth_request_api.dart';
-import 'package:healthin/Service/community_api.dart';
+import 'package:healthin/Const/const.dart';
+import 'calender/new_calander.dart';
 import 'home/home_screen.dart';
 import 'community/community_main_screen.dart';
 import 'diet/diet.dart';
@@ -26,23 +24,24 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _widgetOptions = <Widget>[
-      Home2(),
-      Diet(),
+    final List<Widget> widgetOptions = <Widget>[
+      const HomeScreen(),
+      const CalendarTab(),
       QrScanPage(),
-      Community(),
-      Dictionary(addmode: false),
+      const Community(),
+      const Dictionary(addmode: false),
     ];
     return SafeArea(
       child: Scaffold(
         //extendBody: true,
-        body: _widgetOptions.elementAt(_selectedIndex),
+        body: widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: BottomAppBar(
             notchMargin: 8,
-            shape: CircularNotchedRectangle(),
+            shape: const CircularNotchedRectangle(),
             clipBehavior: Clip.antiAlias,
             child: BottomNavigationBar(
-              backgroundColor: Colors.indigo,
+              backgroundColor: primaryColor,
+              elevation: 0,
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,
               onTap: (int index) {
@@ -61,7 +60,7 @@ class _MyHomeState extends State<MyHome> {
               // selectedIconTheme: IconThemeData(color: Colors.white),
               // unselectedLabelStyle: TextStyle(color: Colors.grey[100]),
               // selectedLabelStyle: TextStyle(color: Colors.white),
-              items: [
+              items: const [
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.home_filled,
@@ -70,9 +69,9 @@ class _MyHomeState extends State<MyHome> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.food_bank,
+                    Icons.calendar_today,
                   ),
-                  label: "식단",
+                  label: "운동 달력",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(

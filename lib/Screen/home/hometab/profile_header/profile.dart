@@ -11,7 +11,7 @@ class Profile extends ConsumerWidget {
   double _percent = 0.7;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userStateProvider);
+    final user = ref.watch(userProfileNotifierProvider);
     return Container(
         color: Colors.indigo,
         height: 230,
@@ -41,7 +41,7 @@ class Profile extends ConsumerWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    user.name.toString(),
+                                    user.nickname.toString(),
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 )

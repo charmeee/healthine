@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:healthin/Model/dictionary_model.dart';
 import 'package:healthin/Screen/dictionary/dictionary_detail.dart';
+import 'package:healthin/Screen/dictionary/qr_dicctionary.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //import '../exercisewatch/whileExercise.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -35,6 +37,13 @@ class _QRViewExampleState extends State<QrScanPage> {
       controller!.pauseCamera();
     }
     controller!.resumeCamera();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
   }
 
   @override
@@ -81,6 +90,18 @@ class _QRViewExampleState extends State<QrScanPage> {
     );
   }
 
+  Future<bool> init() async {
+    if (Platform.isAndroid) {
+      log("camera permison");
+      final cameraPermision = await Permission.camera.request();
+      log("cameraPermision : " + cameraPermision.isGranted.toString());
+      if (cameraPermision.isGranted) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
@@ -102,42 +123,22 @@ class _QRViewExampleState extends State<QrScanPage> {
     );
   }
 
-  Future<List<DictionaryData>> readJson() async {
-    //json파일 읽어오기
-    List<DictionaryData> alldata = [];
-    final String response =
-        await rootBundle.loadString('testjsonfile/healthmachinedata.json');
-    //print(response.runtimeType);w
-    Map<String, dynamic> _alldata = await jsonDecode(response);
-    alldata = [
-      ..._alldata["exerciseType"].map((item) => DictionaryData.fromJson(item))
-    ];
-    return alldata;
-  }
-
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
     });
+    controller.resumeCamera();
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
-        if (scanData != null) {
-          //widget.addDidexercise(result!.code.toString());
+        if (result != null) {
           this.controller!.dispose();
-          //Navigator.pop(context);
-          readJson().then((value) {
-            DictionaryData founddata = value.firstWhere(
-                (element) => element.id == int.parse(result!.code.toString()));
-            if (founddata != null) {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DictionaryDetail(
-                            founddata: founddata,
-                          )));
-            }
-          });
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => QrDictionary(
+                        equipmentId: result!.code.toString(),
+                      )));
         }
       });
     });

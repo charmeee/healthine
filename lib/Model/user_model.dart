@@ -1,26 +1,22 @@
 class UserInfo {
   String? id;
   String? username;
-  String? name;
   String? nickname;
-  String? phoneNumber;
-  String? avatarImage;
-  String? accessToken;
-  UserInfo({
-    this.id,
-    this.username,
-    this.name,
-    this.nickname,
-    this.phoneNumber,
-    this.avatarImage,
-    this.accessToken,
-  });
+  String? userEmail;
+  String? ageRange;
+  String? gender;
+  UserInfo(
+      {this.id,
+      this.username,
+      this.nickname,
+      this.userEmail,
+      this.ageRange,
+      this.gender});
   UserInfo.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         username = json['username'],
-        name = json['name'],
         nickname = json['nickname'],
-        phoneNumber = json['phoneNumber'],
-        avatarImage = json['avatarImage'],
-        accessToken = json['accessToken'];
+        userEmail = json['userEmail'],
+        ageRange = json['ageRange'],
+        gender = json['gender'];
 }

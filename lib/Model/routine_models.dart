@@ -1,7 +1,23 @@
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
+
+enum routineStatus {
+  before,
+  doing,
+  done;
+
+  factory routineStatus.getByString(String str) {
+    return routineStatus.values
+        .firstWhere((value) => value == str, orElse: () => routineStatus.doing);
+  }
+}
+
 class RoutineData {
+  var id = uuid.v1();
   String name;
   String type;
-  bool doing = false;
+  routineStatus status = routineStatus.before;
   String? img;
 
   //유산소
@@ -12,34 +28,25 @@ class RoutineData {
   int numPerSet; //세트당 횟수
   int weight; //근력운동일때만 사용
 
-  RoutineData(
-      {required this.name,
-      required this.type,
-      this.totalSet = 3,
-      this.numPerSet = 10,
-      this.weight = 10,
-      this.totalTime = 10,
-      this.doing = false,
-      this.img});
+  RoutineData({
+    required this.name,
+    required this.type,
+    this.totalSet = 3,
+    this.numPerSet = 10,
+    this.weight = 10,
+    this.totalTime = 10,
+    this.img,
+    this.status = routineStatus.before,
+  });
   RoutineData.fromJson(Map<String, dynamic> json)
-      : name = json['name'] ?? "",
+      : id = json['id'],
+        name = json['name'] ?? "",
         type = json['type'] ?? "",
         totalSet = json['set'] ?? 3,
         numPerSet = json['num'] ?? 10,
         weight = json['weight'] ?? 10,
         totalTime = json['time'] ?? 10,
-        doing = json['doing'] ?? false,
         img = json['img'];
-
-  // RoutineData.fromJson(Map<String, dynamic> json)
-  //     : name = json['name'],
-  //       type = json['type'],
-  //       totalSet = json['set'],
-  //       numPerSet = json['num'],
-  //       weight = json['weight'],
-  //       totalTime = json['time'],
-  //       doing = json['doing'] ?? false,
-  //       img = json['img'];
 
   putAerobicRoutine({name, type, totalTime, img}) {
     //유산소일때

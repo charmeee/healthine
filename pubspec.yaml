@@ -38,7 +38,6 @@ dependencies:
   qr_flutter: ^4.0.0
   percent_indicator: ^4.2.2
   syncfusion_flutter_charts: ^20.2.36
-  qr_code_scanner: ^1.0.0
   youtube_player_iframe: ^2.3.0
   table_calendar: ^3.0.6
   flutter_native_splash: ^2.2.6
@@ -56,6 +55,14 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.0.0
   path: ^1.8.2
+  uuid: ^3.0.6
+  carousel_slider: ^4.1.1
+  flutter_secure_storage: ^6.0.0
+  permission_handler: ^10.0.1
+  qr_code_scanner: ^1.0.1
+  dio: ^4.0.6
+  dio_cookie_manager: ^2.0.0
+  infinite_scroll_pagination: ^3.2.0
 
 
 dev_dependencies:
@@ -87,7 +94,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - testjsonfile/healthmachinedata.json
-     - assets/img_exercise/
+     - assets/exercise_img/
+     - assets/banner_img/
      - assets/
   #   - images/a_dot_ham.jpeg
 

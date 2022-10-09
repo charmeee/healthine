@@ -4,13 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Service/routine_request_api.dart';
 
+//순서는 index
+
 class RoutineNotifier extends StateNotifier<List<RoutineData>> {
   RoutineNotifier([List<RoutineData>? initialRoutine])
       : super(initialRoutine ?? []) {
     log("루틴데이터가져오기실행");
     getRoutineData();
   }
-
   getRoutineData() async {
     List<RoutineData> routinedata = await readRoutineJson();
     if (routinedata.isNotEmpty) {
@@ -20,11 +21,11 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     }
   }
 
-  doRoutine(int index) {
+  changeRoutineStatus(int index, routineStatus status) {
     List<RoutineData> routineList = [...state];
     routineList = routineList.asMap().entries.map((e) {
       if (e.key == index) {
-        e.value.doing = true;
+        e.value.status = status;
       }
       // else {
       //   e.value.doing = false;
@@ -47,10 +48,10 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
 
   deleteRoutineData(index) {
     log("루틴데이터 삭제.");
-    state.removeAt(index); //이것도 바꿔야될듯.
+    state.removeAt(index);
   }
 
-  editRoutineData({index, required String props, required int value}) {
+  editRoutineDataByIndex({index, required String props, required int value}) {
     log("루틴데이터 편집.");
     RoutineData routine = state[index];
     switch (props) {
@@ -70,7 +71,34 @@ class RoutineNotifier extends StateNotifier<List<RoutineData>> {
     }
     state = [
       for (final item in state)
-        if (item.name == routine.name) routine else item
+        if (item.id == routine.id) routine else item
+    ];
+  }
+
+  editRoutineDataById(
+      {required var routineId, required String props, required int value}) {
+    log("루틴데이터 편집.");
+    RoutineData routine =
+        state.firstWhere((element) => element.id == routineId);
+
+    switch (props) {
+      case "time":
+        routine.totalTime = (routine.totalTime) + value;
+        log(routine.totalTime.toString());
+        break;
+      case "weight":
+        routine.weight = (routine.weight) + value;
+        break;
+      case "set":
+        routine.totalSet = (routine.totalSet) + value;
+        break;
+      case "num":
+        routine.numPerSet = (routine.numPerSet) + value;
+        break;
+    }
+    state = [
+      for (final item in state)
+        if (item.id == routine.id) routine else item
     ];
   }
 }

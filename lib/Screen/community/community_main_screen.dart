@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Model/community_model.dart';
-import 'package:healthin/Model/routine_models.dart';
 import 'package:healthin/Provider/community_provider.dart';
+import 'package:healthin/Service/community_api.dart';
 
-import 'community_detail_screen.dart';
+// import 'community_detail_screen.dart';
+import 'community_main_body_widget.dart';
 import 'communiuty_write_screen.dart';
 
 enum CommunityListFilter {
@@ -15,76 +18,72 @@ enum CommunityListFilter {
   completed,
 } //나중에 카테고리 별 분류할 예정
 
-class Community extends ConsumerWidget {
+class Community extends ConsumerStatefulWidget {
   const Community({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // ref를 사용해 프로바이더 구독(listen)하기
-    List<CommunityBoardsList> CommunityList =
-        ref.watch(CommunityListNotifierProvider);
-    return DefaultTabController(
-      length: 5,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.indigo,
-          title: TabBar(
-            tabs: [
-              Tab(text: '전체'),
-              Tab(text: '인증'),
-              Tab(text: '질문'),
-              Tab(text: '일상'),
-              Tab(text: '인기글'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            Container(
-              child: ListView.separated(
-                itemCount: CommunityList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(CommunityList[index].title),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Communitydetail(
-                                  id: CommunityList[index].id)));
-                    },
-                    trailing: Text(CommunityList[index].nickname),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  height: 10,
-                  color: Colors.indigo,
+  ConsumerState<Community> createState() => _CommunityState();
+}
+
+class _CommunityState extends ConsumerState<Community> {
+  List<CommunityBoardsType> boardType = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    init();
+  }
+
+  init() async {
+    List<CommunityBoardsType> tmp = await getCommunityBoardsType();
+    setState(() {
+      boardType = tmp;
+    });
+    await ref.read(communityProvider.notifier).initCommunityBoards(tmp);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (boardType.length > 0)
+        ? DefaultTabController(
+            length: boardType.length,
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.indigo,
+                title: TabBar(
+                  tabs: [
+                    ...boardType.map(
+                      (e) => Tab(text: e.title.toString()),
+                    )
+                  ],
                 ),
               ),
-            ),
-            Container(color: Colors.yellow),
-            Container(
-              color: Colors.greenAccent,
-            ),
-            Container(
-              color: Colors.amber,
-            ),
-            Container()
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.indigo[300],
-          tooltip: "글쓰기",
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CommunityWrite()));
-          },
-          child: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
+              body: TabBarView(
+                children: [
+                  for (int i = 0; i < boardType.length; i++)
+                    CommunityMainBodyLayout(
+                      boardId: boardType[i].id,
+                      boardTitle: boardType[i].title,
+                    ),
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.indigo[300],
+                tooltip: "글쓰기",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CommunityWrite(boardType: boardType)));
+                },
+                child: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+              ),
+            ))
+        : Center(child: CircularProgressIndicator());
   }
 }

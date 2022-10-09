@@ -5,7 +5,9 @@ import 'package:healthin/Provider/dictonary_provider.dart';
 import 'package:healthin/Provider/routine_provider.dart';
 import '../../Model/routine_models.dart';
 import 'dictionary_detail.dart';
+import 'package:uuid/uuid.dart';
 
+var uuid = const Uuid();
 final List<String> healthtype = [
   "가슴",
   "등",
@@ -49,7 +51,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
       bottomNavigationBar: routineList.isNotEmpty
           ? ElevatedButton(
               onPressed: () {
-                routineListRead.addRoutineData(routineList);
+                routineListRead.addRoutineData(routineList); //이걸 변경해야함.
                 Navigator.pop(context);
               },
               child: Text("루틴추가하기"))
@@ -61,6 +63,8 @@ class _DictionaryState extends ConsumerState<Dictionary> {
     setState(() {
       routineList.add(routinedata);
     });
+    log(routinedata.id.toString());
+    log(routinedata.name.toString());
   }
 
   removeRoutineData(String data) {
@@ -183,7 +187,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
   @override
   Widget build(BuildContext context) {
     // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
-    final filteredDatasWatch = ref.watch(filteredDatas);
+    final filteredDatasWatch = ref.watch(filteredDictionaryDatas);
     return Expanded(
       child: Container(
         child: filteredDatasWatch == null || filteredDatasWatch.isEmpty
@@ -210,25 +214,25 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                     trailing: widget.addmode
                         ? Checkbox(
                             value: widget.routineList.any((item) =>
-                                item.name == filteredDatasWatch[index].name),
+                                item.name == filteredDatasWatch[index].title),
                             onChanged: (value) {
                               log(widget.routineList.length.toString());
                               log("체크박스 value" + value.toString());
                               if (value!) {
                                 widget.addRoutineData(RoutineData(
-                                    name: filteredDatasWatch[index].name ?? "",
-                                    type: filteredDatasWatch[index].type ?? "",
+                                    name: filteredDatasWatch[index].title,
+                                    type: filteredDatasWatch[index].type,
                                     numPerSet: 10,
                                     weight: 10,
                                     img:
-                                        "assets/img_exercise/${filteredDatasWatch[index].id}.png"));
+                                        "assets/exercise_img/${filteredDatasWatch[index].id}.png"));
                               } else {
                                 widget.removeRoutineData(
-                                    filteredDatasWatch[index].name ?? "");
+                                    filteredDatasWatch[index].title);
                               }
                             })
                         : null,
-                    title: Text(filteredDatasWatch[index].name.toString()),
+                    title: Text(filteredDatasWatch[index].title.toString()),
                   );
                 },
                 itemCount: filteredDatasWatch.length,

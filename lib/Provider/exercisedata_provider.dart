@@ -20,9 +20,14 @@ class UserExercisedNotifier extends StateNotifier<List<UserExerciseData>> {
     //post요청도넣으면 될듯.
   }
 
-  void replace(UserExerciseData data, int index) {
+  void replace(UserExerciseData data, var id) {
     List<UserExerciseData> temp = [...state];
-    temp[index] = data;
+    temp.map((e) {
+      if (e.id == id) {
+        return e = data;
+      }
+      return e;
+    });
     state = temp;
     log("교체됨");
     log(state.length.toString());

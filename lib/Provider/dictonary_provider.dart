@@ -8,7 +8,7 @@ import 'package:healthin/Service/dictionary_api.dart';
 final searchBynameProvider = StateProvider<String?>((ref) => null);
 final searchBytypeProvider = StateProvider<String?>((ref) => null);
 
-final filteredDatas = Provider<List<DictionaryData>>((ref) {
+final filteredDictionaryDatas = Provider<List<DictionaryData>>((ref) {
   final String? filtername = ref.watch(searchBynameProvider); //string으로 들어감.
   final String? filtertype = ref.watch(searchBytypeProvider); //string으로 들어갈것.
   final List<DictionaryData> dictionarys =
@@ -19,7 +19,7 @@ final filteredDatas = Provider<List<DictionaryData>>((ref) {
   } else {
     if (filtername != null) {
       filteredDictionarys.addAll(dictionarys.where((data) =>
-          data.name!.toLowerCase().contains(filtername.toLowerCase())));
+          data.title.toLowerCase().contains(filtername.toLowerCase())));
     }
     if (filtertype != null) {
       filteredDictionarys
@@ -37,10 +37,10 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
   }
 
   getDictionary() async {
-    List<DictionaryData> dictionaryData = await readDictionaryJson();
+    List<DictionaryData> dictionaryData = await getDicionaryList();
     if (dictionaryData.isNotEmpty) {
       state = dictionaryData;
-      log(state[0].name.toString());
+      log(state[0].title.toString());
       log("사전데이터를 받아옴.");
     }
   }
