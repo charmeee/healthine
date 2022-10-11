@@ -1,6 +1,7 @@
 //import 'dart:html';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthin/Service/community_api.dart';
 import 'Database/secureStorage.dart';
@@ -62,6 +63,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     super.initState();
     //status = true;
+    storage.delete(key: "accessToken");
     initialization();
   }
 
@@ -78,7 +80,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       log("자동로그인성공");
     } catch (e) {
       ref.read(loginStateProvider.notifier).state = false;
-      print(e);
+      log(e.toString());
       log("자동로그인 실패");
     }
     FlutterNativeSplash.remove();
@@ -88,10 +90,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     //changeStatus();
     final isLogined = ref.watch(loginStateProvider);
-    final userProfile = ref.watch(userProfileNotifierProvider.notifier);
-    if (isLogined == true) {
-      userProfile.getUserProfile();
-    }
     print("메인 status ${isLogined}");
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지

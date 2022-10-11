@@ -18,8 +18,6 @@ class CustomInterceptor extends Interceptor {
     //쿠키 넣는 파트
     cookieJar.loadForRequest(options.uri).then((cookies) {
       var cookie = getCookies(cookies);
-
-      log('onRequest | cookie: $cookie');
       if (cookie.isNotEmpty) {
         options.headers[HttpHeaders.cookieHeader] = cookie;
         log('onRequest | headers: ${options.headers} body:${options.data}');
@@ -61,6 +59,7 @@ class CustomInterceptor extends Interceptor {
 
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     log('[ERR] [${err.response?.statusCode}] ${err.requestOptions.uri} ${err.message} ~-~:${err.response?.data["message"]}');
+    log('[ERR HEADER]${err.response?.headers}');
     if (err.response != null) {
       //Unauthorized 에러 -> refreshToken으로 재요청 -> 실패시 로그아웃
       _saveCookies(err.response!)
@@ -76,40 +75,83 @@ class CustomInterceptor extends Interceptor {
           err.response!.data["message"] == "Unauthorized") {
         log("Unauthorized handler 실행");
         //나중에 queuedIndicator로 바꿔야함
-        // RequestOptions requestOptions = err.requestOptions;
+        RequestOptions requestOptions = err.requestOptions;
         // dio.interceptors.requestLock.lock();
         // dio.interceptors.responseLock.lock();
-        // try {
-        //   dio.interceptors.requestLock.unlock();
-        //   dio.interceptors.responseLock.unlock();
-        //   await refreshTokenRequest(); //api
-        //   log("refreshTokenRequest 성공");
-        //   final opts = new Options(method: requestOptions.method);
-        //   dio.options.headers["Accept"] = "*/*";
-        //   try {
-        //     final response = await dio.request(requestOptions.path,
-        //         options: opts,
-        //         cancelToken: requestOptions.cancelToken,
-        //         onReceiveProgress: requestOptions.onReceiveProgress,
-        //         data: requestOptions.data,
-        //         queryParameters: requestOptions.queryParameters);
-        //     log("refresh 후 response: $response");
-        //     if (response.statusCode == 200 || response.statusCode == 201) {
-        //       handler.resolve(response);
-        //     } else {
-        //       return null;
-        //     }
-        //   } catch (e) {
-        //     log("refreshTokenRequest 실패");
-        //     await storage.deleteAll();
-        //     return handler.reject(err);
-        //   }
-        // } catch (e) {
-        //   log("error: $e");
-        //   // dio.interceptors.requestLock.unlock();
-        //   // dio.interceptors.responseLock.unlock();
-        //   return null;
-        // }
+        // dio.interceptors.errorLock.lock();
+        //handler.resolve(await _refreshToken(requestOptions));
+
+//dio1.interceptors.add(CustomInterceptor(cookieJar));
+        try {
+          BaseOptions dio1Options = options.copyWith();
+          final dio1 = Dio(dio1Options);
+          // dio1.interceptors.add(InterceptorsWrapper(
+          //     onRequest: (options, handler) async {
+          //   cookieJar.loadForRequest(options.uri).then((cookies) {
+          //     var cookie = getCookies(cookies);
+          //     if (cookie.isNotEmpty) {
+          //       options.headers[HttpHeaders.cookieHeader] = cookie;
+          //       log('ㅇㅅㅇ onRequest | headers: ${options.headers} body:${options.data}');
+          //       return handler.next(options);
+          //     }
+          //   }).catchError((e, stackTrace) {
+          //     var err = DioError(requestOptions: options, error: e);
+          //     err.stackTrace = stackTrace;
+          //     return handler.reject(err, true);
+          //   });
+          // }, onResponse:
+          //         (Response response, ResponseInterceptorHandler handler) {
+          //   log("ㅇㅅㅇ" + response.toString());
+          //   return handler.next(response);
+          // }, onError: (DioError err, ErrorInterceptorHandler handler) {
+          //   log("ㅇㅅㅇ" + err.toString());
+          //   return handler.next(err);
+          // }));
+          final response = await dio1.patch("/auth/refresh", data: {});
+          log(response.data);
+          if (handler.isCompleted) {
+            log("handler is completed");
+          }
+          //토큰이안넣어짐..
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            log("refresh token 발급 완료  ${response.data["accessToken"]}");
+            storage.delete(key: "accessToken");
+            storage.write(
+                key: "accessToken", value: response.data["accessToken"]);
+          } else {
+            log("server cant refresh");
+            return handler.reject(err);
+          }
+          try {
+            final token = await storage.read(key: 'accessToken');
+            //Authorization
+            requestOptions.headers['Authorization'] = 'Bearer $token';
+            //해더를 제대로 안넣어줘서 그럼..
+
+            final response = await dio.fetch(requestOptions);
+            log("refresh 후 response: $response");
+            //response를 provider 프로필에 넘겨줘야함.. 아마 dio를 riverpod에 감싸서 써야할것.
+            if (response.statusCode == 200 || response.statusCode == 201) {
+              //return null;
+              return handler.resolve(response);
+            } else {
+              //return null;
+              return handler.reject(err);
+            }
+          } on DioError catch (e) {
+            //헤드를 안줫더니 이거 에러잡혀서 계속 돌았음.
+            //이거 에러잡히면 계속 돔..
+            //뒤에 요청들을 다 cancel 해주거고 로그아웃 해줘야함.
+            log("refreshtoken발급후 이후 요청 실패 - 서버문제 예싱");
+            await storage.deleteAll();
+            //return null;
+            return handler.reject(err);
+          }
+        } catch (e) {
+          log("refreshTokenRequest{ error:$e }");
+          return handler.reject(err);
+        }
+
         //
         // // dio.interceptors.requestLock.unlock();
         // // dio.interceptors.responseLock.unlock();
