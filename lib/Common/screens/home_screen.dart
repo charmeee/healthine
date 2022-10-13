@@ -10,6 +10,7 @@ import '../../User/screens/userSetting_screen.dart';
 
 import '../../Routine/widgets/routineCard.dart';
 import '../../Record/widgets/todayExecisedCard.dart';
+import '../../Diet/screens/camera_screen.dart';
 
 List<Map> manuButton = [
   {
@@ -25,7 +26,7 @@ List<Map> manuButton = [
   {
     "icon": Icons.route,
     "text": "루틴 찾기",
-    "onTab": UserSetting(),
+    "onTab": CameraScreen(),
   },
   {
     "icon": Icons.person,
