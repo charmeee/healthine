@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:healthin/Screen/home/hometab/Inbody/inbodychart.dart';
 
-import '../Screen/home/hometab/profile_header/profile.dart';
+import 'profile_header/profile.dart';
 
 class Home1 extends StatelessWidget {
   Home1({Key? key, required this.didexercise}) : super(key: key);
@@ -120,7 +119,6 @@ class Tab1 extends StatelessWidget {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                     ),
                   ),
-                  InbodyChart(),
                 ],
               )),
               //인바디 차트
