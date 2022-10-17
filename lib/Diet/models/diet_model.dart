@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class DietModel {
   DietModel({
     required this.photoId,
@@ -7,43 +9,43 @@ class DietModel {
   String photoId;
   List<DietResult> results;
 
-  factory DietModel.fromJson(Map<String, dynamic> json) => DietModel(
-        photoId: json["photoId"],
-        results: List<DietResult>.from(
-            json["results"].map((x) => DietResult.fromJson(x))),
-      );
+  DietModel.fromJson(Map<String, dynamic> json)
+      : photoId = json["photoId"],
+        results = (json["results"] as List<Map<String, Object>>)
+            .map((e) => DietResult.fromJson(e))
+            .toList();
 
   Map<String, dynamic> toJson() => {
         "photoId": photoId,
-        "results": List<dynamic>.from(results.map((x) => x.toJson())),
+        "results":
+            List<Map<String, Object>>.from(results.map((x) => x.toJson())),
       };
 }
 
 class DietResult {
   DietResult({
     required this.name,
-    required this.carbohydrate,
-    required this.protein,
-    required this.fat,
+    this.carbohydrate,
+    this.protein,
+    this.fat,
     this.sodium,
-    required this.calories,
+    this.calories,
   });
 
-  String? name;
-  int? carbohydrate;
-  int? protein;
-  int? fat;
-  int? sodium;
-  int? calories;
+  String name;
+  double? carbohydrate;
+  double? protein;
+  double? fat;
+  double? sodium;
+  double? calories;
 
-  factory DietResult.fromJson(Map<String, dynamic> json) => DietResult(
-        name: json["name"],
-        carbohydrate: json["carbohydrate"],
-        protein: json["protein"],
-        fat: json["fat"],
-        sodium: json["sodium"],
-        calories: json["calories"],
-      );
+  DietResult.fromJson(Map<String, dynamic> json)
+      : name = json["name"],
+        carbohydrate = json["carbohydrate"],
+        protein = json["protein"],
+        fat = json["fat"],
+        sodium = json["sodium"],
+        calories = json["calories"];
 
   Map<String, dynamic> toJson() => {
         "name": name,

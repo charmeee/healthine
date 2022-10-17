@@ -77,41 +77,23 @@ class CustomInterceptor extends Interceptor {
         final dio1 = Dio(options);
         dio1.interceptors.add(CookieManager(cookieJar));
         try {
-          final refreshResponse = await dio1
-              .patch("https://api.be-healthy.life/User/refresh", data: {});
-          if (handler.isCompleted) {
-            log("handler is completed");
-          }
+          final refreshResponse = await dio1.patch("/auth/refresh", data: {});
           //토큰이안넣어짐..
-          if (refreshResponse.statusCode == 200) {
-            log("refresh token 발급 완료  ${refreshResponse.data["accessToken"]}");
-            storage.delete(key: "accessToken");
-            storage.write(
-                key: "accessToken",
-                value: refreshResponse.data["accessToken"].toString());
-          }
-        } catch (e) {
-          log("refreshTokenRequest{ error:$e }");
-          return handler.reject(err);
-        }
-
-        try {
+          log("refresh token 발급 완료  ${refreshResponse.data["accessToken"]}");
+          storage.delete(key: "accessToken");
+          storage.write(
+              key: "accessToken",
+              value: refreshResponse.data["accessToken"].toString());
           final token = await storage.read(key: 'accessToken');
           //Authorization
           requestOptions.headers['Authorization'] = 'Bearer $token';
           //해더를 제대로 안넣어줘서 그럼..
 
-          final response = await dio.fetch(requestOptions);
+          final response = await dio1.fetch(requestOptions);
           log("refresh 후 response: $response");
           //response를 provider 프로필에 넘겨줘야함.. 아마 dio를 riverpod에 감싸서 써야할것.
-          if (response.statusCode == 200 || response.statusCode == 201) {
-            //return null;
-            return handler.resolve(response);
-          } else {
-            //return null;
-            return handler.reject(err);
-          }
-        } on DioError catch (e) {
+          return handler.resolve(response);
+        } on DioError catch (err) {
           //헤드를 안줫더니 이거 에러잡혀서 계속 돌았음.
           //이거 에러잡히면 계속 돔..
           //뒤에 요청들을 다 cancel 해주거고 로그아웃 해줘야함.
@@ -126,7 +108,7 @@ class CustomInterceptor extends Interceptor {
 
       }
     } else {
-      handler.next(err);
+      return handler.reject(err);
     }
   }
 

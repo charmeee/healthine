@@ -9,12 +9,17 @@ class GoogleLogin implements SocialLogin {
   @override
   Future<LoginState> login() async {
     final _googleSignIn = GoogleSignIn(
-      clientId:
-          "812774997300-qmjr67kjsue5up5vupt9f9teicnq49r9.apps.googleusercontent.com",
-    );
+        //
+        // serverClientId:
+        //     "812774997300-ssr1q1d8m9d0ukcjdrbduslevu31vv17.apps.googleusercontent.com",
+        );
+    log(_googleSignIn.toString());
+    log(_googleSignIn.currentUser.toString());
+    log("google login");
     try {
       var googleLoginResult = await _googleSignIn.signIn();
       if (googleLoginResult != null) {
+        log("googleLoginResult: $googleLoginResult");
         var ggauth = await googleLoginResult.authentication;
         if (ggauth != null) {
           log("ggauth.accessToken: ${ggauth.accessToken}");

@@ -4,20 +4,26 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:healthin/Common/dio/dio_main.dart';
 import 'package:healthin/Community/models/community_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../models/diet_model.dart';
 
-Future<List<DietResult>> getDietData(imagePath) async {
+Future<List<DietResult>> getDietData(XFile image) async {
   try {
     var formData =
-        FormData.fromMap({'file': await MultipartFile.fromFile(imagePath)});
+        FormData.fromMap({'file': await MultipartFile.fromFile(image.path)});
+    log(formData.toString() + 'formData');
+    log(formData.runtimeType.toString() + 'formData');
     final response = await dio.post("/meals/inspect",
         options: Options(headers: {"Authorization": "true"}), data: formData);
 
-    if (response.statusCode == 200) {
-      log("식단 정보 조회 완료");
-      log(response.data.toString());
-      return DietModel.fromJson(response.data).results;
+    if (response.statusCode == 201) {
+      Map<String, dynamic> data = Map<String, dynamic>.from(response.data);
+      log(data.toString() + 'data');
+      log(data.runtimeType.toString());
+      DietModel tmp = DietModel.fromJson(data);
+      log(tmp.runtimeType.toString() + 'tmp');
+      return DietModel.fromJson(data).results;
     } else {
       log("식단 정보가져오기 오류");
       throw Exception(response.data);

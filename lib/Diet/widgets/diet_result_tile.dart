@@ -1,27 +1,26 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../models/diet_model.dart';
 import '../services/diet_api.dart';
 
 class DietResultWidget extends StatelessWidget {
-  final imagePath;
+  final XFile image;
   final Function(List<DietResult> result) setDietResult;
 
   const DietResultWidget(
-      {Key? key, required this.imagePath, required this.setDietResult})
+      {Key? key, required this.image, required this.setDietResult})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<DietResult>>(
-        future: getDietData(imagePath), //<List<DietResult>>
+        future: getDietData(image), //<List<DietResult>>
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // final List<bool> _selected = List.generate(snapshot.data!.length,
             //     (i) => false); // Fill it with false initially
-            setDietResult(snapshot.data!);
+            //setDietResult(snapshot.data!);
             return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data!.length,

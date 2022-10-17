@@ -21,13 +21,13 @@ class _CameraScreenState extends State<CameraScreen> {
   final picker = ImagePicker();
   List<DietResult>? result;
   var imagePath = '';
+  XFile? image;
   // 비동기 처리를 통해 카메라와 갤러리에서 이미지를 가져온다.
   Future getImage(ImageSource imageSource) async {
-    final image = await picker.pickImage(
+    image = await picker.pickImage(
         source: imageSource, maxHeight: 500, maxWidth: 500, imageQuality: 50);
-
     setState(() {
-      imagePath = image!.path;
+      //imagePath = image!.path;
       _image = File(image!.path); // 가져온 이미지를 _image에 저장
     });
     //사진보내는 api.
@@ -100,18 +100,18 @@ class _CameraScreenState extends State<CameraScreen> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width,
         child: Center(
-            child: _image == null
+            child: image == null
                 ? Text('이미지가 선택되지 않았습니다.')
                 : Image.file(File(_image!.path))));
   }
 
   Widget showDataWidget() {
-    if (_image == null) {
+    if (image == null) {
       return Text("식단을 등록해주세요.");
     } else {
       return Column(
         children: [
-          DietResultWidget(imagePath: imagePath, setDietResult: setDietResult),
+          DietResultWidget(image: image!, setDietResult: setDietResult),
           DietTextForm(result: result),
         ],
       );
