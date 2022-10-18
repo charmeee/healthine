@@ -61,15 +61,8 @@ class CustomInterceptor extends Interceptor {
     log('[ERR] [${err.response?.statusCode}] ${err.requestOptions.uri} ${err.message} ~-~:${err.response?.data["message"]}');
     if (err.response != null) {
       //Unauthorized 에러 -> refreshToken으로 재요청 -> 실패시 로그아웃
-      _saveCookies(err.response!)
-          .then((_) => handler.next(err))
-          .catchError((e, stackTrace) {
-        var _err = DioError(
-          requestOptions: err.response!.requestOptions,
-          error: e,
-        );
-        _err.stackTrace = stackTrace;
-      });
+      //
+
       if (err.response!.statusCode == 401 &&
           err.response!.data["message"] == "Unauthorized") {
         log("Unauthorized handler 실행");

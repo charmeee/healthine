@@ -8,7 +8,8 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'dio_handling.dart';
 
 var options = BaseOptions(
-  baseUrl: 'https://api.be-healthy.life',
+  //https://
+  baseUrl: 'http://api.be-healthy.life',
   connectTimeout: 5000,
   receiveTimeout: 3000,
 );
