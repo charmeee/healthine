@@ -118,8 +118,11 @@ class _UserSettingState extends ConsumerState<UserSetting> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    ref.read(userProfileNotifierProvider.notifier).logout();
+                  onPressed: () async {
+                    await ref
+                        .read(userProfileNotifierProvider.notifier)
+                        .logout();
+                    Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   child: Text("로그아웃"),
                   style: ElevatedButton.styleFrom(primary: Colors.indigo),

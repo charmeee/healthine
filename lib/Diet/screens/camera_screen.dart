@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,6 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   File? _image;
   final picker = ImagePicker();
-  List<DietResult>? result;
   var imagePath = '';
   XFile? image;
   // 비동기 처리를 통해 카메라와 갤러리에서 이미지를 가져온다.
@@ -87,12 +87,6 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
-  setDietResult(List<DietResult> result) {
-    setState(() {
-      this.result = result;
-    });
-  }
-
   // 이미지를 보여주는 위젯
   Widget showImageWidget() {
     return Container(
@@ -111,8 +105,8 @@ class _CameraScreenState extends State<CameraScreen> {
     } else {
       return Column(
         children: [
-          DietResultWidget(image: image!, setDietResult: setDietResult),
-          DietTextForm(result: result),
+          DietResultWidget(image: image!),
+          DietTextForm(),
         ],
       );
     }

@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/diet_model.dart';
 
-Future<List<DietResult>> getDietData(XFile image) async {
+Future<DietPhotoResult> getDietDataByAi(XFile image) async {
   try {
     var formData =
         FormData.fromMap({'file': await MultipartFile.fromFile(image.path)});
@@ -19,11 +19,8 @@ Future<List<DietResult>> getDietData(XFile image) async {
 
     if (response.statusCode == 201) {
       Map<String, dynamic> data = Map<String, dynamic>.from(response.data);
-      log(data.toString() + 'data');
-      log(data.runtimeType.toString());
-      DietModel tmp = DietModel.fromJson(data);
-      log(tmp.runtimeType.toString() + 'tmp');
-      return DietModel.fromJson(data).results;
+      log(data.toString() + 'foodData from ai');
+      return DietPhotoResult.fromJson(data);
     } else {
       log("식단 정보가져오기 오류");
       throw Exception(response.data);
@@ -31,4 +28,11 @@ Future<List<DietResult>> getDietData(XFile image) async {
   } catch (e) {
     throw Exception(e);
   }
+}
+
+Future<void> postDietData(DayDiet diet) async {
+  await dio.post("/meals",
+      options: Options(headers: {"Authorization": "true"}),
+      data: jsonEncode(diet.toJson()));
+  return;
 }

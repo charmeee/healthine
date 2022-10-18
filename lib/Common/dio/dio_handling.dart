@@ -78,7 +78,6 @@ class CustomInterceptor extends Interceptor {
               key: "accessToken",
               value: refreshResponse.data["accessToken"].toString());
           final token = await storage.read(key: 'accessToken');
-          //Authorization
           requestOptions.headers['Authorization'] = 'Bearer $token';
           //해더를 제대로 안넣어줘서 그럼..
 
@@ -87,18 +86,11 @@ class CustomInterceptor extends Interceptor {
           //response를 provider 프로필에 넘겨줘야함.. 아마 dio를 riverpod에 감싸서 써야할것.
           return handler.resolve(response);
         } on DioError catch (err) {
-          //헤드를 안줫더니 이거 에러잡혀서 계속 돌았음.
-          //이거 에러잡히면 계속 돔..
-          //뒤에 요청들을 다 cancel 해주거고 로그아웃 해줘야함.
           log("refreshtoken발급후 이후 요청 실패 - 서버문제 예싱");
           await storage.deleteAll();
           //return null;
           return handler.reject(err);
         }
-        //
-        // // dio.interceptors.requestLock.unlock();
-        // // dio.interceptors.responseLock.unlock();
-
       }
     } else {
       return handler.reject(err);

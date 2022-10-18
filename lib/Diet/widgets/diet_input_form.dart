@@ -3,18 +3,26 @@ import 'package:flutter/material.dart';
 import '../models/diet_model.dart';
 
 class DietTextForm extends StatefulWidget {
-  final List<DietResult>? result;
-  const DietTextForm({Key? key, this.result}) : super(key: key);
+  const DietTextForm({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<DietTextForm> createState() => _DietTextFormState();
+  State createState() => _DietTextFormState();
 }
 
 class _DietTextFormState extends State<DietTextForm> {
   final formKey = GlobalKey<FormState>();
+
+  //ref.watch(selectedDietProvider);
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
+      )),
       padding: const EdgeInsets.all(16.0),
       width: MediaQuery.of(context).size.width,
       child: Form(
@@ -22,9 +30,6 @@ class _DietTextFormState extends State<DietTextForm> {
         child: Column(
           children: [
             TextFormField(
-              initialValue: (widget.result != null && widget.result!.isNotEmpty)
-                  ? widget.result![0].name.toString()
-                  : '',
               decoration: const InputDecoration(
                 labelText: '식단 이름',
                 border: OutlineInputBorder(),
@@ -40,9 +45,6 @@ class _DietTextFormState extends State<DietTextForm> {
               height: 16.0,
             ),
             TextFormField(
-              initialValue: (widget.result != null && widget.result!.isNotEmpty)
-                  ? widget.result![0].calories.toString()
-                  : '',
               decoration: const InputDecoration(
                 labelText: '식단 설명',
                 border: OutlineInputBorder(),
