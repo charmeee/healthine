@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Routine/screens/routineSetting_screen.dart';
 
-class RoutineListTabLayout extends StatefulWidget {
-  const RoutineListTabLayout({Key? key}) : super(key: key);
+import '../../Common/util/util.dart';
+import '../models/routine_model.dart';
+import '../providers/routine_provider.dart';
+
+class RoutineListTabLayout extends ConsumerWidget {
+  const RoutineListTabLayout({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  State<RoutineListTabLayout> createState() => _RoutineListTabLayoutState();
-}
-
-class _RoutineListTabLayoutState extends State<RoutineListTabLayout> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final myRoutineList = ref.watch(userRoutineListProvider);
     return GridView.count(
       crossAxisCount: 2,
       childAspectRatio: 1.5,
-      children: List.generate(100, (index) {
+      children: List.generate(myRoutineList.length, (index) {
+        List<String> getDay = getDayList(myRoutineList[index].day);
+        List<String> type =
+            myRoutineList[index].type.map((e) => "#$e").toList();
         return GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => RoutineSetting()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        RoutineSetting(myRoutine: myRoutineList[index])));
           },
           child: Container(
               margin: EdgeInsets.all(10),
@@ -39,14 +48,14 @@ class _RoutineListTabLayoutState extends State<RoutineListTabLayout> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
-                            "내 루틴1",
+                            myRoutineList[index].title.toString(),
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Text("#하체  #어깨")
+                        Text(type.join(" ")),
                       ],
                     ),
                   ),
@@ -54,7 +63,7 @@ class _RoutineListTabLayoutState extends State<RoutineListTabLayout> {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     alignment: Alignment.centerRight,
                     child: Text(
-                      "요일: 월,화",
+                      "요일: " + getDay.join(","),
                       style: TextStyle(fontSize: 13),
                     ),
                   )

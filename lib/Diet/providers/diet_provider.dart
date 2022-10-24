@@ -3,21 +3,20 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/diet_model.dart';
+import '../services/diet_api.dart';
 
-final selectedDietProvider =
-    StateNotifierProvider<SelectedDietNotifier, List<DietResult>>(
-        (ref) => SelectedDietNotifier());
+//오늘 먹은 식단 정보를 저장하고 있으면 좋을듯? 덜 요청해두되고
+final todayDietProvider =
+    StateNotifierProvider<DietStatisticsNotifier, DayDietStatistics?>(
+        (ref) => DietStatisticsNotifier());
 
-class SelectedDietNotifier extends StateNotifier<List<DietResult>> {
-  SelectedDietNotifier() : super([]);
-
-  void addDiet(DietResult diet) {
-    log("addDiet:${diet}");
-    state = [...state, diet];
+class DietStatisticsNotifier extends StateNotifier<DayDietStatistics?> {
+  DietStatisticsNotifier() : super(null) {
+    getData();
   }
 
-  void removeDiet(DietResult diet) {
-    log("removeDiet:${diet}");
-    state = state.where((element) => element.name != diet.name).toList();
+  Future getData() async {
+    DateTime now = DateTime.now();
+    state = await getDietStatistics(now);
   }
 }

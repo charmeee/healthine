@@ -45,6 +45,10 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
     }
   }
 
+  String getDictionaryNameById(String id) {
+    return state.firstWhere((element) => element.id == id).title;
+  }
+
   addDictionary(List<DictionaryData> data) {
     log("사전데이터 추가.");
     state = [...state, ...data];

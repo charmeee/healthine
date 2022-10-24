@@ -4,20 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Diet/models/diet_model.dart';
+import 'package:healthin/Diet/widgets/diet_type_chip.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../services/diet_api.dart';
 import '../widgets/diet_input_form.dart';
 import '../widgets/diet_result_tile.dart';
 
-class CameraScreen extends StatefulWidget {
-  const CameraScreen({Key? key}) : super(key: key);
+class DietInputScreen extends StatefulWidget {
+  const DietInputScreen({Key? key}) : super(key: key);
 
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  _DietInputScreenState createState() => _DietInputScreenState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
+class _DietInputScreenState extends State<DietInputScreen> {
   File? _image;
   final picker = ImagePicker();
   var imagePath = '';
@@ -67,7 +68,6 @@ class _CameraScreenState extends State<CameraScreen> {
                         getImage(ImageSource.camera);
                       },
                     ),
-
                     // 갤러리에서 이미지를 가져오는 버튼
                     ElevatedButton(
                       child: Icon(Icons.wallpaper),
@@ -91,8 +91,8 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget showImageWidget() {
     return Container(
         color: const Color(0xffd0cece),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: MediaQuery.of(context).size.width * 0.8,
         child: Center(
             child: image == null
                 ? Text('이미지가 선택되지 않았습니다.')
@@ -105,8 +105,8 @@ class _CameraScreenState extends State<CameraScreen> {
     } else {
       return Column(
         children: [
+          const DietTypeChips(),
           DietResultWidget(image: image!),
-          DietTextForm(),
         ],
       );
     }

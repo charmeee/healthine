@@ -58,7 +58,7 @@ class CustomInterceptor extends Interceptor {
   }
 
   void onError(DioError err, ErrorInterceptorHandler handler) async {
-    log('[ERR] [${err.response?.statusCode}] ${err.requestOptions.uri} ${err.message} ~-~:${err.response?.data["message"]}');
+    log('[ERR] [${err.response?.statusCode}] ${err.requestOptions.uri} ${err.message}');
     if (err.response != null) {
       //Unauthorized 에러 -> refreshToken으로 재요청 -> 실패시 로그아웃
       //

@@ -29,11 +29,11 @@ class Dictionary extends ConsumerStatefulWidget {
 }
 
 class _DictionaryState extends ConsumerState<Dictionary> {
-  final List<RoutineData> routineList = [];
+  final List<RoutineManual> routineList = [];
 
   @override
   Widget build(BuildContext context) {
-    final routineListRead = ref.read(RoutineNotifierProvider.notifier);
+    final routineListRead = ref.read(userRoutineListProvider.notifier);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -52,7 +52,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
       bottomNavigationBar: routineList.isNotEmpty
           ? ElevatedButton(
               onPressed: () {
-                routineListRead.addRoutineData(routineList); //이걸 변경해야함.
+                //routineListRead.addRoutineData(routineList); //이걸 변경해야함.
                 Navigator.pop(context);
               },
               child: Text("루틴추가하기"))
@@ -60,17 +60,15 @@ class _DictionaryState extends ConsumerState<Dictionary> {
     );
   }
 
-  addRoutineData(RoutineData routinedata) {
+  addRoutineData(RoutineManual routinedata) {
     setState(() {
       routineList.add(routinedata);
     });
-    log(routinedata.id.toString());
-    log(routinedata.name.toString());
   }
 
   removeRoutineData(String data) {
     setState(() {
-      routineList.removeWhere((item) => item.name == data);
+      routineList.removeWhere((item) => item.manualId == data);
     });
   }
 }
@@ -176,7 +174,7 @@ class DictionaryList extends ConsumerStatefulWidget {
       required this.removeRoutineData})
       : super(key: key);
   final bool addmode;
-  final List<RoutineData> routineList;
+  final List<RoutineManual> routineList;
   final Function addRoutineData;
   final Function removeRoutineData;
 
@@ -215,18 +213,19 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                     trailing: widget.addmode
                         ? Checkbox(
                             value: widget.routineList.any((item) =>
-                                item.name == filteredDatasWatch[index].title),
+                                item.manualId ==
+                                filteredDatasWatch[index].title),
                             onChanged: (value) {
                               log(widget.routineList.length.toString());
                               log("체크박스 value" + value.toString());
                               if (value!) {
-                                widget.addRoutineData(RoutineData(
-                                    name: filteredDatasWatch[index].title,
-                                    type: filteredDatasWatch[index].type,
-                                    numPerSet: 10,
-                                    weight: 10,
-                                    img:
-                                        "assets/exercise_img/${filteredDatasWatch[index].id}.png"));
+                                // widget.addRoutineData(RoutineData(
+                                //     name: filteredDatasWatch[index].title,
+                                //     type: filteredDatasWatch[index].type,
+                                //     numPerSet: 10,
+                                //     weight: 10,
+                                //     img:
+                                //         "assets/exercise_img/${filteredDatasWatch[index].id}.png"));
                               } else {
                                 widget.removeRoutineData(
                                     filteredDatasWatch[index].title);

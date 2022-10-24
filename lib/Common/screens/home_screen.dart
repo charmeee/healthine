@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Diet/widgets/diet_main_card.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/Diet/screens/diet.dart';
 import 'package:healthin/znotUseFiles/report_screen.dart';
@@ -10,7 +11,7 @@ import '../../User/screens/userSetting_screen.dart';
 
 import '../../Routine/widgets/routineCard.dart';
 import '../../Record/widgets/todayExecisedCard.dart';
-import '../../Diet/screens/camera_screen.dart';
+import '../../Diet/screens/diet_input_screen.dart';
 
 List<Map> manuButton = [
   {
@@ -26,7 +27,7 @@ List<Map> manuButton = [
   {
     "icon": Icons.route,
     "text": "루틴 찾기",
-    "onTab": CameraScreen(),
+    "onTab": DietInputScreen(),
   },
   {
     "icon": Icons.person,
@@ -261,7 +262,7 @@ class HomeScreen extends ConsumerWidget {
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    "운동리포트",
+                    "오늘의 음식",
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
@@ -272,17 +273,7 @@ class HomeScreen extends ConsumerWidget {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                  child: Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text("운동을 시작해 보세요"),
-                        Container(
-                          height: 50,
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: DietCard(),
                 ),
 
                 // CarouselSlider(
@@ -401,7 +392,7 @@ class HomeScreen extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                RoutineCard(), //오늘의 루틴
+                //RoutineCard(), //오늘의 루틴
                 ExecisedCard(),
                 Container(
                   height: 50,

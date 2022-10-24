@@ -17,7 +17,7 @@ class DietResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DietPhotoResult>(
+    return FutureBuilder<DietAiPhotoAnalysis>(
         future: getDietDataByAi(image), //<List<DietResult>>
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -27,6 +27,7 @@ class DietResultWidget extends StatelessWidget {
                 itemCount: snapshot.data!.results.length + 1,
                 itemBuilder: (context, index) {
                   if (index == snapshot.data!.results.length) {
+                    //마지막에 식단추가 버튼.
                     return ElevatedButton(
                       onPressed: () {
                         showBottomSheet(
@@ -51,23 +52,45 @@ class DietResultWidget extends StatelessWidget {
   }
 }
 
-class DietSelectTile extends StatelessWidget {
-  final DietResult item;
+class DietSelectTile extends ConsumerWidget {
+  final NutritionResult item;
   final String photoId;
   const DietSelectTile({Key? key, required this.item, required this.photoId})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
       tileColor: Colors.white,
       onTap: () async {
-        await postDietData(DayDiet.fromDietResult(
-            item, describeEnum(DietType.breakfast), photoId));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Diet()),
-        );
+        //alert창 띄우기
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('식단 추가'),
+                content: const Text('식단을 추가하시겠습니까?'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('취소')),
+                  TextButton(
+                      onPressed: () async {
+                        //식단 추가 api
+                        await postDiet(DietDetailResult.fromDietResult(
+                            item, describeEnum(DietType.breakfast), photoId));
+                        ref.refresh(todayDietProvider); //getData
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Diet()),
+                            (route) => route.isFirst);
+                      },
+                      child: const Text('확인')),
+                ],
+              );
+            });
         //post요청을날리고 식단 페이지로 navigate 함
       },
       title: Text(item.name.toString()),

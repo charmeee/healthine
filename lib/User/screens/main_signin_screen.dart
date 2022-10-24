@@ -73,9 +73,16 @@ class MainSignIn extends ConsumerWidget {
               ),
               onPressed: () async {
                 //util로해서 만드는게 나을듯?
-                LoginState loginState = await kakaoLogin.login();
-                ref.read(loginStateProvider.notifier).state =
-                    loginState.isLogin;
+                LoginState loginState = await ref
+                    .read(userProfileNotifierProvider.notifier)
+                    .venderLogin(Vender.kakao);
+                if (loginState.isLogin == false) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('카카오 로그인 실패'),
+                    ),
+                  );
+                }
                 if (loginState.isFreshman) {
                   Navigator.push(
                     context,
@@ -114,3 +121,5 @@ class MainSignIn extends ConsumerWidget {
     );
   }
 }
+
+//vender ,

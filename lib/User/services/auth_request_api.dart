@@ -42,6 +42,7 @@ Future<UserInfo> userProfileRequest() async {
   try {
     final response = await dio.get("/auth/profile",
         options: Options(headers: {"Authorization": "true"}));
+    log("userProfile{ data:${response.data}, statusCode:${response.statusCode} }");
     if (response.statusCode == 200) {
       return UserInfo(
         id: response.data["id"],

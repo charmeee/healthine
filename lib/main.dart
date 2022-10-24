@@ -74,12 +74,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     initializeDateFormatting();
     try {
       await ref.read(userProfileNotifierProvider.notifier).getUserProfile();
-      ref.read(loginStateProvider.notifier).state = true;
-      log("자동로그인성공");
     } catch (e) {
-      ref.read(loginStateProvider.notifier).state = false;
-      log(e.toString());
-      log("자동로그인 실패");
+      print(e);
     }
     FlutterNativeSplash.remove();
   }
@@ -92,10 +88,6 @@ class _MyAppState extends ConsumerState<MyApp> {
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
     //MainSignIn은 로그인 페이지'
-    final userProfile = ref.watch(userProfileNotifierProvider.notifier);
-    if (isLogined) {
-      userProfile.getUserProfile();
-    }
     return isLogined ? MyHome() : MainSignIn();
   }
 }

@@ -29,17 +29,6 @@ class HomeDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: Icon(
-              Icons.home,
-              color: Colors.grey[850],
-            ),
-            title: Text('헬스장 정보'),
-            onTap: () {
-              print('Home is clicked');
-            },
-            trailing: Icon(Icons.add),
-          ),
-          ListTile(
-            leading: Icon(
               Icons.settings,
               color: Colors.grey[850],
             ),
