@@ -172,12 +172,12 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
       ),
       bottomNavigationBar: ElevatedButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => WhileExercise(
-                        routine: widget.myRoutine.routineManuals,
-                        routineId: widget.myRoutine.id)));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => WhileExercise(
+            //             routine: widget.myRoutine.routineManuals,
+            //             routineId: widget.myRoutine.id)));
           },
           child: Text("루틴시작하기")),
     );
