@@ -6,6 +6,8 @@ import 'package:healthin/Diet/screens/diet.dart';
 import 'package:healthin/znotUseFiles/report_screen.dart';
 import 'package:healthin/Routine/screens/routineList_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../Routine/models/routine_models.dart';
+import '../../Routine/providers/routine_provider.dart';
 import '../../User/providers/user_provider.dart';
 import '../../User/screens/userSetting_screen.dart';
 
@@ -74,6 +76,8 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     UserInfo user = ref.watch(userProfileNotifierProvider);
+    final todayRoutine = ref.watch(todayRoutineProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
@@ -196,25 +200,52 @@ class HomeScreen extends ConsumerWidget {
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                   child: Card(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("루틴을 추가해 보세요."),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RoutineList()),
-                            );
-                          },
-                          icon: Icon(Icons.add),
-                          iconSize: 50,
-                        )
-                      ],
+                    child: todayRoutine.when(
+                      data: (data) {
+                        if (data == null) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("루틴을 추가해 보세요."),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RoutineList()),
+                                  );
+                                },
+                                icon: Icon(Icons.add),
+                                iconSize: 50,
+                              )
+                            ],
+                          );
+                        } else {
+                          return ListView.builder(
+                            itemCount: data.routineManuals!.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: Icon(Icons.fitness_center),
+                                title: Text(
+                                    data.routineManuals![index].manualTitle),
+                                subtitle: Text(data
+                                    .routineManuals![index].routineManualId
+                                    .toString()),
+                              );
+                            },
+                          );
+                        }
+                      },
+                      loading: () => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      error: (error, stack) => const Center(
+                        child: Text('Error'),
+                      ),
                     ),
                   ),
                 ),
+
                 // Container(
                 //   width: MediaQuery.of(context).size.width,
                 //   padding: EdgeInsets.symmetric(horizontal: 20),

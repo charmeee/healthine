@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Dictionary/providers/dictonary_provider.dart';
 import 'package:healthin/Routine/providers/routine_provider.dart';
-import '../../Routine/routine_models.dart';
+import '../../Routine/models/routine_models.dart';
 import 'package:uuid/uuid.dart';
 
 import 'dictionary_detail_screeen.dart';

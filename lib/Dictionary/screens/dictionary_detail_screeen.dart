@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Dictionary/models/dictionary_model.dart';
-import 'package:healthin/Routine/routine_models.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 
 class DictionaryDetail extends StatelessWidget {
   ManualData founddata;

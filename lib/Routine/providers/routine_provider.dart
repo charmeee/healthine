@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Routine/routine_models.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/Routine/services/myRoutine_api.dart';
 
 import '../test.dart';
@@ -21,11 +21,8 @@ class MyRoutinePreviewNotifier extends StateNotifier<List<MyRoutine>> {
     getRoutineData();
   }
   getRoutineData() async {
-    List<MyRoutine> routineData =
-        myRoutineListEx.map((e) => MyRoutine.liteFromJson(e)).toList();
-    if (routineData.isNotEmpty) {
-      state = routineData;
-    }
+    List<MyRoutine> routineData = await getMyRoutineList();
+    state = routineData;
   }
 
   // 걍 get루틴 postroutine 정도만있어도될듯
@@ -45,13 +42,15 @@ final userRoutinePreviewProvider =
   return MyRoutinePreviewNotifier();
 });
 
-final todayRoutineProvider = Provider<String?>((ref) {
+final todayRoutineProvider = FutureProvider<MyRoutine?>((ref) async {
   List<String?> dayOfWeek = ref.watch(dayOfWeekRoutineProvider);
   DateTime today = DateTime.now();
   String? todayRoutineId = dayOfWeek[today.weekday - 1];
-  if (todayRoutineId == null) {
-    return;
+  log("todayRoutineId : $todayRoutineId");
+  if (todayRoutineId != null) {
+    return await getMyRoutineById(todayRoutineId! as String);
   }
+  return null;
   //MyRoutine todayRoutine = get요청 api
 });
 

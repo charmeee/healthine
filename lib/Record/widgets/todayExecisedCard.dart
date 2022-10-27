@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Routine/routine_models.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/Record/providers/exercisedata_provider.dart';
 import 'package:healthin/Routine/providers/routine_provider.dart';
 

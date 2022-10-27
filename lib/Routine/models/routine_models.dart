@@ -66,16 +66,16 @@ class MyRoutine {
     return MyRoutine(
         id: json['id'],
         title: json['title'],
-        days: json['days'],
-        type: json['type']);
+        days: json['days'].map<int>((e) => e as int).toList(),
+        type: json['type'] ?? []);
   }
 
   factory MyRoutine.fromJson(Map<String, dynamic> json) {
     return MyRoutine(
       id: json['id'],
       title: json['title'],
-      days: json['days'],
-      type: json['type'],
+      days: json['days'].map<int>((e) => e as int).toList(),
+      type: json['type'] ?? [],
       routineManuals: (json['routineManuals'] as List<dynamic>)
           .map((e) => RoutineManual.fromJson(e))
           .toList(),
@@ -151,7 +151,7 @@ class ReferenceRoutine {
         description: json['description'],
         author: json['author'],
         likesCount: json['likesCount'],
-        type: json['type']);
+        type: json['type'] ?? []);
   }
 
   factory ReferenceRoutine.fromJson(Map<String, dynamic> json) {
@@ -161,7 +161,7 @@ class ReferenceRoutine {
       description: json['description'],
       author: json['author'],
       likesCount: json['likesCount'],
-      type: json['type'],
+      type: json['type'] ?? [],
       routineManuals: (json['routineManuals'] as List<dynamic>)
           .map((e) => RoutineManual.fromJson(e))
           .toList(),
@@ -220,7 +220,7 @@ class RoutineManual {
       setNumber: 3,
       weight: 10,
       speed: 4,
-      playMinute: 0,
+      playMinute: 10,
       order: 0,
       type: "",
     );
@@ -237,6 +237,23 @@ class RoutineManual {
       "playMinute": playMinute,
       "order": order,
       "type": type,
+    };
+  }
+
+  Map<String, dynamic> weightToJson() {
+    return {
+      "targetNumber": targetNumber,
+      "setNumber": setNumber,
+      "weight": weight,
+      "order": order,
+    };
+  }
+
+  Map<String, dynamic> cardioToJson() {
+    return {
+      "speed": speed,
+      "playMinute": playMinute,
+      "order": order,
     };
   }
 }

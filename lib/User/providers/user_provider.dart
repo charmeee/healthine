@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Routine/routine_models.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/User/models/user_model.dart';
 
 import '../services/auth_request_api.dart';

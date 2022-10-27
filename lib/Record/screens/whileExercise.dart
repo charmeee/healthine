@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Routine/routine_models.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';

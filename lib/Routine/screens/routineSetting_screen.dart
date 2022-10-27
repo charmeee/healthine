@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Routine/providers/routine_provider.dart';
 import 'package:healthin/Dictionary/screens/main_dictionary_screen.dart';
-import 'package:healthin/Routine/routine_models.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/Routine/screens/routineAdding_screen.dart';
 
 import '../../Common/util/util.dart';
 import '../../Dictionary/providers/dictonary_provider.dart';
 import '../../Record/screens/whileExercise.dart';
+import '../services/myRoutine_api.dart';
 import '../test.dart';
 
 class RoutineSetting extends ConsumerStatefulWidget {
@@ -27,22 +28,34 @@ class RoutineSetting extends ConsumerStatefulWidget {
 
 class _RoutineSettingState extends ConsumerState<RoutineSetting> {
   late MyRoutine myRoutine;
+  late MyRoutine copyRoutine; //비교하기위한 복제본.
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    initApi();
+  }
+
+  initApi() async {
     if (widget.routine != null) {
-      //이건 레퍼런스에서 가져온루틴 은 레퍼런스 가저오기 api가 있어서 무적건 get요청을 날리면될듯.
-
-      //원래 있던 루틴.
-      myRoutine = MyRoutine.fromJson(myRoutineEx); //futurebuilder로해도될듯^.^
-      //get요청을조진다. => manaul부분이 절대 null이될 수 없음
-
+      myRoutine = await getMyRoutineById(widget.routine!.id);
     } else {
       //처음루틴을 만드는 경우.
-      myRoutine = MyRoutine.init(widget.routineTitle); //manual부분 null
+      myRoutine = MyRoutine.init(widget.routineTitle);
+      myRoutine = await postMyRoutine(myRoutine); //manual부분 null
       //루틴 post를해서 루틴 id를 채워넣음.
     }
+  }
+
+  sendRoutineManuals() async {
+    await postMyRoutineManuals(myRoutine.routineManuals!, myRoutine.id);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    sendRoutineManuals();
+    super.dispose();
   }
 
   @override

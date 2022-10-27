@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Routine/screens/routineSetting_screen.dart';
 
 import '../../Common/util/util.dart';
-import '../models/routine_model.dart';
 import '../providers/routine_provider.dart';
 
 class RoutineListTabLayout extends ConsumerWidget {

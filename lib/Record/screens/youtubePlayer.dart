@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:healthin/Dictionary/models/dictionary_model.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'dart:convert';
-import '../../Routine/routine_models.dart';
+import '../../Routine/models/routine_models.dart';
 
 // 내가봣을때 걍 유튜브링크 넘겨줘서 webview로 보는게 더 맞는거 가틈..
 

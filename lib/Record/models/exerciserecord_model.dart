@@ -14,7 +14,7 @@
 // "manualId": "string"
 // }
 
-import '../../Routine/routine_models.dart';
+import '../../Routine/models/routine_models.dart';
 
 class Record {
   String id;
