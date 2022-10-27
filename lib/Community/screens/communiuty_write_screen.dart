@@ -54,9 +54,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                     formKey.currentState!.save();
                     if (await postCommunityBoardData(
                         thisBoardId, title, content)) {
-                      await ref
-                          .read(communityProvider.notifier)
-                          .reloadBoard(thisBoardId); //새로고침
+                      //새로고침
                       Navigator.of(context).pop();
                     } else {
                       Navigator.of(context).pop();

@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Routine/screens/routineSetting_screen.dart';
 import '../widgets/routineListTab_layout.dart';
+import '../widgets/routineName_dialog.dart';
 
 class RoutineList extends StatefulWidget {
   const RoutineList({Key? key}) : super(key: key);
@@ -12,6 +16,7 @@ class RoutineList extends StatefulWidget {
 class _RoutineListState extends State<RoutineList>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  final _routineFormKey = GlobalKey<FormState>();
   @override
   void initState() {
     _tabController = TabController(
@@ -60,7 +65,18 @@ class _RoutineListState extends State<RoutineList>
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Form(
+                    key: _routineFormKey,
+                    child: NameInputDialog(
+                      routineFormKey: _routineFormKey,
+                    ),
+                  );
+                });
+          },
           child: Icon(Icons.add),
           backgroundColor: Colors.greenAccent,
         ),

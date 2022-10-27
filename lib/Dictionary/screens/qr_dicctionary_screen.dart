@@ -19,7 +19,7 @@ class QrDictionary extends StatefulWidget {
 }
 
 class _QrDictionaryState extends State<QrDictionary> {
-  late List<DictionaryData> dictionaryList = [];
+  late List<ManualData> dictionaryList = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -29,7 +29,7 @@ class _QrDictionaryState extends State<QrDictionary> {
 
   getList() async {
     try {
-      List<DictionaryData> tmp =
+      List<ManualData> tmp =
           await getDicionaryListByEquipmentId(widget.equipmentId);
       setState(() {
         dictionaryList = tmp;

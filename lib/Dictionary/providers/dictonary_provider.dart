@@ -8,12 +8,12 @@ import 'package:healthin/Dictionary/services/dictionary_api.dart';
 final searchBynameProvider = StateProvider<String?>((ref) => null);
 final searchBytypeProvider = StateProvider<String?>((ref) => null);
 
-final filteredDictionaryDatas = Provider<List<DictionaryData>>((ref) {
+final filteredDictionaryDatas = Provider<List<ManualData>>((ref) {
   final String? filtername = ref.watch(searchBynameProvider); //string으로 들어감.
   final String? filtertype = ref.watch(searchBytypeProvider); //string으로 들어갈것.
-  final List<DictionaryData> dictionarys =
+  final List<ManualData> dictionarys =
       ref.watch(DictionaryNotifierProvider); //전체 데이타
-  Set<DictionaryData> filteredDictionarys = {};
+  Set<ManualData> filteredDictionarys = {};
   if (filtername == null && filtertype == null) {
     return dictionarys;
   } else {
@@ -29,15 +29,15 @@ final filteredDictionaryDatas = Provider<List<DictionaryData>>((ref) {
   }
 });
 
-class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
-  DictionaryNotifier([List<DictionaryData>? initialDictionary])
+class DictionaryNotifier extends StateNotifier<List<ManualData>> {
+  DictionaryNotifier([List<ManualData>? initialDictionary])
       : super(initialDictionary ?? []) {
     log("사전데이터가져오기실행");
     getDictionary();
   }
 
   getDictionary() async {
-    List<DictionaryData> dictionaryData = await getDicionaryList();
+    List<ManualData> dictionaryData = await getDicionaryList();
     if (dictionaryData.isNotEmpty) {
       state = dictionaryData;
       log(state[0].title.toString());
@@ -49,7 +49,7 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
     return state.firstWhere((element) => element.id == id).title;
   }
 
-  addDictionary(List<DictionaryData> data) {
+  addDictionary(List<ManualData> data) {
     log("사전데이터 추가.");
     state = [...state, ...data];
   }
@@ -66,7 +66,7 @@ class DictionaryNotifier extends StateNotifier<List<DictionaryData>> {
 //루틴순서변경
 //루틴세부항목 변경
 final DictionaryNotifierProvider =
-    StateNotifierProvider<DictionaryNotifier, List<DictionaryData>>((ref) {
+    StateNotifierProvider<DictionaryNotifier, List<ManualData>>((ref) {
   log("DictionaryNotifierProvider실행");
   return DictionaryNotifier();
 });

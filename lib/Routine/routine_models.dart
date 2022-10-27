@@ -1,6 +1,40 @@
+import 'package:flutter/foundation.dart';
+import 'package:healthin/Dictionary/models/dictionary_model.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
+
+enum ExerciseType {
+  back,
+  chest,
+  shoulder,
+  arm,
+  leg,
+  abs,
+  cardio,
+  etc;
+
+  factory ExerciseType.fromName(String name) {
+    switch (name) {
+      case 'back':
+        return ExerciseType.back;
+      case 'chest':
+        return ExerciseType.chest;
+      case 'shoulder':
+        return ExerciseType.shoulder;
+      case 'arm':
+        return ExerciseType.arm;
+      case 'leg':
+        return ExerciseType.leg;
+      case 'abs':
+        return ExerciseType.abs;
+      case 'cardio':
+        return ExerciseType.cardio;
+      default:
+        return ExerciseType.etc;
+    }
+  }
+}
 
 enum routineStatus {
   before,
@@ -13,38 +47,120 @@ enum routineStatus {
   }
 }
 
-class Routine {
+class MyRoutine {
   String id;
   String title;
-  String description;
-  List<int> day;
-  String access;
-  String author;
-  String owner;
+  List<int> days;
   List<String> type;
-  List<RoutineManual> routineManuals;
+  List<RoutineManual>? routineManuals;
 
-  Routine({
+  MyRoutine({
+    required this.id,
+    required this.title,
+    required this.days,
+    required this.type,
+    this.routineManuals,
+  });
+
+  factory MyRoutine.liteFromJson(Map<String, dynamic> json) {
+    return MyRoutine(
+        id: json['id'],
+        title: json['title'],
+        days: json['days'],
+        type: json['type']);
+  }
+
+  factory MyRoutine.fromJson(Map<String, dynamic> json) {
+    return MyRoutine(
+      id: json['id'],
+      title: json['title'],
+      days: json['days'],
+      type: json['type'],
+      routineManuals: (json['routineManuals'] as List<dynamic>)
+          .map((e) => RoutineManual.fromJson(e))
+          .toList(),
+    );
+  }
+  factory MyRoutine.fromReferenceRoutine(ReferenceRoutine referencerRoutine) {
+    return MyRoutine(
+      id: "",
+      title: referencerRoutine.title,
+      days: List<int>.generate(7, (index) {
+        if (index == DateTime.now().weekday - 1) return 1;
+        return 0;
+      }),
+      type: referencerRoutine.type,
+      routineManuals: referencerRoutine.routineManuals,
+    );
+  }
+
+  factory MyRoutine.init(String routineTitle) {
+    return MyRoutine(
+      id: "",
+      title: routineTitle,
+      days: List<int>.generate(7, (index) {
+        if (index == DateTime.now().weekday - 1) return 1;
+        return 0;
+      }),
+      type: [],
+      routineManuals: [],
+    );
+  }
+  Map<String, dynamic> newRoutineToJson() {
+    return {
+      "title": title,
+      "days": days,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "days": days,
+      "type": type,
+      "routineManuals": routineManuals == null
+          ? []
+          : routineManuals!.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class ReferenceRoutine {
+  String id;
+  String title;
+  String description; //
+  String author; //
+  int likesCount;
+  List<String> type;
+  List<RoutineManual>? routineManuals;
+
+  ReferenceRoutine({
     required this.id,
     required this.title,
     required this.description,
-    required this.day,
-    required this.access,
     required this.author,
-    required this.owner,
+    required this.likesCount,
     required this.type,
-    required this.routineManuals,
+    this.routineManuals,
   });
 
-  factory Routine.fromJson(Map<String, dynamic> json) {
-    return Routine(
+  factory ReferenceRoutine.liteFromJson(Map<String, dynamic> json) {
+    return ReferenceRoutine(
+        id: json['id'],
+        title: json['title'],
+        description: json['description'],
+        author: json['author'],
+        likesCount: json['likesCount'],
+        type: json['type']);
+  }
+
+  factory ReferenceRoutine.fromJson(Map<String, dynamic> json) {
+    return ReferenceRoutine(
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      day: json['day'],
-      access: json['access'],
       author: json['author'],
-      owner: json['owner'],
+      likesCount: json['likesCount'],
       type: json['type'],
       routineManuals: (json['routineManuals'] as List<dynamic>)
           .map((e) => RoutineManual.fromJson(e))
@@ -56,6 +172,7 @@ class Routine {
 class RoutineManual {
   String manualId;
   String routineManualId;
+  String manualTitle;
   int targetNumber;
   int setNumber;
   int weight;
@@ -64,9 +181,12 @@ class RoutineManual {
   int order;
   String type;
 
+  bool get isCardio => type == describeEnum(ExerciseType.cardio);
+
   RoutineManual({
     required this.manualId,
     required this.routineManualId,
+    required this.manualTitle,
     required this.targetNumber,
     required this.setNumber,
     this.weight = 0,
@@ -80,14 +200,44 @@ class RoutineManual {
     return RoutineManual(
       manualId: json['manualId'],
       routineManualId: json['routineManualId'],
-      targetNumber: json['targetNumber'],
-      setNumber: json['setNumber'],
-      weight: json['weight'],
-      speed: json['speed'],
-      playMinute: json['playMinute'],
+      manualTitle: json['manualTitle'],
+      targetNumber: json['targetNumber'] ?? 0,
+      setNumber: json['setNumber'] ?? 0,
+      weight: json['weight'] ?? 0,
+      speed: json['speed'] ?? 0,
+      playMinute: json['playMinute'] ?? 0,
       order: json['order'],
       type: json['type'],
     );
+  }
+
+  factory RoutineManual.init() {
+    return RoutineManual(
+      manualId: "",
+      routineManualId: "",
+      manualTitle: "",
+      targetNumber: 10,
+      setNumber: 3,
+      weight: 10,
+      speed: 4,
+      playMinute: 0,
+      order: 0,
+      type: "",
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "manualId": manualId,
+      "routineManualId": routineManualId,
+      "manualTitle": manualTitle,
+      "targetNumber": targetNumber,
+      "setNumber": setNumber,
+      "weight": weight,
+      "speed": speed,
+      "playMinute": playMinute,
+      "order": order,
+      "type": type,
+    };
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:healthin/Dictionary/models/dictionary_model.dart';
 import 'package:healthin/Routine/routine_models.dart';
 
 class DictionaryDetail extends StatelessWidget {
-  DictionaryData founddata;
+  ManualData founddata;
 
   DictionaryDetail({Key? key, required this.founddata}) : super(key: key);
 

@@ -6,8 +6,12 @@ import '../screens/community_detail_screen.dart';
 class MainCommunityListTile extends StatelessWidget {
   final CommunityBoard board;
   final String boardId;
+  final GlobalKey<RefreshIndicatorState> refreshKey;
   const MainCommunityListTile(
-      {Key? key, required this.board, required this.boardId})
+      {Key? key,
+      required this.board,
+      required this.boardId,
+      required this.refreshKey})
       : super(key: key);
 
   @override
@@ -25,7 +29,7 @@ class MainCommunityListTile extends StatelessWidget {
                       boardId: boardId,
                       postId: board.id,
                       boardTitle: board.title,
-                    )));
+                    ))).then((value) => refreshKey.currentState?.show());
       },
       trailing: Text(board.author),
     );

@@ -1,4 +1,4 @@
-class DictionaryData {
+class ManualData {
   String id;
   String title;
   String enTitle;
@@ -7,7 +7,7 @@ class DictionaryData {
   List? description;
   // List? precautions;
 
-  DictionaryData({
+  ManualData({
     required this.id,
     required this.title,
     required this.enTitle,
@@ -16,7 +16,7 @@ class DictionaryData {
     this.description,
     //this.precautions
   });
-  DictionaryData.fromJson(Map<String, dynamic> json)
+  ManualData.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         title = json['title'],
         enTitle = json['enTitle'],

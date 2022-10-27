@@ -15,14 +15,14 @@ class RecordNotifier extends StateNotifier<List<Record>> {
   //먼저 오늘의 운동기록을 조회한다
   getRecordData() async {
     List<Record> recorddata =
-        recordTest.map((e) => Record.fromJson(e)).toList();
+        recordTestEx.map((e) => Record.fromJson(e)).toList();
     if (recorddata.isNotEmpty) {
       state = recorddata;
     }
   }
 
-  addRecordData(Record data) {
-    state = [...state, data];
+  updateRecordData(List<Record> data) {
+    state = data;
   }
 }
 

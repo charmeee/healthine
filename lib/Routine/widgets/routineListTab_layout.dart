@@ -13,12 +13,12 @@ class RoutineListTabLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final myRoutineList = ref.watch(userRoutineListProvider);
+    final myRoutineList = ref.watch(userRoutinePreviewProvider);
     return GridView.count(
       crossAxisCount: 2,
       childAspectRatio: 1.5,
       children: List.generate(myRoutineList.length, (index) {
-        List<String> getDay = getDayList(myRoutineList[index].day);
+        List<String> getDay = getDayList(myRoutineList[index].days);
         List<String> type =
             myRoutineList[index].type.map((e) => "#$e").toList();
         return GestureDetector(
@@ -26,8 +26,9 @@ class RoutineListTabLayout extends ConsumerWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        RoutineSetting(myRoutine: myRoutineList[index])));
+                    builder: (context) => RoutineSetting(
+                        routine: myRoutineList[index],
+                        routineTitle: myRoutineList[index].title)));
           },
           child: Container(
               margin: EdgeInsets.all(10),

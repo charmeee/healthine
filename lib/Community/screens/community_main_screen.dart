@@ -33,7 +33,6 @@ class _CommunityState extends ConsumerState<Community> {
     setState(() {
       boardType = tmp;
     });
-    await ref.read(communityProvider.notifier).initCommunityBoards(tmp);
   }
 
   @override

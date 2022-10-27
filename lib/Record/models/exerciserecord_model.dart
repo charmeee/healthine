@@ -1,22 +1,28 @@
 //import 'dart:developer';
 
 // {
-// "routineId": "string",
-// "manualId": "string",
-// "startedAt": "2022-10-24T10:57:33.892Z",
-// "endedAt": "2022-10-24T10:57:33.892Z",
+// "id": "string",
+// "routineTitle": "string",
 // "targetNumber": 0,
 // "setNumber": 0,
 // "weight": 0,
 // "speed": 0,
-// "playMinute": 0
+// "playMinute": 0,
+// "startedAt": "2022-10-26T20:50:54.316Z",
+// "endedAt": "2022-10-26T20:50:54.316Z",
+// "createdAt": "2022-10-26T20:50:54.316Z",
+// "manualId": "string"
 // }
+
+import '../../Routine/routine_models.dart';
+
 class Record {
   String id;
-  String routineId;
+  String routineTitle;
   String manualId;
   DateTime startedAt;
   DateTime endedAt;
+  DateTime? createdAt;
   int targetNumber;
   int setNumber;
   int weight;
@@ -25,24 +31,39 @@ class Record {
 
   Record({
     required this.id,
-    required this.routineId,
+    required this.routineTitle,
     required this.manualId,
     required this.startedAt,
     required this.endedAt,
+    this.createdAt,
     required this.targetNumber,
     required this.setNumber,
     required this.weight,
     required this.speed,
     required this.playMinute,
   });
-
+  factory Record.init(RoutineManual routineManual, String routineTitle) {
+    return Record(
+      id: "",
+      manualId: routineManual.manualId,
+      routineTitle: routineTitle,
+      startedAt: DateTime.now(),
+      endedAt: DateTime.now(),
+      targetNumber: 0,
+      setNumber: 0,
+      weight: routineManual.weight,
+      speed: routineManual.speed,
+      playMinute: 0,
+    );
+  }
   factory Record.fromJson(Map<String, dynamic> json) {
     return Record(
       id: json['id'],
-      routineId: json['routineId'],
       manualId: json['manualId'],
+      routineTitle: json['routineTitle'],
       startedAt: DateTime.parse(json['startedAt']),
       endedAt: DateTime.parse(json['endedAt']),
+      createdAt: DateTime.parse(json['createdAt']),
       targetNumber: json['targetNumber'],
       setNumber: json['setNumber'],
       weight: json['weight'],

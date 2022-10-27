@@ -70,6 +70,7 @@ class _CommunityMainBodyLayoutState extends State<CommunityMainBodyLayout> {
             itemBuilder: (context, item, index) => MainCommunityListTile(
               board: item,
               boardId: widget.boardId,
+              refreshKey: refreshKey,
             ),
           ),
           separatorBuilder: (context, index) =>

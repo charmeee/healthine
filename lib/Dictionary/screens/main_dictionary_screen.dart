@@ -33,7 +33,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
 
   @override
   Widget build(BuildContext context) {
-    final routineListRead = ref.read(userRoutineListProvider.notifier);
+    final routineListRead = ref.read(userRoutinePreviewProvider.notifier);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -52,8 +52,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
       bottomNavigationBar: routineList.isNotEmpty
           ? ElevatedButton(
               onPressed: () {
-                //routineListRead.addRoutineData(routineList); //이걸 변경해야함.
-                Navigator.pop(context);
+                Navigator.pop(context, routineList);
               },
               child: Text("루틴추가하기"))
           : null,
@@ -66,9 +65,9 @@ class _DictionaryState extends ConsumerState<Dictionary> {
     });
   }
 
-  removeRoutineData(String data) {
+  removeRoutineData(String dataId) {
     setState(() {
-      routineList.removeWhere((item) => item.manualId == data);
+      routineList.removeWhere((item) => item.manualId == dataId);
     });
   }
 }
@@ -195,20 +194,12 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     onTap: () {
-                      widget.addmode
-                          ? showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                  child: Text("개수추가"),
-                                );
-                              })
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DictionaryDetail(
-                                      founddata: filteredDatasWatch[index])),
-                            );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DictionaryDetail(
+                                founddata: filteredDatasWatch[index])),
+                      );
                     },
                     trailing: widget.addmode
                         ? Checkbox(
@@ -219,16 +210,14 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                               log(widget.routineList.length.toString());
                               log("체크박스 value" + value.toString());
                               if (value!) {
-                                // widget.addRoutineData(RoutineData(
-                                //     name: filteredDatasWatch[index].title,
-                                //     type: filteredDatasWatch[index].type,
-                                //     numPerSet: 10,
-                                //     weight: 10,
-                                //     img:
-                                //         "assets/exercise_img/${filteredDatasWatch[index].id}.png"));
+                                RoutineManual routineManual =
+                                    RoutineManual.init();
+                                routineManual.manualId =
+                                    filteredDatasWatch[index].id;
+                                widget.addRoutineData(routineManual);
                               } else {
                                 widget.removeRoutineData(
-                                    filteredDatasWatch[index].title);
+                                    filteredDatasWatch[index].id);
                               }
                             })
                         : null,

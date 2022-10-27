@@ -9,12 +9,16 @@ import 'package:healthin/Routine/screens/routineAdding_screen.dart';
 import '../../Common/util/util.dart';
 import '../../Dictionary/providers/dictonary_provider.dart';
 import '../../Record/screens/whileExercise.dart';
+import '../test.dart';
 
 class RoutineSetting extends ConsumerStatefulWidget {
-  final Routine myRoutine;
+  final MyRoutine? routine;
+  final String routineTitle;
   const RoutineSetting({
     Key? key,
-    required this.myRoutine,
+    this.routine,
+    required this.routineTitle,
+    //routineid를받고 is null이면 추가 아니면 수정.
   }) : super(key: key);
 
   @override
@@ -22,12 +26,23 @@ class RoutineSetting extends ConsumerStatefulWidget {
 }
 
 class _RoutineSettingState extends ConsumerState<RoutineSetting> {
-  late Routine myRoutine;
+  late MyRoutine myRoutine;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    myRoutine = widget.myRoutine;
+    if (widget.routine != null) {
+      //이건 레퍼런스에서 가져온루틴 은 레퍼런스 가저오기 api가 있어서 무적건 get요청을 날리면될듯.
+
+      //원래 있던 루틴.
+      myRoutine = MyRoutine.fromJson(myRoutineEx); //futurebuilder로해도될듯^.^
+      //get요청을조진다. => manaul부분이 절대 null이될 수 없음
+
+    } else {
+      //처음루틴을 만드는 경우.
+      myRoutine = MyRoutine.init(widget.routineTitle); //manual부분 null
+      //루틴 post를해서 루틴 id를 채워넣음.
+    }
   }
 
   @override
@@ -73,7 +88,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                   for (int i = 0; i < 7; i++) ...[
                     ChoiceChip(
                         label: Text(dayList[i]),
-                        selected: myRoutine.day[i] == 1,
+                        selected: myRoutine.days[i] == 1,
                         onSelected: (bool value) {
                           if (value == true &&
                               ref.watch(dayOfWeekRoutineProvider)[i] != null) {
@@ -92,11 +107,8 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                                           child: Text("취소")),
                                       TextButton(
                                           onPressed: () {
-                                            ref
-                                                .read(userRoutineListProvider
-                                                    .notifier)
-                                                .editDayOfWeek(
-                                                    myRoutine.id, i, value);
+                                            //그전루틴 patch
+
                                             Navigator.of(context).pop();
                                           },
                                           child: Text("변경"))
@@ -104,9 +116,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                                   );
                                 });
                           } else {
-                            ref
-                                .read(userRoutineListProvider.notifier)
-                                .editDayOfWeek(myRoutine.id, i, value);
+                            //걍여기잇는거에서바꾸기
                           }
                         })
                   ]
@@ -129,12 +139,28 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
             child: ReorderableListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.all(8),
-              itemCount: myRoutine.routineManuals.length,
+              itemCount: myRoutine.routineManuals!.length + 1,
               itemBuilder: (context, index) {
-                String name = ref
-                    .read(DictionaryNotifierProvider.notifier)
-                    .getDictionaryNameById(
-                        myRoutine.routineManuals[index].manualId);
+                if (index == myRoutine.routineManuals!.length) {
+                  return Container(
+                    height: 50,
+                    child: Center(
+                      child: IconButton(
+                          onPressed: () async {
+                            List<RoutineManual> routineManuals =
+                                await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Dictionary(addmode: true)));
+                            setState(() {
+                              myRoutine.routineManuals!.addAll(routineManuals);
+                            });
+                          },
+                          icon: Icon(Icons.add)),
+                    ),
+                  );
+                }
                 return Card(
                   //key: ValueKey(_routineList["type"]), 는 이름에따라서 키가 발급됨 만약 이름이 같으면 같은키
                   key: Key('$index'),
@@ -144,7 +170,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(10),
                     title: Text(
-                      name,
+                      myRoutine.routineManuals![index].manualTitle,
                       style: TextStyle(color: Colors.black),
                     ),
                     onTap: () {
@@ -161,10 +187,12 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                   newIndex -= 1;
                 }
                 //깊은 복사가 안되었어서 생긴문제 ㅎ;
-                final _routineList = [...myRoutine.routineManuals];
+                final _routineList = [...myRoutine.routineManuals!];
                 var item = _routineList.removeAt(oldIndex);
                 _routineList.insert(newIndex, item);
-                //routineListRead.changeRoutineOrder(_routineList);
+                setState(() {
+                  myRoutine.routineManuals = _routineList;
+                });
               },
             ),
           ),
@@ -172,12 +200,33 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
       ),
       bottomNavigationBar: ElevatedButton(
           onPressed: () {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => WhileExercise(
-            //             routine: widget.myRoutine.routineManuals,
-            //             routineId: widget.myRoutine.id)));
+            //일단 patch 나포스트먼저 시킴
+            if (myRoutine.routineManuals == null ||
+                myRoutine.routineManuals!.isEmpty) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("루틴이 비어있습니다."),
+                      content: Text("루틴을 추가해주세요."),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("확인"))
+                      ],
+                    );
+                  });
+            } else {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WhileExercise(
+                          routineManuals: myRoutine.routineManuals!,
+                          routineId: myRoutine.id,
+                          routineTitle: myRoutine.title)));
+            }
           },
           child: Text("루틴시작하기")),
     );
