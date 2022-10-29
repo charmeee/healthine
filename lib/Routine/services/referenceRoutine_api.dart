@@ -11,8 +11,10 @@ Future<List<ReferenceRoutine>> getReferenceRoutineList(
       options: Options(headers: {"Authorization": "true"}));
   log("참조루틴 리스트 조회 완료");
   log(response.data.toString());
+  log(response.data["items"].toString());
+
   try {
-    return (response.data as List)
+    return (response.data["items"] as List)
         .map((e) => ReferenceRoutine.liteFromJson(e))
         .toList();
   } catch (e) {

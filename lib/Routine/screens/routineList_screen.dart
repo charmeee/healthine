@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Routine/screens/routineSetting_screen.dart';
 import '../widgets/myRoutineListTab_layout.dart';
+import '../widgets/referenceRoutineListTab_layout.dart';
 import '../widgets/routineName_dialog.dart';
 
 class RoutineList extends StatefulWidget {
@@ -82,8 +83,8 @@ class _RoutineListState extends State<RoutineList>
         ),
         body: TabBarView(
           children: [
-            RoutineListTabLayout(),
-            RoutineListTabLayout(),
+            MyRoutineListTabLayout(),
+            ReferenceRoutineListTabLayout(),
           ],
           controller: _tabController,
         ));

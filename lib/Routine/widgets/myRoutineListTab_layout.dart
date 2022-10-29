@@ -7,8 +7,8 @@ import 'package:healthin/Routine/screens/routineSetting_screen.dart';
 import '../../Common/util/util.dart';
 import '../providers/routine_provider.dart';
 
-class RoutineListTabLayout extends ConsumerWidget {
-  const RoutineListTabLayout({
+class MyRoutineListTabLayout extends ConsumerWidget {
+  const MyRoutineListTabLayout({
     Key? key,
   }) : super(key: key);
 

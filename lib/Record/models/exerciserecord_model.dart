@@ -93,8 +93,8 @@ class Record {
       "routineId": routineId,
       "manualId": manualId,
       //startedAt: "2022-10-29T11:09:27.922Z",
-      "startedAt": DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(startedAt),
-      "endedAt": DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(endedAt),
+      "startedAt": DateFormat("yyyy-MM-dd HH:mm:ss").format(startedAt),
+      "endedAt": DateFormat("yyyy-MM-dd HH:mm:ss").format(endedAt),
       "targetNumber": targetNumber,
       "setNumber": setNumber,
       "weight": weight,
@@ -103,56 +103,3 @@ class Record {
     };
   }
 }
-
-// {
-// "id": "string",
-// "routineTitle": "string",
-// "targetNumber": 0,
-// "setNumber": 0,
-// "weight": 0,
-// "speed": 0,
-// "playMinute": 0,
-// "startedAt": "2022-10-24T18:16:02.764Z",
-// "endedAt": "2022-10-24T18:16:02.764Z",
-// "createdAt": "2022-10-24T18:16:02.764Z"
-// }
-
-// class UserExerciseData {
-//   //운동기록이랑 운동 시계에서 ㅆㅁ
-//   //time 단위는 초
-//   var id = uuid.v1();
-//   int doingTime = 0; //한 시간 !
-//
-//   //근력
-//   int doingSet = 1; //진행중인 세트 !
-//   int doingNum = 1; //한 횟수 !
-//
-//   //근력 시계용
-//   int restTime = 3; //휴식 시간 !
-//   int countInterver = 3; //운동 횟수 속도 !
-//
-//   RoutineData routineData;
-//
-//   UserExerciseData(
-//       {required this.routineData,
-//       this.doingSet = 1,
-//       this.restTime = 3,
-//       this.countInterver = 3,
-//       this.doingTime = 0,
-//       this.doingNum = 1 //한총개수
-//       });
-//
-//   putAerobicWatchData({doingTime}) {
-//     // TODO: implement putAerobicRoutine
-//     this.doingTime = doingTime;
-//   }
-//
-//   putWeightWatchData({doingTime, doingSet, doingNum, restTime, countInterver}) {
-//     // TODO: implement putAerobicRoutine
-//     this.doingTime = doingTime;
-//     this.doingSet = doingSet;
-//     this.doingNum = doingNum;
-//     this.restTime = restTime;
-//     this.countInterver = countInterver;
-//   }
-// }

@@ -256,7 +256,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
           ],
         ),
         bottomNavigationBar: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               //일단 patch 나포스트먼저 시킴
               if (myRoutine.routineManuals == null ||
                   myRoutine.routineManuals!.isEmpty) {
@@ -276,6 +276,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                       );
                     });
               } else {
+                await sendRoutine();
                 Navigator.push(
                     context,
                     MaterialPageRoute(

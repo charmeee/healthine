@@ -89,7 +89,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   Future<void> sendRecord() async {
     //기록을 보내는 함수
     setState(() {
-      record.playMinute = _time;
+      record.playMinute = _time ~/ 60;
       record.targetNumber = widget.routineManuals[nowOrder].targetNumber;
     });
     if (beforeLength - 1 == nowOrder) {
@@ -136,14 +136,15 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           //현재 운동이 끝난경우
           log("현재운동끝");
           //운동로그 post
+          await sendRecord();
           _timer?.cancel();
           timeWatchFlag = false;
           nowOrder++;
           if (widget.routineManuals.length == nowOrder) {
             //전체 루틴이 끝난경우
-            await sendRecord();
             log("전체루틴끝");
-            Navigator.pop(context); //=> 축하합니다 운동을 완료했습니다
+            Navigator.popUntil(
+                context, (route) => route.isFirst); //=> 축하합니다 운동을 완료했습니다
           } else {
             record = Record.init(widget.routineManuals[nowOrder],
                 widget.routineTitle, widget.routineId);
@@ -183,175 +184,207 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: timeWatchFlag ? Colors.green : Colors.red,
-        padding: EdgeInsets.all(10),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                //이름
-                widget.routineManuals[nowOrder].manualTitle,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
-              ),
-              Text(
-                //시간
-                '$minutes:$seconds',
-                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
-              ),
-              if (isCardio == false) ...[
+      body: WillPopScope(
+        onWillPop: () {
+          bool flag = false;
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("운동을 종료하시겠습니까?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("아니오")),
+                      TextButton(
+                          onPressed: () async {
+                            await sendRecord();
+                            flag = true;
+                            _timer?.cancel();
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          },
+                          child: Text("확인")),
+                    ],
+                  ));
+          return Future.value(flag);
+        },
+        child: Container(
+          color: timeWatchFlag ? Colors.green : Colors.red,
+          padding: EdgeInsets.all(10),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
                 Text(
-                  "${record.targetNumber} / ${widget.routineManuals[nowOrder].targetNumber} 개",
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  //이름
+                  widget.routineManuals[nowOrder].manualTitle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
                 ),
                 Text(
-                  "${record.setNumber} / ${widget.routineManuals[nowOrder].setNumber} 세트",
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  //시간
+                  '$minutes:$seconds',
+                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
                 ),
-                Row(
-                  //개수 사이 시간
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${speed} 속도",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {
+                if (isCardio == false) ...[
+                  Text(
+                    "${record.targetNumber} / ${widget.routineManuals[nowOrder].targetNumber} 개",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  ),
+                  Text(
+                    "${record.setNumber} / ${widget.routineManuals[nowOrder].setNumber} 세트",
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
+                  ),
+                  Row(
+                    //개수 사이 시간
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${speed} 속도",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 35),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  speed--;
+                                });
+                              },
+                              icon: Icon(Icons.exposure_minus_1)),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  speed++;
+                                });
+                              },
+                              icon: Icon(Icons.plus_one))
+                        ],
+                      )
+                    ],
+                  ),
+                  Row(
+                    //쉬는시간
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "$restSecond초 휴식",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 35),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  restSecond--;
+                                });
+                              },
+                              icon: Icon(Icons.exposure_minus_1)),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  restSecond++;
+                                });
+                              },
+                              icon: Icon(Icons.plus_one))
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+                SizedBox(
+                  height: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        // height: buttonheight,
+                        width: MediaQuery.of(context).size.width / 3 * 0.8,
+                        child: TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  timeWatchFlag ? Colors.red : Colors.green)),
+                          onPressed: () {
+                            if (timeWatchFlag) {
+                              //스탑워치가 실행중일때 멈추면
                               setState(() {
-                                speed--;
+                                _timer?.cancel();
+                                timeWatchFlag = false;
                               });
-                            },
-                            icon: Icon(Icons.exposure_minus_1)),
-                        IconButton(
-                            onPressed: () {
+                            } else {
                               setState(() {
-                                speed++;
+                                timeWatchFlag = true;
+                                startTimer();
                               });
-                            },
-                            icon: Icon(Icons.plus_one))
-                      ],
-                    )
-                  ],
-                ),
-                Row(
-                  //쉬는시간
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "$restSecond초 휴식",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                restSecond--;
-                              });
-                            },
-                            icon: Icon(Icons.exposure_minus_1)),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                restSecond++;
-                              });
-                            },
-                            icon: Icon(Icons.plus_one))
-                      ],
-                    )
-                  ],
+                            }
+                          },
+                          child: timeWatchFlag
+                              ? Text("휴식", style: textstyle1)
+                              : Text("다시 시작", style: textstyle1),
+                        ),
+                      ),
+                      SizedBox(
+                        // height: buttonheight,
+                        width: MediaQuery.of(context).size.width / 3 * 0.8,
+                        child: TextButton(
+                          onPressed: () async {
+                            AlertDialog(
+                              title: Text("운동을 종료하시겠습니까?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("아니오")),
+                                TextButton(
+                                    onPressed: () async {
+                                      await sendRecord();
+                                      _timer?.cancel();
+                                      Navigator.popUntil(
+                                          context, (route) => route.isFirst);
+                                    },
+                                    child: Text("확인")),
+                              ],
+                            );
+                          },
+                          //Navigator.of(context).popUntil((route) => route.isFirst)
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.black54)),
+                          child: Text(
+                            "운동 완료",
+                            style: textstyle1,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        // height: buttonheight,
+                        width: MediaQuery.of(context).size.width / 3 * 0.8,
+                        child: TextButton(
+                          onPressed: () => {
+                            launchUrl(Uri.parse(
+                                "https://www.youtube.com/watch?v=2K2WCGstHOY"))
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.black54)),
+                          child: Text(
+                            "운동 방법",
+                            style: textstyle1,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ],
-              SizedBox(
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      // height: buttonheight,
-                      width: MediaQuery.of(context).size.width / 3 * 0.8,
-                      child: TextButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                timeWatchFlag ? Colors.red : Colors.green)),
-                        onPressed: () {
-                          if (timeWatchFlag) {
-                            //스탑워치가 실행중일때 멈추면
-                            setState(() {
-                              _timer?.cancel();
-                              timeWatchFlag = false;
-                            });
-                          } else {
-                            setState(() {
-                              timeWatchFlag = true;
-                              startTimer();
-                            });
-                          }
-                        },
-                        child: timeWatchFlag
-                            ? Text("휴식", style: textstyle1)
-                            : Text("다시 시작", style: textstyle1),
-                      ),
-                    ),
-                    SizedBox(
-                      // height: buttonheight,
-                      width: MediaQuery.of(context).size.width / 3 * 0.8,
-                      child: TextButton(
-                        onPressed: () async {
-                          setState(() {
-                            record.playMinute = _time ~/ 60;
-                            //post날리고 provider update
-                          });
-                          await sendRecord();
-                          _timer?.cancel();
-
-                          Future.delayed(
-                              Duration(
-                                milliseconds: 10,
-                              ), () {
-                            Navigator.of(context).pop();
-                          });
-                        },
-                        //Navigator.of(context).popUntil((route) => route.isFirst)
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.black54)),
-                        child: Text(
-                          "운동 완료",
-                          style: textstyle1,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      // height: buttonheight,
-                      width: MediaQuery.of(context).size.width / 3 * 0.8,
-                      child: TextButton(
-                        onPressed: () => {
-                          launchUrl(Uri.parse(
-                              "https://www.youtube.com/watch?v=2K2WCGstHOY"))
-                        },
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.black54)),
-                        child: Text(
-                          "운동 방법",
-                          style: textstyle1,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

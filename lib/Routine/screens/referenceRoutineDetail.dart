@@ -29,6 +29,35 @@ class _ReferenceScreenState extends State<ReferenceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(referenceRoutine.title),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                Text(referenceRoutine.title),
+                Text(referenceRoutine.description),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              children: referenceRoutine.routineManuals!
+                  .map((e) => ListTile(
+                        title: Text(e.manualTitle),
+                        subtitle: Text(
+                            "${e.weight}kg/ ${e.targetNumber}회/ ${e.setNumber}세트"),
+                      ))
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

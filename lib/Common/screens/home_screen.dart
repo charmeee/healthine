@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Diet/widgets/diet_main_card.dart';
+import 'package:healthin/Record/screens/whileExercise.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/Diet/screens/diet.dart';
 import 'package:healthin/znotUseFiles/report_screen.dart';
@@ -227,7 +228,7 @@ class HomeScreen extends ConsumerWidget {
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: data.routineManuals!.length + 2,
+                            itemCount: data.routineManuals!.length + 3,
                             itemBuilder: (context, index) {
                               if (data.routineManuals!.length == index) {
                                 return ElevatedButton(
@@ -242,6 +243,24 @@ class HomeScreen extends ConsumerWidget {
                                 );
                               } //todayRoutine
                               if (data.routineManuals!.length + 1 == index) {
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    if (data.routineManuals != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => WhileExercise(
+                                                routineManuals:
+                                                    data.routineManuals!,
+                                                routineId: data.id,
+                                                routineTitle: data.title)),
+                                      );
+                                    }
+                                  },
+                                  child: Text("루틴 시작하기"),
+                                );
+                              }
+                              if (data.routineManuals!.length + 2 == index) {
                                 return Text(todayRecord.length.toString());
                               }
                               return ListTile(
