@@ -14,11 +14,14 @@
 // "manualId": "string"
 // }
 
+import 'package:intl/intl.dart';
+
 import '../../Routine/models/routine_models.dart';
 
 class Record {
   String id;
   String routineTitle;
+  String routineId;
   String manualId;
   DateTime startedAt;
   DateTime endedAt;
@@ -32,6 +35,7 @@ class Record {
   Record({
     required this.id,
     required this.routineTitle,
+    required this.routineId,
     required this.manualId,
     required this.startedAt,
     required this.endedAt,
@@ -42,10 +46,12 @@ class Record {
     required this.speed,
     required this.playMinute,
   });
-  factory Record.init(RoutineManual routineManual, String routineTitle) {
+  factory Record.init(
+      RoutineManual routineManual, String routineTitle, String routineId) {
     return Record(
       id: "",
       manualId: routineManual.manualId,
+      routineId: routineId,
       routineTitle: routineTitle,
       startedAt: DateTime.now(),
       endedAt: DateTime.now(),
@@ -60,6 +66,7 @@ class Record {
     return Record(
       id: json['id'],
       manualId: json['manualId'],
+      routineId: "",
       routineTitle: json['routineTitle'],
       startedAt: DateTime.parse(json['startedAt']),
       endedAt: DateTime.parse(json['endedAt']),
@@ -70,6 +77,30 @@ class Record {
       speed: json['speed'],
       playMinute: json['playMinute'],
     );
+  }
+  // "routineId": "string",
+  // "manualId": "string",
+  // "startedAt": "2022-10-27T07:43:26.809Z",
+  // "endedAt": "2022-10-27T07:43:26.809Z",
+  // "targetNumber": 0,
+  // "setNumber": 0,
+  // "weight": 0,
+  // "speed": 0,
+  // "playMinute": 0
+
+  toJson() {
+    return {
+      "routineId": routineId,
+      "manualId": manualId,
+      //startedAt: "2022-10-29T11:09:27.922Z",
+      "startedAt": DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(startedAt),
+      "endedAt": DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(endedAt),
+      "targetNumber": targetNumber,
+      "setNumber": setNumber,
+      "weight": weight,
+      "speed": speed,
+      "playMinute": playMinute,
+    };
   }
 }
 

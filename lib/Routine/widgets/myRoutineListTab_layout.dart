@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Routine/screens/routineSetting_screen.dart';
@@ -23,11 +25,14 @@ class RoutineListTabLayout extends ConsumerWidget {
         return GestureDetector(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RoutineSetting(
-                        routine: myRoutineList[index],
-                        routineTitle: myRoutineList[index].title)));
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RoutineSetting(
+                            routine: myRoutineList[index],
+                            routineTitle: myRoutineList[index].title)))
+                .then((value) {
+              log("pop");
+            });
           },
           child: Container(
               margin: EdgeInsets.all(10),

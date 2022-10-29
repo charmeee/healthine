@@ -60,12 +60,15 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   }
 
   addRoutineData(RoutineManual routinedata) {
+    log("addRoutineData");
+
     setState(() {
       routineList.add(routinedata);
     });
   }
 
   removeRoutineData(String dataId) {
+    log("removeRoutineData");
     setState(() {
       routineList.removeWhere((item) => item.manualId == dataId);
     });
@@ -204,8 +207,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                     trailing: widget.addmode
                         ? Checkbox(
                             value: widget.routineList.any((item) =>
-                                item.manualId ==
-                                filteredDatasWatch[index].title),
+                                item.manualId == filteredDatasWatch[index].id),
                             onChanged: (value) {
                               log(widget.routineList.length.toString());
                               log("체크박스 value" + value.toString());
@@ -214,6 +216,8 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                                     RoutineManual.init();
                                 routineManual.manualId =
                                     filteredDatasWatch[index].id;
+                                routineManual.manualTitle =
+                                    filteredDatasWatch[index].title;
                                 widget.addRoutineData(routineManual);
                               } else {
                                 widget.removeRoutineData(

@@ -41,34 +41,41 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   String hours = '00';
   String minutes = '00';
   String seconds = '00';
+  int speed = 4;
   final duration = const Duration(seconds: 1);
   List<Record> records = [];
   late Record record; //현재 레코드.
   late int nowOrder = 0; //현재 운동순서.
   int restSecond = 120;
-  // late UserExerciseData exerciseData;
-  // late RoutineData routineData;
-  //late Map exerciseSet;
-  //int getTime = 0; //넘겨줄시간
+  late int beforeLength = 0;
   Timer? _timer;
   int _time = 0; //초단위
   late int findedindex;
   @override
   void initState() {
     super.initState();
-    List<Record> beforeRecord = ref.read(todayRecordProvider);
+    record = Record.init(
+        widget.routineManuals[0], widget.routineTitle, widget.routineId);
+    final beforeRecord = ref.read(todayRecordProvider);
+    beforeLength = beforeRecord.length;
+    log("beforeLength : $beforeLength");
+    log(widget.routineManuals.length.toString());
     if (beforeRecord.isEmpty) {
+      log("운동기록이 없는경우. ");
       //기록이없는 경우
-      record = Record.init(widget.routineManuals[0], widget.routineTitle);
+      record = Record.init(
+          widget.routineManuals[0], widget.routineTitle, widget.routineId);
     } else {
       //기록이있는경우
+      log("운동기록이 있는 경우.");
       nowOrder = beforeRecord.length;
       if (record.setNumber == widget.routineManuals[nowOrder - 1].setNumber) {
         //현재 운동이 끝난경우
-        record =
-            Record.init(widget.routineManuals[nowOrder], widget.routineTitle);
+        record = Record.init(widget.routineManuals[nowOrder],
+            widget.routineTitle, widget.routineId);
       } else {
         record = beforeRecord.last;
+        nowOrder--;
       }
     }
     _time = record.playMinute;
@@ -84,12 +91,15 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
     setState(() {
       record.playMinute = _time;
       record.targetNumber = widget.routineManuals[nowOrder].targetNumber;
-      _timer?.cancel();
-      if (records[nowOrder].setNumber != 0) {
-        records.add(record);
-      }
     });
-    await ref.read(todayRecordProvider.notifier).updateRecordData(records);
+    if (beforeLength - 1 == nowOrder) {
+      //전에 기록이 있는경우
+      await ref
+          .read(todayRecordProvider.notifier)
+          .editRecordData(record, widget.routineId);
+    } else {
+      await ref.read(todayRecordProvider.notifier).addRecordData(record);
+    }
   }
 
   void startTimer() {
@@ -97,8 +107,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
       _time++;
       if (isCardio == false) {
         //유산소가 아니면
-        if (_time % widget.routineManuals[nowOrder].speed == 0 &&
-            timeWatchFlag) {
+        if (_time % speed == 0 && timeWatchFlag) {
           setState(() {
             record.targetNumber++;
           });
@@ -124,21 +133,20 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           });
         }
         if (record.setNumber == widget.routineManuals[nowOrder].setNumber) {
-          //전체 운동이 끝난경우
+          //현재 운동이 끝난경우
           log("현재운동끝");
-          records.add(record);
           //운동로그 post
           _timer?.cancel();
           timeWatchFlag = false;
-          if (widget.routineManuals.length == records.length) {
+          nowOrder++;
+          if (widget.routineManuals.length == nowOrder) {
             //전체 루틴이 끝난경우
             await sendRecord();
             log("전체루틴끝");
             Navigator.pop(context); //=> 축하합니다 운동을 완료했습니다
           } else {
-            nowOrder++;
-            record = Record.init(
-                widget.routineManuals[nowOrder], widget.routineTitle);
+            record = Record.init(widget.routineManuals[nowOrder],
+                widget.routineTitle, widget.routineId);
           }
           await Future.delayed(Duration(seconds: restSecond * 2), () {
             log("스탑워치 다시시작!");
@@ -168,9 +176,8 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   @override
   void dispose() {
     // TODO: 시간을 상위 state에 넘겨 줘야함.
-
-    super.dispose();
     _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -209,7 +216,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${record.speed} 속도",
+                      "${speed} 속도",
                       style:
                           TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                     ),
@@ -218,14 +225,14 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                         IconButton(
                             onPressed: () {
                               setState(() {
-                                record.speed--;
+                                speed--;
                               });
                             },
                             icon: Icon(Icons.exposure_minus_1)),
                         IconButton(
                             onPressed: () {
                               setState(() {
-                                record.speed++;
+                                speed++;
                               });
                             },
                             icon: Icon(Icons.plus_one))
@@ -303,9 +310,9 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                           setState(() {
                             record.playMinute = _time ~/ 60;
                             //post날리고 provider update
-                            _timer?.cancel();
                           });
                           await sendRecord();
+                          _timer?.cancel();
 
                           Future.delayed(
                               Duration(

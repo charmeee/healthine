@@ -6,6 +6,7 @@ import 'package:healthin/Diet/screens/diet.dart';
 import 'package:healthin/znotUseFiles/report_screen.dart';
 import 'package:healthin/Routine/screens/routineList_screen.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../Record/providers/exercisedata_provider.dart';
 import '../../Routine/models/routine_models.dart';
 import '../../Routine/providers/routine_provider.dart';
 import '../../User/providers/user_provider.dart';
@@ -76,8 +77,9 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     UserInfo user = ref.watch(userProfileNotifierProvider);
-    final todayRoutine = ref.watch(todayRoutineProvider);
 
+    final todayRoutine = ref.watch(todayRoutineProvider);
+    final todayRecord = ref.watch(todayRecordProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
@@ -196,34 +198,52 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  height: 250,
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                   child: Card(
                     child: todayRoutine.when(
                       data: (data) {
                         if (data == null) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("루틴을 추가해 보세요."),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RoutineList()),
-                                  );
-                                },
-                                icon: Icon(Icons.add),
-                                iconSize: 50,
-                              )
-                            ],
+                          return SizedBox(
+                            height: 250,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("루틴을 추가해 보세요."),
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RoutineList()),
+                                    );
+                                  },
+                                  icon: Icon(Icons.add),
+                                  iconSize: 50,
+                                )
+                              ],
+                            ),
                           );
                         } else {
                           return ListView.builder(
-                            itemCount: data.routineManuals!.length,
+                            shrinkWrap: true,
+                            itemCount: data.routineManuals!.length + 2,
                             itemBuilder: (context, index) {
+                              if (data.routineManuals!.length == index) {
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RoutineList()),
+                                    );
+                                  },
+                                  child: Text("목록보기"),
+                                );
+                              } //todayRoutine
+                              if (data.routineManuals!.length + 1 == index) {
+                                return Text(todayRecord.length.toString());
+                              }
                               return ListTile(
                                 leading: Icon(Icons.fitness_center),
                                 title: Text(

@@ -58,13 +58,30 @@ Future<MyRoutine> postMyRoutine(MyRoutine routine) async {
 //patch myRoutine
 ///routine-manuals/{manualId}/routine/{routineId}
 
-Future<void> postMyRoutineManuals(
-    List<RoutineManual> routineManuals, String routineId) async {
+Future<void> postMyRoutineManual(
+    RoutineManual routineManual, String routineId) async {
   //dio로 patch 요청 /routines/my-routines/{id}
-  for (int i = 0; i < routineManuals.length; i++) {
-    await dio.post(
-        "/routine-manuals/${routineManuals[i].manualId}/routine/$routineId",
-        options: Options(headers: {"Authorization": "true"}),
-        data: routineManuals[i].toJson());
-  }
+  await dio.post(
+      "/routine-manuals/${routineManual.manualId}/routine/$routineId",
+      options: Options(headers: {"Authorization": "true"}),
+      data: routineManual.isCardio
+          ? routineManual.cardioToJson()
+          : routineManual.weightToJson());
+}
+
+//patch myRoutineManual /routine-manuals/{routineManualId}
+Future<void> patchMyRoutineManual(RoutineManual routineManual) async {
+  //dio로 patch 요청 /routines/my-routines/{id}
+  await dio.patch("/routine-manuals/${routineManual.routineManualId}",
+      options: Options(headers: {"Authorization": "true"}),
+      data: routineManual.isCardio
+          ? routineManual.cardioToJson()
+          : routineManual.weightToJson());
+}
+
+//delete myRoutineManual /routine-manuals/{routineManualId}
+Future<void> deleteMyRoutineManual(String routineManualId) async {
+  //dio로 patch 요청 /routines/my-routines/{id}
+  await dio.delete("/routine-manuals/$routineManualId",
+      options: Options(headers: {"Authorization": "true"}));
 }

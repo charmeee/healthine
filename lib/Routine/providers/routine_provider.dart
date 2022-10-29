@@ -29,6 +29,29 @@ class MyRoutinePreviewNotifier extends StateNotifier<List<MyRoutine>> {
   editRoutineData() async {
     // 루틴 수정 patch ->get
   }
+  sendRoutineManuals(List<RoutineManual> beforeManuals,
+      List<RoutineManual> nowManuals, String routineId) {
+    log('sendRoutineManuals');
+    nowManuals.map((e) async {
+      int index = beforeManuals.indexWhere(
+          (element) => element.routineManualId == e.routineManualId);
+      if (index > -1) {
+        //값이있는것.patch를 날릴 것.
+        beforeManuals.removeAt(index);
+        //patch e
+      } else {
+        await postMyRoutineManual(e, routineId);
+        //post e
+      }
+    });
+    if (beforeManuals.isNotEmpty) {
+      beforeManuals.map((e) async {
+        //delete e
+        await deleteMyRoutineManual(e.routineManualId);
+      });
+    }
+    getRoutineData();
+  }
 }
 
 //루틴리스트변경
@@ -48,7 +71,7 @@ final todayRoutineProvider = FutureProvider<MyRoutine?>((ref) async {
   String? todayRoutineId = dayOfWeek[today.weekday - 1];
   log("todayRoutineId : $todayRoutineId");
   if (todayRoutineId != null) {
-    return await getMyRoutineById(todayRoutineId! as String);
+    return await getMyRoutineById(todayRoutineId);
   }
   return null;
   //MyRoutine todayRoutine = get요청 api

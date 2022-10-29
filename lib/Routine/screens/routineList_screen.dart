@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Routine/screens/routineSetting_screen.dart';
-import '../widgets/routineListTab_layout.dart';
+import '../widgets/myRoutineListTab_layout.dart';
 import '../widgets/routineName_dialog.dart';
 
 class RoutineList extends StatefulWidget {

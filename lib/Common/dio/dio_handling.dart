@@ -62,7 +62,7 @@ class CustomInterceptor extends Interceptor {
     if (err.response != null) {
       //Unauthorized 에러 -> refreshToken으로 재요청 -> 실패시 로그아웃
       //
-
+      log("errmessage" + err.response!.data["message"].toString());
       if (err.response!.statusCode == 401 &&
           err.response!.data["message"] == "Unauthorized") {
         log("Unauthorized handler 실행");

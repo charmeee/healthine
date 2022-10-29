@@ -2,6 +2,8 @@
 //
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Record/models/exerciserecord_model.dart';
+import 'package:healthin/Record/services/record_api.dart';
+import 'package:intl/intl.dart';
 
 import '../../Routine/test.dart';
 // import 'package:healthin/Routine/routine_models.dart';
@@ -14,15 +16,23 @@ class RecordNotifier extends StateNotifier<List<Record>> {
 
   //먼저 오늘의 운동기록을 조회한다
   getRecordData() async {
-    List<Record> recorddata =
-        recordTestEx.map((e) => Record.fromJson(e)).toList();
-    if (recorddata.isNotEmpty) {
-      state = recorddata;
+    DateTime now = DateTime.now();
+    List<Record> recordData = await getRoutineLogByDay(
+        DateFormat("yyyy-MM-dd").format(now).toString());
+    if (recordData.isNotEmpty) {
+      state = recordData;
     }
   }
 
-  updateRecordData(List<Record> data) {
-    state = data;
+  addRecordData(Record record) async {
+    await postRoutineLog(record);
+    state = [...state, record];
+  }
+
+  editRecordData(Record record, String routineId) async {
+    await patchRoutineLog(
+        record.id, routineId, record.setNumber, record.playMinute);
+    state = [...state, record];
   }
 }
 

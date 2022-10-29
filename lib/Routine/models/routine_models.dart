@@ -61,7 +61,15 @@ class MyRoutine {
     required this.type,
     this.routineManuals,
   });
-
+  factory MyRoutine.copyWith(MyRoutine myRoutine) {
+    return MyRoutine(
+      id: myRoutine.id,
+      title: myRoutine.title,
+      days: myRoutine.days,
+      type: myRoutine.type,
+      routineManuals: myRoutine.routineManuals,
+    );
+  }
   factory MyRoutine.liteFromJson(Map<String, dynamic> json) {
     return MyRoutine(
         id: json['id'],
@@ -100,6 +108,7 @@ class MyRoutine {
       title: routineTitle,
       days: List<int>.generate(7, (index) {
         if (index == DateTime.now().weekday - 1) return 1;
+        //if (index == DateTime.now().weekday) return 1; //테스트용
         return 0;
       }),
       type: [],
@@ -143,6 +152,18 @@ class ReferenceRoutine {
     required this.type,
     this.routineManuals,
   });
+
+  factory ReferenceRoutine.init() {
+    return ReferenceRoutine(
+      id: "",
+      title: "",
+      description: "",
+      author: "",
+      likesCount: 0,
+      type: [],
+      routineManuals: [],
+    );
+  }
 
   factory ReferenceRoutine.liteFromJson(Map<String, dynamic> json) {
     return ReferenceRoutine(
@@ -225,6 +246,7 @@ class RoutineManual {
       type: "",
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       "manualId": manualId,
