@@ -22,7 +22,7 @@ class Record {
   String id;
   String routineTitle;
   String routineId;
-  String manualId;
+  String manualId; //루틴메뉴얼 아이디
   DateTime startedAt;
   DateTime endedAt;
   DateTime? createdAt;
@@ -50,7 +50,7 @@ class Record {
       RoutineManual routineManual, String routineTitle, String routineId) {
     return Record(
       id: "",
-      manualId: routineManual.manualId,
+      manualId: routineManual.routineManualId,
       routineId: routineId,
       routineTitle: routineTitle,
       startedAt: DateTime.now(),

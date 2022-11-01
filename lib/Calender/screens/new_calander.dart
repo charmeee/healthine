@@ -1,7 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Record/models/exerciserecord_model.dart';
+import 'package:healthin/Record/providers/exercisedata_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../../Diet/models/diet_model.dart';
+import '../../Diet/providers/diet_provider.dart';
 
 const didhealthcolor = Colors.green;
 
@@ -94,11 +100,14 @@ class _CalendarTabState extends State<CalendarTab> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return CalendarEvents();
-                }),
+            child: RecordCalender(
+              selectedDay: selectedDay,
+            ),
+            // child: ListView.builder(
+            //     itemCount: 10,
+            //     itemBuilder: (context, index) {
+            //       return CalendarEvents(selectedDay:selectedDay);
+            //     }),
           ),
         ],
       ),
@@ -106,60 +115,118 @@ class _CalendarTabState extends State<CalendarTab> {
   }
 }
 
-class CalendarEvents extends StatelessWidget {
-  const CalendarEvents({Key? key}) : super(key: key);
+class RecordCalender extends ConsumerWidget {
+  final DateTime selectedDay;
+
+  const RecordCalender({Key? key, required this.selectedDay}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final todayRecord = ref.watch(todayRecordProvider);
+    final todayDiet = ref.watch(todayDietProvider);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text("운동기록"),
+        selectedDay.year == DateTime.now().year &&
+                selectedDay.month == DateTime.now().month &&
+                selectedDay.day == DateTime.now().day
+            ? CalendarExerciseEvents(
+                todayRecord: todayRecord,
+              )
+            : Text("운동기록이 없습니다."),
+        Text("식단기록"),
+        selectedDay.year == DateTime.now().year &&
+                selectedDay.month == DateTime.now().month &&
+                selectedDay.day == DateTime.now().day
+            ? CalendarDietEvents(todayDiet: todayDiet)
+            : Text("식단기록이 없습니다."),
+      ],
+    );
+  }
+}
+
+class CalendarDietEvents extends StatelessWidget {
+  final DayDietStatistics? todayDiet;
+  const CalendarDietEvents({Key? key, required this.todayDiet})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        height: 70,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-                alignment: Alignment.center,
-                color: Colors.orange,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(
-                    "하체",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                )),
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 1,
-                  ),
-                  Text(
-                    "랫 풀 다운",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  Text(
-                    "5kg * 10회 * 3세트",
-                    style: TextStyle(fontSize: 17),
-                  ),
-                ],
-              ),
-            )),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.bottomRight,
-              child: Text(
-                "00:20:10",
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-          ],
-        ),
-      ),
+    if (todayDiet == null) {
+      return Text("식단기록이 없습니다.");
+    }
+    return ListTile(
+      title: Text(todayDiet!.statistics.calories.toString() + "kcal"),
     );
+  }
+}
+
+class CalendarExerciseEvents extends StatelessWidget {
+  final List<Record> todayRecord;
+  const CalendarExerciseEvents({Key? key, required this.todayRecord})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: todayRecord.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(todayRecord[index].routineTitle),
+            subtitle: Text(todayRecord[index].playMinute.toString()),
+          );
+        });
+    // return Card(
+    //   child: Container(
+    //     height: 70,
+    //     child: Row(
+    //       crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       children: [
+    //         Container(
+    //             alignment: Alignment.center,
+    //             color: Colors.orange,
+    //             child: Padding(
+    //               padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    //               child: Text(
+    //                 "하체",
+    //                 style: TextStyle(
+    //                     color: Colors.white, fontWeight: FontWeight.bold),
+    //               ),
+    //             )),
+    //         Expanded(
+    //             child: Padding(
+    //           padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    //           child: Column(
+    //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //             crossAxisAlignment: CrossAxisAlignment.start,
+    //             children: [
+    //               SizedBox(
+    //                 height: 1,
+    //               ),
+    //               Text(
+    //                 "랫 풀 다운",
+    //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+    //               ),
+    //               Text(
+    //                 "5kg * 10회 * 3세트",
+    //                 style: TextStyle(fontSize: 17),
+    //               ),
+    //             ],
+    //           ),
+    //         )),
+    //         Container(
+    //           padding: const EdgeInsets.all(8.0),
+    //           alignment: Alignment.bottomRight,
+    //           child: Text(
+    //             "00:20:10",
+    //             style: TextStyle(fontSize: 16),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

@@ -6,23 +6,29 @@ import '../screens/routineSetting_screen.dart';
 
 class NameInputDialog extends StatelessWidget {
   final GlobalKey<FormState> routineFormKey;
+  final bool addMode;
   const NameInputDialog({
     Key? key,
     required this.routineFormKey,
+    required this.addMode,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("루틴 추가"),
+      title: addMode ? Text("루틴 추가") : Text("루틴 이름 변경"),
       content: TextFormField(
         onSaved: (value) async {
           log(value.toString());
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      RoutineSetting(routineTitle: value.toString())));
+          if (addMode) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        RoutineSetting(routineTitle: value.toString())));
+          } else {
+            Navigator.pop(context, value.toString());
+          }
         },
         decoration: InputDecoration(
           hintText: "루틴의 이름을 입력해주세요",
@@ -45,7 +51,6 @@ class NameInputDialog extends StatelessWidget {
               if (routineFormKey.currentState!.validate()) {
                 log("루틴 이름추가");
                 routineFormKey.currentState!.save();
-                //Navigator.of(context).pop();
               }
             },
             child: Text("확인")),

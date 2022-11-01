@@ -9,7 +9,7 @@ import 'dio_handling.dart';
 
 var options = BaseOptions(
   //https://
-  baseUrl: 'http://api.be-healthy.life',
+  baseUrl: 'https://api.be-healthy.life',
   connectTimeout: 5000,
   receiveTimeout: 3000,
 );

@@ -77,6 +77,7 @@ final todayRoutineProvider = FutureProvider<MyRoutine?>((ref) async {
   //MyRoutine todayRoutine = get요청 api
 });
 
+//날마다 해당루틴 id를 넣는다.
 final dayOfWeekRoutineProvider = StateProvider<List<String?>>((ref) {
   final routine = ref.watch(userRoutinePreviewProvider);
   List<String?> dayOfWeek = List.generate(7, (index) => null);

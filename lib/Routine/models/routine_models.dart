@@ -4,6 +4,14 @@ import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
 
+enum ManualType {
+  targetNumber,
+  setNumber,
+  weight, //무산소
+  speed,
+  playMinute
+}
+
 enum ExerciseType {
   back,
   chest,
@@ -51,14 +59,14 @@ class MyRoutine {
   String id;
   String title;
   List<int> days;
-  List<String> type;
+  List<String> types;
   List<RoutineManual>? routineManuals;
 
   MyRoutine({
     required this.id,
     required this.title,
     required this.days,
-    required this.type,
+    required this.types,
     this.routineManuals,
   });
   factory MyRoutine.copyWith(MyRoutine myRoutine) {
@@ -66,16 +74,17 @@ class MyRoutine {
       id: myRoutine.id,
       title: myRoutine.title,
       days: myRoutine.days,
-      type: myRoutine.type,
+      types: myRoutine.types,
       routineManuals: myRoutine.routineManuals,
     );
   }
   factory MyRoutine.liteFromJson(Map<String, dynamic> json) {
     return MyRoutine(
-        id: json['id'],
-        title: json['title'],
-        days: json['days'].map<int>((e) => e as int).toList(),
-        type: json['type'] ?? []);
+      id: json['id'],
+      title: json['title'],
+      days: json['days'].map<int>((e) => e as int).toList(),
+      types: json['types'].map<String>((e) => e.toString()).toList() ?? [],
+    );
   }
 
   factory MyRoutine.fromJson(Map<String, dynamic> json) {
@@ -83,7 +92,7 @@ class MyRoutine {
       id: json['id'],
       title: json['title'],
       days: json['days'].map<int>((e) => e as int).toList(),
-      type: json['type'] ?? [],
+      types: json['types'].map<String>((e) => e.toString()).toList() ?? [],
       routineManuals: (json['routineManuals'] as List<dynamic>)
           .map((e) => RoutineManual.fromJson(e))
           .toList(),
@@ -93,11 +102,8 @@ class MyRoutine {
     return MyRoutine(
       id: "",
       title: referencerRoutine.title,
-      days: List<int>.generate(7, (index) {
-        if (index == DateTime.now().weekday - 1) return 1;
-        return 0;
-      }),
-      type: referencerRoutine.type,
+      days: [0, 0, 0, 0, 0, 0, 0],
+      types: referencerRoutine.types,
       routineManuals: referencerRoutine.routineManuals,
     );
   }
@@ -106,12 +112,8 @@ class MyRoutine {
     return MyRoutine(
       id: "",
       title: routineTitle,
-      days: List<int>.generate(7, (index) {
-        if (index == DateTime.now().weekday - 1) return 1;
-        //if (index == DateTime.now().weekday) return 1; //테스트용
-        return 0;
-      }),
-      type: [],
+      days: [0, 0, 0, 0, 0, 0, 0],
+      types: [],
       routineManuals: [],
     );
   }
@@ -122,11 +124,23 @@ class MyRoutine {
     };
   }
 
+  Map<String, dynamic> dayToJson() {
+    return {
+      "days": days,
+    };
+  }
+
+  Map<String, dynamic> titleToJson() {
+    return {
+      "title": title,
+    };
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "title": title,
       "days": days,
-      "type": type,
+      "types": types,
       "routineManuals": routineManuals == null
           ? []
           : routineManuals!.map((e) => e.toJson()).toList(),
@@ -140,7 +154,7 @@ class ReferenceRoutine {
   String description; //
   String author; //
   int likesCount;
-  List<String> type;
+  List<String> types;
   List<RoutineManual>? routineManuals;
 
   ReferenceRoutine({
@@ -149,7 +163,7 @@ class ReferenceRoutine {
     required this.description,
     required this.author,
     required this.likesCount,
-    required this.type,
+    required this.types,
     this.routineManuals,
   });
 
@@ -160,19 +174,20 @@ class ReferenceRoutine {
       description: "",
       author: "",
       likesCount: 0,
-      type: [],
+      types: [],
       routineManuals: [],
     );
   }
 
   factory ReferenceRoutine.liteFromJson(Map<String, dynamic> json) {
     return ReferenceRoutine(
-        id: json['id'],
-        title: json['title'],
-        description: json['description'],
-        author: json['author'],
-        likesCount: json['likesCount'],
-        type: json['type'] ?? []);
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      author: json['author'],
+      likesCount: json['likesCount'] ?? 0,
+      types: json['types'].map<String>((e) => e.toString()).toList() ?? [],
+    );
   }
 
   factory ReferenceRoutine.fromJson(Map<String, dynamic> json) {
@@ -181,8 +196,8 @@ class ReferenceRoutine {
       title: json['title'],
       description: json['description'],
       author: json['author'],
-      likesCount: json['likesCount'],
-      type: json['type'] ?? [],
+      likesCount: json['likesCount'] ?? 0,
+      types: json['types'].map<String>((e) => e.toString()).toList() ?? [],
       routineManuals: (json['routineManuals'] as List<dynamic>)
           .map((e) => RoutineManual.fromJson(e))
           .toList(),

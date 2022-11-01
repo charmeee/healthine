@@ -61,11 +61,11 @@ class NutritionResult {
 
   NutritionResult.fromJson(Map<String, dynamic> json)
       : name = json["name"] ?? "",
-        carbohydrate = json["carbohydrate"].toDouble(),
-        protein = json["protein"].toDouble(),
-        fat = json["fat"].toDouble(),
-        sodium = json["sodium"].toDouble(),
-        calories = json["calories"];
+        carbohydrate = ((json["carbohydrate"] ?? 0).toDouble()) as double,
+        protein = ((json["protein"] ?? 0).toDouble()) as double,
+        fat = ((json["fat"] ?? 0).toDouble()) as double,
+        sodium = ((json["sodium"] ?? 0).toDouble()) as double,
+        calories = ((json["calories"] ?? 0).toInt()) as int;
 
   Map<String, dynamic> toJson() => {
         "name": name,
@@ -117,10 +117,10 @@ class DietDetailResult extends NutritionResult {
         photoId = json["photoId"],
         super(
           name: json["title"],
-          carbohydrate: json["carbohydrate"],
-          protein: json["protein"],
-          fat: json["fat"],
-          sodium: json["sodium"],
+          carbohydrate: (json["carbohydrate"] ?? 0).toDouble(),
+          protein: (json["protein"] ?? 0).toDouble(),
+          fat: (json["fat"] ?? 0).toDouble(),
+          sodium: (json["sodium"] ?? 0).toDouble(),
           calories: json["calories"],
         );
 

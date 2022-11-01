@@ -27,7 +27,7 @@ Future<Record> postRoutineLog(Record recode) async {
   log("루틴로그 생성 완료");
   log(response.data.toString());
   try {
-    return response.data;
+    return Record.fromJson(response.data);
   } catch (e) {
     log("루틴로그 생성 오류");
     throw Exception(e);

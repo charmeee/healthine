@@ -16,8 +16,9 @@ class MainCommunityListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate =
-        DateFormat('yyyy-MM-dd kk:mm').format(board.createdAt);
+    String formattedDate = board.createdAt != null
+        ? DateFormat('yyyy-MM-dd').format(board.createdAt!)
+        : '';
     return ListTile(
       title: Text(board.title),
       subtitle: Text(formattedDate),

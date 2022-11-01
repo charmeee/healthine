@@ -20,8 +20,8 @@ class MyRoutineListTabLayout extends ConsumerWidget {
       childAspectRatio: 1.5,
       children: List.generate(myRoutineList.length, (index) {
         List<String> getDay = getDayList(myRoutineList[index].days);
-        List<String> type =
-            myRoutineList[index].type.map((e) => "#$e").toList();
+        List<String> types =
+            myRoutineList[index].types.map((e) => "#$e").toList();
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -60,7 +60,7 @@ class MyRoutineListTabLayout extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        Text(type.join(" ")),
+                        Text(types.join(" ")),
                       ],
                     ),
                   ),

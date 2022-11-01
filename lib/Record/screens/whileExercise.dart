@@ -334,24 +334,26 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                         width: MediaQuery.of(context).size.width / 3 * 0.8,
                         child: TextButton(
                           onPressed: () async {
-                            AlertDialog(
-                              title: Text("운동을 종료하시겠습니까?"),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text("아니오")),
-                                TextButton(
-                                    onPressed: () async {
-                                      await sendRecord();
-                                      _timer?.cancel();
-                                      Navigator.popUntil(
-                                          context, (route) => route.isFirst);
-                                    },
-                                    child: Text("확인")),
-                              ],
-                            );
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text("운동을 종료하시겠습니까?"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("아니오")),
+                                        TextButton(
+                                            onPressed: () async {
+                                              await sendRecord();
+                                              _timer?.cancel();
+                                              Navigator.popUntil(context,
+                                                  (route) => route.isFirst);
+                                            },
+                                            child: Text("확인")),
+                                      ],
+                                    ));
                           },
                           //Navigator.of(context).popUntil((route) => route.isFirst)
                           style: ButtonStyle(

@@ -14,25 +14,25 @@ class CommunityBoardsType {
 }
 
 //게시글 목록
-class CommunityBoardsList {
-  //provider
-  String boardId;
-  int nowPage = 1;
-  int limit = 20;
-  List<CommunityBoard> boards;
-  CommunityBoardsList(
-      {required this.nowPage,
-      this.limit = 20,
-      required this.boardId,
-      required this.boards});
-  CommunityBoardsList.fromJson(Map<String, dynamic> json)
-      : nowPage = json['nowPage'],
-        limit = json['limit'],
-        boardId = json['boardId'],
-        boards = (json['boards'] as List<dynamic>)
-            .map((e) => CommunityBoard.fromJson(e))
-            .toList();
-}
+// class CommunityBoardsList {
+//   //provider
+//   String boardId;
+//   int nowPage = 1;
+//   int limit = 20;
+//   List<CommunityBoard> boards;
+//   CommunityBoardsList(
+//       {required this.nowPage,
+//       this.limit = 20,
+//       required this.boardId,
+//       required this.boards});
+//   CommunityBoardsList.fromJson(Map<String, dynamic> json)
+//       : nowPage = json['nowPage'],
+//         limit = json['limit'],
+//         boardId = json['boardId'],
+//         boards = (json['boards'] as List<dynamic>)
+//             .map((e) => CommunityBoard.fromJson(e))
+//             .toList();
+// }
 
 //특정 게시물 데이터
 class CommunityBoardData {
@@ -80,21 +80,31 @@ class CommunityBoard {
   String id;
   String author;
   String title;
-  String content;
-  DateTime createdAt;
+  int likesCount;
+  int views;
+  String? content;
+  DateTime? createdAt;
   DateTime? updatedAt;
   CommunityBoard(
       {required this.id,
       required this.author,
       required this.title,
-      required this.content,
-      required this.createdAt,
+      this.content,
+      required this.likesCount,
+      required this.views,
+      this.createdAt,
       this.updatedAt});
   CommunityBoard.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         author = json['author'],
         title = json['title'],
-        content = json['content'],
-        createdAt = DateTime.parse(json['createdAt']),
-        updatedAt = DateTime.parse(json['updatedAt']);
+        content = json['content'] ?? "",
+        likesCount = json['likesCount'] ?? 0,
+        views = json['views'] ?? 0,
+        createdAt = json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'])
+            : null,
+        updatedAt = json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'])
+            : null;
 }

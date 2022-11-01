@@ -37,6 +37,7 @@ Future<MyRoutine> getMyRoutineById(String routineId) async {
     return MyRoutine.fromJson(response.data);
   } catch (e) {
     log("내루틴 조회 오류");
+    log("error: $e");
     throw Exception(e);
   }
 }
@@ -56,8 +57,21 @@ Future<MyRoutine> postMyRoutine(MyRoutine routine) async {
 }
 
 //patch myRoutine
-///routine-manuals/{manualId}/routine/{routineId}
+Future<void> patchMyRoutine(
+    Map<String, dynamic> routine, String routineId) async {
+  //dio로 patch 요청 /routines/my-routines/{id}
+  await dio.patch("/routines/${routineId}",
+      options: Options(headers: {"Authorization": "true"}), data: routine);
+}
 
+//delete myRoutine
+Future<void> deleteMyRoutine(String routineId) async {
+  //dio로 delete 요청 /routines/my-routines/{id}
+  await dio.delete("/routines/$routineId",
+      options: Options(headers: {"Authorization": "true"}));
+}
+
+//post myRoutineManual
 Future<void> postMyRoutineManual(
     RoutineManual routineManual, String routineId) async {
   //dio로 patch 요청 /routines/my-routines/{id}
@@ -72,6 +86,7 @@ Future<void> postMyRoutineManual(
 //patch myRoutineManual /routine-manuals/{routineManualId}
 Future<void> patchMyRoutineManual(RoutineManual routineManual) async {
   //dio로 patch 요청 /routines/my-routines/{id}
+  log(routineManual.routineManualId);
   await dio.patch("/routine-manuals/${routineManual.routineManualId}",
       options: Options(headers: {"Authorization": "true"}),
       data: routineManual.isCardio

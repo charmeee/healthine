@@ -53,6 +53,7 @@ class _CommunityMainBodyLayoutState extends State<CommunityMainBodyLayout> {
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (error) {
+      log(error.toString());
       _pagingController.error = error;
     }
   }

@@ -66,7 +66,7 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
             constraints: BoxConstraints(minHeight: 250),
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Text(
-              widget.board.content,
+              widget.board.content ?? "",
               style: TextStyle(fontSize: 18),
             ),
           );

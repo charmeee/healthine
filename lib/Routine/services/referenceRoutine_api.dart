@@ -19,6 +19,7 @@ Future<List<ReferenceRoutine>> getReferenceRoutineList(
         .toList();
   } catch (e) {
     log("참조루틴 리스트 조회 오류");
+    log("error: $e");
     throw Exception(e);
   }
 }

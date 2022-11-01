@@ -9,3 +9,10 @@ List<String> getDayList(List<int> list) {
   }
   return day;
 }
+
+List<int> getTodayDayList() {
+  return List<int>.generate(7, (index) {
+    if (index == DateTime.now().weekday - 1) return 1;
+    return 0;
+  });
+}
