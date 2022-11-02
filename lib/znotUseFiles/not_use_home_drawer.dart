@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Provider/user_provider.dart';
-import 'package:healthin/Screen/userSetting/userSetting.dart';
-import 'package:healthin/Model/routine_models.dart';
+import 'package:healthin/User/providers/user_provider.dart';
+import 'package:healthin/User/screens/userSetting_screen.dart';
+import 'package:healthin/Routine/models/routine_models.dart';
 
 class HomeDrawer extends ConsumerWidget {
   const HomeDrawer({Key? key}) : super(key: key);
@@ -26,17 +26,6 @@ class HomeDrawer extends ConsumerWidget {
               //backgroundImage: null,
             ),
             accountEmail: null,
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.home,
-              color: Colors.grey[850],
-            ),
-            title: Text('헬스장 정보'),
-            onTap: () {
-              print('Home is clicked');
-            },
-            trailing: Icon(Icons.add),
           ),
           ListTile(
             leading: Icon(
