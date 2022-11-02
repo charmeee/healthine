@@ -41,10 +41,10 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   String hours = '00';
   String minutes = '00';
   String seconds = '00';
-  int speed = 4;
+  int countSpeed = 4;
   final duration = const Duration(seconds: 1);
   List<Record> records = [];
-  late Record record; //현재 레코드.
+  late Record nowRecord; //현재 레코드.
   late int nowOrder = 0; //현재 운동순서.
   int restSecond = 120;
   late int beforeLength = 0;
@@ -54,31 +54,34 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   @override
   void initState() {
     super.initState();
-    record = Record.init(
+    nowRecord = Record.init(
         widget.routineManuals[0], widget.routineTitle, widget.routineId);
     final beforeRecord = ref.read(todayRecordProvider);
     beforeLength = beforeRecord.length;
-    log("beforeLength : $beforeLength");
+    log("beforeLength : ${beforeRecord.length}");
     log(widget.routineManuals.length.toString());
     if (beforeRecord.isEmpty) {
       log("운동기록이 없는경우. ");
-      //기록이없는 경우
-      record = Record.init(
-          widget.routineManuals[0], widget.routineTitle, widget.routineId);
     } else {
-      //기록이있는경우
       log("운동기록이 있는 경우.");
       nowOrder = beforeRecord.length;
-      if (record.setNumber == widget.routineManuals[nowOrder - 1].setNumber) {
+      if (beforeRecord[nowOrder - 1].setNumber ==
+          widget.routineManuals[nowOrder - 1].setNumber) {
         //현재 운동이 끝난경우
-        record = Record.init(widget.routineManuals[nowOrder],
+        nowRecord = Record.init(widget.routineManuals[nowOrder],
             widget.routineTitle, widget.routineId);
       } else {
-        record = beforeRecord.last;
+        //운동이안끝난경우.
+        nowRecord = beforeRecord[nowOrder - 1];
+        if (nowRecord.targetNumber ==
+            widget.routineManuals[nowOrder - 1].targetNumber) {
+          nowRecord.setNumber++;
+          nowRecord.targetNumber = 0;
+        }
+        _time = nowRecord.playMinute;
         nowOrder--;
       }
     }
-    _time = record.playMinute;
     startTimer();
     timeWatchFlag = true;
     if (widget.routineManuals[nowOrder].isCardio) {
@@ -89,70 +92,77 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   Future<void> sendRecord() async {
     //기록을 보내는 함수
     setState(() {
-      record.playMinute = _time ~/ 60;
-      record.targetNumber = widget.routineManuals[nowOrder].targetNumber;
+      nowRecord.playMinute = _time ~/ 60;
+      nowRecord.targetNumber = widget.routineManuals[nowOrder].targetNumber;
     });
     if (beforeLength - 1 == nowOrder) {
       //전에 기록이 있는경우
       await ref
           .read(todayRecordProvider.notifier)
-          .editRecordData(record, widget.routineId);
+          .editRecordData(nowRecord, widget.routineId);
     } else {
-      await ref.read(todayRecordProvider.notifier).addRecordData(record);
+      await ref.read(todayRecordProvider.notifier).addRecordData(nowRecord);
     }
   }
 
   void startTimer() {
     _timer = Timer.periodic(duration, (timer) async {
-      _time++;
+      setState(() {
+        _time++;
+        seconds = (_time % 60).toString().padLeft(2, '0');
+        minutes = (_time ~/ 60).toString().padLeft(2, "0");
+      });
       if (isCardio == false) {
         //유산소가 아니면
-        if (_time % speed == 0 && timeWatchFlag) {
+        if (_time % countSpeed == 0 && timeWatchFlag) {
           setState(() {
-            record.targetNumber++;
+            nowRecord.targetNumber++;
           });
           log("개수증가");
         }
-        if (record.targetNumber ==
+        if (nowRecord.targetNumber ==
                 widget.routineManuals[nowOrder].targetNumber &&
             timeWatchFlag == true) {
           //유산소의 경우 개수 기준으로 카운트해서 멈춤
           //한세트 끝낫을때
           log("세트증가");
           setState(() {
-            record.setNumber++;
-            record.targetNumber = 0;
+            nowRecord.setNumber++;
+            nowRecord.targetNumber = 0;
             timeWatchFlag = false;
+            _timer?.cancel();
           });
-          _timer?.cancel();
+          if (nowRecord.setNumber ==
+              widget.routineManuals[nowOrder].setNumber) {
+            //nowRecord finished
+            log("현재운동끝");
+            await sendRecord();
+            setState(() {
+              _time = 0;
+              _timer?.cancel();
+              timeWatchFlag = false;
+              nowOrder++;
+            });
+            if (widget.routineManuals.length == nowOrder) {
+              //전체 루틴이 끝난경우
+              log("전체루틴끝");
+              Navigator.popUntil(
+                  context, (route) => route.isFirst); //=> 축하합니다 운동을 완료했습니다
+            } else {
+              //다음루틴시작.
+              setState(() {
+                nowRecord = Record.init(widget.routineManuals[nowOrder],
+                    widget.routineTitle, widget.routineId);
+              });
+            }
+          }
           log("스탑워치 멈춤/휴식");
           await Future.delayed(Duration(seconds: restSecond), () {
             log("스탑워치 다시시작!");
-            timeWatchFlag = true;
-            startTimer();
-          });
-        }
-        if (record.setNumber == widget.routineManuals[nowOrder].setNumber) {
-          //현재 운동이 끝난경우
-          log("현재운동끝");
-          //운동로그 post
-          await sendRecord();
-          _timer?.cancel();
-          timeWatchFlag = false;
-          nowOrder++;
-          if (widget.routineManuals.length == nowOrder) {
-            //전체 루틴이 끝난경우
-            log("전체루틴끝");
-            Navigator.popUntil(
-                context, (route) => route.isFirst); //=> 축하합니다 운동을 완료했습니다
-          } else {
-            record = Record.init(widget.routineManuals[nowOrder],
-                widget.routineTitle, widget.routineId);
-          }
-          await Future.delayed(Duration(seconds: restSecond * 2), () {
-            log("스탑워치 다시시작!");
-            timeWatchFlag = true;
-            startTimer();
+            setState(() {
+              timeWatchFlag = true;
+              startTimer();
+            });
           });
         }
       } else {
@@ -160,17 +170,12 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         if (_time == widget.routineManuals[nowOrder].playMinute) {
           log("유산소 완료");
           setState(() {
+            _time = 0;
             timeWatchFlag = false;
+            _timer?.cancel();
           });
-          _timer?.cancel();
         }
       }
-      setState(() {
-        minutes = (_time ~/ 60).toString().padLeft(2, "0");
-        seconds = (_time % 60).toString().padLeft(2, "0");
-        //log("stringsec" + seconds);
-        //log(stopwatch.elapsed.inSeconds.toString());
-      });
     }); //Timer(Duration duration, void callback())
   }
 
@@ -201,7 +206,6 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                           onPressed: () async {
                             await sendRecord();
                             flag = true;
-                            _timer?.cancel();
                             Navigator.popUntil(
                                 context, (route) => route.isFirst);
                           },
@@ -231,11 +235,11 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                 ),
                 if (isCardio == false) ...[
                   Text(
-                    "${record.targetNumber} / ${widget.routineManuals[nowOrder].targetNumber} 개",
+                    "${nowRecord.targetNumber} / ${widget.routineManuals[nowOrder].targetNumber} 개",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                   ),
                   Text(
-                    "${record.setNumber} / ${widget.routineManuals[nowOrder].setNumber} 세트",
+                    "${nowRecord.setNumber} / ${widget.routineManuals[nowOrder].setNumber} 세트",
                     style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
                   ),
                   Row(
@@ -243,7 +247,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${speed} 속도",
+                        "${countSpeed} 속도",
                         style: TextStyle(
                             fontWeight: FontWeight.w300, fontSize: 35),
                       ),
@@ -252,14 +256,14 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                           IconButton(
                               onPressed: () {
                                 setState(() {
-                                  speed--;
+                                  countSpeed--;
                                 });
                               },
                               icon: Icon(Icons.exposure_minus_1)),
                           IconButton(
                               onPressed: () {
                                 setState(() {
-                                  speed++;
+                                  countSpeed++;
                                 });
                               },
                               icon: Icon(Icons.plus_one))
@@ -334,26 +338,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                         width: MediaQuery.of(context).size.width / 3 * 0.8,
                         child: TextButton(
                           onPressed: () async {
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: Text("운동을 종료하시겠습니까?"),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("아니오")),
-                                        TextButton(
-                                            onPressed: () async {
-                                              await sendRecord();
-                                              _timer?.cancel();
-                                              Navigator.popUntil(context,
-                                                  (route) => route.isFirst);
-                                            },
-                                            child: Text("확인")),
-                                      ],
-                                    ));
+                            Navigator.of(context).maybePop();
                           },
                           //Navigator.of(context).popUntil((route) => route.isFirst)
                           style: ButtonStyle(

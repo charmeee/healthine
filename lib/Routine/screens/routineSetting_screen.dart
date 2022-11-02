@@ -32,12 +32,12 @@ class RoutineSetting extends ConsumerStatefulWidget {
 }
 
 class _RoutineSettingState extends ConsumerState<RoutineSetting> {
-  final _routineTitleFormKey = GlobalKey<FormState>();
   late MyRoutine myRoutine;
   late MyRoutine copyRoutine; //비교하기위한 복제본.
   bool editMode = false;
+  bool fixable = false;
   late TextEditingController titleController;
-
+  int todayIndex = DateTime.now().weekday - 1;
   @override
   void initState() {
     // TODO: implement initState
@@ -91,13 +91,15 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
     );
   }
 
-  editRoutineDay(int index, value) async {
+  Future<bool> editRoutineDay(int index, value) async {
+    //참이면 바꼇고 참이아니면안바꼇고
     //1. 수정하고 싶은요일을 받는다.
     //원래 그요일에 무언
     if (value) {
       //곂칠때 대비한사전작업
       List<String?> days = ref.watch(dayOfWeekRoutineProvider);
       if (days[index] != null) {
+        //바꿀려고햇는데 원래루틴이있을때
         showDialog(
             context: context,
             builder: (context) {
@@ -117,23 +119,27 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                       child: Text("변경"))
                 ],
               );
-            }).then((value) {
-          if (value == false) {
-            return;
+            }).then((result) {
+          if (result == false) {
+            return false;
           }
         });
+        //이전루틴 그날짜를 지운다.
         List<int> tmp = days.map((e) => e == days[index] ? 1 : 0).toList();
         tmp[index] = 0; //그날은 다시지워줌.
         await patchMyRoutine({"days": tmp}, days[index]!);
       }
-      ref.watch(dayOfWeekRoutineProvider.notifier).state[index] = myRoutine.id;
+      ref.watch(dayOfWeekRoutineProvider.notifier).state[index] =
+          myRoutine.id; //원래루틴이없을때
     } else {
+      //값이 value false일때
       ref.watch(dayOfWeekRoutineProvider.notifier).state[index] = null;
     }
     setState(() {
       myRoutine.days[index] = value ? 1 : 0;
     });
     await patchMyRoutine(myRoutine.dayToJson(), myRoutine.id);
+    return true;
   }
 
   sendRoutineManuals() async {
@@ -208,9 +214,13 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
   Widget build(BuildContext context) {
     List<String> type = myRoutine.types.map((e) => "#$e").toList();
     final record = ref.watch(todayRecordProvider);
-
+    final dayRoutine = ref.watch(dayOfWeekRoutineProvider);
     return WillPopScope(
       onWillPop: () async {
+        if (myRoutine.id == dayRoutine[todayIndex] && record.isNotEmpty) {
+          //이게 오늘의 루틴이고 기록중이면
+          return true;
+        }
         await sendRoutineManuals();
         return true;
       },
@@ -280,9 +290,13 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                           selected: myRoutine.days[i] == 1,
                           selectedColor: Colors.indigo,
                           onSelected: (bool value) {
-                            record.isEmpty
-                                ? editRoutineDay(i, value)
-                                : showDoingRoutineAlert();
+                            if (DateTime.now().weekday - 1 == i &&
+                                record.isNotEmpty) {
+                              //
+                              showDoingRoutineAlert();
+                            } else {
+                              editRoutineDay(i, value);
+                            }
                           })
                     ]
                   ]),
@@ -309,6 +323,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                         myRoutine: myRoutine,
                         editMode: editMode,
                         setRoutineManualType: setRoutineManualType,
+                        isDoingRoutine: dayRoutine[todayIndex] == myRoutine.id,
                       )
                     : Center(
                         child: CircularProgressIndicator(),
@@ -317,7 +332,6 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
         ),
         bottomNavigationBar: ElevatedButton(
             onPressed: () async {
-              //일단 patch 나포스트먼저 시킴
               if (myRoutine.routineManuals == null ||
                   myRoutine.routineManuals!.isEmpty) {
                 showDialog(
@@ -336,16 +350,39 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                       );
                     });
               } else {
-                //오늘하고있는루틴인지 구분이 가능해야함.
-                editRoutineDay(DateTime.now().weekday - 1, true);
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => WhileExercise(
-                            routineManuals: myRoutine.routineManuals!,
-                            routineId: myRoutine.id,
-                            routineTitle: myRoutine.title)),
-                    (route) => route.isFirst);
+                if (dayRoutine[todayIndex] == myRoutine.id) {
+                  //오늘의 루틴이다.
+                  if (record.isEmpty) {
+                    //오늘의 루틴이지만 기록이 없다.
+                    await sendRoutineManuals();
+                  }
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WhileExercise(
+                              routineManuals: myRoutine.routineManuals!,
+                              routineId: myRoutine.id,
+                              routineTitle: myRoutine.title)),
+                      (route) => route.isFirst);
+                } else {
+                  //오늘의 루틴이 아니다.
+                  if (record.isEmpty) {
+                    //오늘의 루틴이 아니지만 기록이 없다.
+                    if (await editRoutineDay(todayIndex, true)) {
+                      await sendRoutineManuals();
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WhileExercise(
+                                  routineManuals: myRoutine.routineManuals!,
+                                  routineId: myRoutine.id,
+                                  routineTitle: myRoutine.title)),
+                          (route) => route.isFirst);
+                    }
+                  } else {
+                    showDoingRoutineAlert();
+                  }
+                }
               }
             },
             child: Text("루틴시작하기")),

@@ -17,6 +17,7 @@ final manualTileInputDecoration = InputDecoration(
 class ManualTile extends StatefulWidget {
   final Function showDoingRoutineAlert;
   final bool recordEmpty;
+  final bool isDoingRoutine;
   final MyRoutine myRoutine;
   final Function(List<RoutineManual>) setRoutineManauls;
   final bool editMode;
@@ -25,6 +26,7 @@ class ManualTile extends StatefulWidget {
       {Key? key,
       required this.showDoingRoutineAlert,
       required this.recordEmpty,
+      required this.isDoingRoutine,
       required this.myRoutine,
       required this.setRoutineManauls,
       required this.editMode,
@@ -91,7 +93,9 @@ class _ManualTileState extends State<ManualTile> {
         );
       },
       onReorder: (int oldIndex, int newIndex) {
-        if (widget.recordEmpty) {
+        if (widget.isDoingRoutine && !widget.recordEmpty) {
+          widget.showDoingRoutineAlert();
+        } else {
           if (oldIndex < newIndex) {
             newIndex -= 1;
           }
@@ -101,14 +105,29 @@ class _ManualTileState extends State<ManualTile> {
           var item = _routineList.removeAt(oldIndex);
           _routineList.insert(newIndex, item);
           widget.setRoutineManauls(_routineList);
-        } else {
-          widget.showDoingRoutineAlert();
         }
       },
     );
   }
 
   Widget _buildCardioRow(RoutineManual routineManual, int index) {
+    if (widget.isDoingRoutine && !widget.recordEmpty) {
+      return SizedBox(
+        height: 40,
+        child: Row(
+          children: [
+            Text(
+              " ${routineManual.playMinute}분",
+              style: TextStyle(color: Colors.black),
+            ),
+            Text(
+              " ${routineManual.speed}속도",
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
+      );
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -153,28 +172,30 @@ class _ManualTileState extends State<ManualTile> {
   }
 
   Widget _buildWeightRow(RoutineManual routineManual, int index) {
+    if (widget.isDoingRoutine && !widget.recordEmpty) {
+      return SizedBox(
+        height: 40,
+        child: Row(
+          children: [
+            Text(
+              " ${routineManual.setNumber}세트",
+              style: TextStyle(color: Colors.black),
+            ),
+            Text(
+              " ${routineManual.targetNumber}회",
+              style: TextStyle(color: Colors.black),
+            ),
+            Text(
+              " ${routineManual.weight}kg",
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
+      );
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(
-          width: 90,
-          height: 50,
-          child: TextField(
-            controller:
-                TextEditingController(text: routineManual.weight.toString()),
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-            onChanged: (value) {
-              log(value);
-              if (value == "") {
-                value = "0";
-              }
-              widget.setRoutineManualType(
-                  ManualType.weight, index, int.parse(value));
-            },
-            decoration: manualTileInputDecoration.copyWith(suffixText: "무게"),
-          ),
-        ),
         SizedBox(
           width: 90,
           height: 50,
@@ -209,6 +230,25 @@ class _ManualTileState extends State<ManualTile> {
                   ManualType.targetNumber, index, int.parse(value));
             },
             decoration: manualTileInputDecoration.copyWith(suffixText: "회"),
+          ),
+        ),
+        SizedBox(
+          width: 90,
+          height: 50,
+          child: TextField(
+            controller:
+                TextEditingController(text: routineManual.weight.toString()),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              log(value);
+              if (value == "") {
+                value = "0";
+              }
+              widget.setRoutineManualType(
+                  ManualType.weight, index, int.parse(value));
+            },
+            decoration: manualTileInputDecoration.copyWith(suffixText: "무게"),
           ),
         ),
       ],
