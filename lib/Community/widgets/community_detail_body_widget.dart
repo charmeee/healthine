@@ -11,11 +11,17 @@ class CommunityDetailBody extends StatefulWidget {
   final CommunityBoard board;
   final List<CommunityBoardComment> comments;
   final UserInfo user;
+  final Function addLike;
+  final Function(String? id) setReplyId;
+  final String? replyId;
   const CommunityDetailBody(
       {Key? key,
       required this.board,
       required this.comments,
-      required this.user})
+      required this.user,
+      required this.addLike,
+      required this.setReplyId,
+      this.replyId})
       : super(key: key);
 
   @override
@@ -26,7 +32,7 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: widget.comments.length + 2,
+      itemCount: widget.comments.length + 3,
       itemBuilder: (context, index) {
         if (index == 0) {
           return Column(
@@ -53,7 +59,7 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
                       ),
                     ),
                     Text(
-                      widget.board.updatedAt.toString(),
+                      widget.board.createdAt.toString(),
                       style: TextStyle(color: Colors.grey),
                     )
                   ],
@@ -70,15 +76,50 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
               style: TextStyle(fontSize: 18),
             ),
           );
-        } else {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              widget.comments[index - 2].author +
-                  ' : ' +
-                  widget.comments[index - 2].content,
-              style: TextStyle(fontSize: 15),
+        } else if (index == 2) {
+          return Container(
+            alignment: Alignment.center,
+            child: ElevatedButton(
+              onPressed: () {
+                widget.addLike();
+              },
+              child: Text('좋아요 ${widget.board.likesCount}'),
             ),
+          );
+        } else {
+          return GestureDetector(
+            onTap: () {
+              if (widget.comments[index - 3].replyId == null) {
+                //부모댓글이면
+                if (widget.replyId == widget.comments[index - 3].id) {
+                  //댓글달기창이 열려있으면
+                  widget.setReplyId(null);
+                } else {
+                  widget.setReplyId(widget.comments[index - 3].id);
+                }
+              }
+            },
+            child: widget.comments[index - 3].replyId == null
+                ? Padding(
+                    //부모댓글이면
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      widget.comments[index - 3].author +
+                          ' : ' +
+                          widget.comments[index - 3].content,
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  )
+                : Padding(
+                    //자식댓글이면
+                    padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                    child: Text(
+                      widget.comments[index - 3].author +
+                          ' : ' +
+                          widget.comments[index - 3].content,
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
+                  ),
           );
         }
       },

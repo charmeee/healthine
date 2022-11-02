@@ -44,10 +44,22 @@ class CommunityBoardData {
 
   CommunityBoardData.fromJson(Map<String, dynamic> json)
       : boardData = CommunityBoard.fromJson(json['boardData']),
-        comments = (json['comments'] as List<dynamic>)
-            .map((e) => CommunityBoardComment.fromJson(e))
-            .toList();
+        comments = (json['comments'] == null || json['comments'].isEmpty)
+            ? []
+            : (json['comments'] as List<dynamic>)
+                .map((e) => CommunityBoardComment.fromJson(e))
+                .toList();
 }
+
+// {
+// "id": "string",
+// "content": "string",
+// "postId": "string",
+// "replyId": "string",
+// "author": "string",
+// "createdAt": "2022-11-02T08:24:13.032Z",
+// "updatedAt": "2022-11-02T08:24:13.032Z"
+// }
 
 //게시물 코멘트
 class CommunityBoardComment {
@@ -55,6 +67,7 @@ class CommunityBoardComment {
   String id;
   String content;
   String author;
+  String? replyId;
   DateTime createdAt;
   DateTime? updatedAt;
   CommunityBoardComment({
@@ -62,12 +75,14 @@ class CommunityBoardComment {
     required this.content,
     required this.author,
     required this.createdAt,
+    this.replyId,
     this.updatedAt,
   });
   CommunityBoardComment.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         content = json['content'],
         author = json['author'],
+        replyId = json['replyId'],
         createdAt = DateTime.parse(json['createdAt']),
         updatedAt = json['updatedAt'] != null
             ? DateTime.parse(json['updatedAt'])
@@ -77,11 +92,13 @@ class CommunityBoardComment {
 class CommunityBoard {
   //게시글 목록 조회
   //boards/{boardId}/posts
+  //Todo: 사진 리스트
   String id;
   String author;
   String title;
   int likesCount;
   int views;
+  int? commentsCount;
   String? content;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -89,6 +106,7 @@ class CommunityBoard {
       {required this.id,
       required this.author,
       required this.title,
+      this.commentsCount,
       this.content,
       required this.likesCount,
       required this.views,
@@ -98,6 +116,7 @@ class CommunityBoard {
       : id = json['id'],
         author = json['author'],
         title = json['title'],
+        commentsCount = json['commentsCount'],
         content = json['content'] ?? "",
         likesCount = json['likesCount'] ?? 0,
         views = json['views'] ?? 0,

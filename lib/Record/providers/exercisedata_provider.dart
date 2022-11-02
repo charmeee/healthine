@@ -23,6 +23,12 @@ class RecordNotifier extends StateNotifier<List<Record>> {
       state = recordData;
     }
   }
+  Future<List<Record>> getAnotherRecordDataByDay(selectedDay) async {
+    List<Record> recordData = await getRoutineLogByDay(
+        DateFormat("yyyy-MM-dd").format(selectedDay).toString());
+    return recordData;
+
+  }
 
   addRecordData(Record record) async {
     await postRoutineLog(record);

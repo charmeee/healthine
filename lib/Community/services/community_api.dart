@@ -22,6 +22,26 @@ Future<CommunityBoard> getCommunityBoardData(
   }
 }
 
+//좋아요 누르기
+Future<bool> postLikes(String boardId, String postId) async {
+  final response = await dio.post("/boards/${boardId}/posts/${postId}/like",
+      options: Options(headers: {"Authorization": "true"}), data: {});
+  log("좋아요 완료");
+  log(response.data.toString());
+  return response.data;
+}
+
+//대댓글post /boards/{boardId}/posts/{postId}/comments/{replyId}
+Future<void> postReplyComment(
+    String boardId, String postId, String replyId, String content) async {
+  final response = await dio.post(
+      "/boards/${boardId}/posts/${postId}/comments/${replyId}",
+      data: {"content": content},
+      options: Options(headers: {"Authorization": "true"}));
+  log("대댓글 완료");
+  log(response.data.toString());
+}
+
 ///boards/{boardId}/posts
 Future<bool> postCommunityBoardData(
     String boardId, String title, String content) async {
@@ -49,11 +69,14 @@ Future<List<CommunityBoardComment>> getCommunityBoardComment(
   final response = await dio.get("/boards/${boardId}/posts/${postId}/comments",
       options: Options(headers: {"Authorization": "true"}));
   log("게시글 댓글 조회 완료");
-  List<CommunityBoardComment> communityBoardCommentList = [];
   log(response.data.toString());
+  List<CommunityBoardComment> communityBoardCommentList = [];
+
   try {
-    for (var item in response.data["items"]) {
-      communityBoardCommentList.add(CommunityBoardComment.fromJson(item));
+    if (response.data.isNotEmpty) {
+      for (var item in response.data) {
+        communityBoardCommentList.add(CommunityBoardComment.fromJson(item));
+      }
     }
     return communityBoardCommentList;
   } catch (e) {

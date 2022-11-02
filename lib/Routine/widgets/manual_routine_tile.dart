@@ -6,6 +6,14 @@ import 'package:healthin/Routine/models/routine_models.dart';
 import '../../Common/Const/const.dart';
 import '../../Dictionary/screens/main_dictionary_screen.dart';
 
+final manualTileInputDecoration = InputDecoration(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: BorderSide.none,
+    ),
+    filled: true,
+    fillColor: Colors.white54);
+
 class ManualTile extends StatefulWidget {
   final Function showDoingRoutineAlert;
   final bool recordEmpty;
@@ -39,6 +47,7 @@ class _ManualTileState extends State<ManualTile> {
           return Container(
             key: Key('$index'),
             height: 50,
+            width: MediaQuery.of(context).size.width,
             child: Center(
               child: IconButton(
                   onPressed: () async {
@@ -72,14 +81,12 @@ class _ManualTileState extends State<ManualTile> {
               routineManual.manualTitle,
               style: TextStyle(color: Colors.black),
             ),
+            trailing: widget.editMode
+                ? IconButton(onPressed: () {}, icon: Icon(Icons.delete))
+                : null,
             subtitle: routineManual.isCardio
-                ? Text(routineManual.playMinute.toString())
-                : Text(routineManual.weight.toString() +
-                    "kg /" +
-                    routineManual.setNumber.toString() +
-                    "세트 /" +
-                    routineManual.targetNumber.toString() +
-                    "회"),
+                ? _buildCardioRow(routineManual, index)
+                : _buildWeightRow(routineManual, index),
           ),
         );
       },
@@ -98,6 +105,113 @@ class _ManualTileState extends State<ManualTile> {
           widget.showDoingRoutineAlert();
         }
       },
+    );
+  }
+
+  Widget _buildCardioRow(RoutineManual routineManual, int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(
+          width: 90,
+          height: 50,
+          child: TextField(
+            controller: TextEditingController(
+                text: routineManual.playMinute.toString()),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              if (value == "") {
+                value = "0";
+              }
+              widget.setRoutineManualType(
+                  ManualType.playMinute, index, int.parse(value));
+            },
+            decoration: manualTileInputDecoration.copyWith(suffixText: "분"),
+          ),
+        ),
+        SizedBox(
+          width: 90,
+          height: 50,
+          child: TextField(
+            controller: TextEditingController(
+                text: routineManual.targetNumber.toString()),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              if (value == "") {
+                value = "0";
+              }
+              widget.setRoutineManualType(
+                  ManualType.targetNumber, index, int.parse(value));
+            },
+            decoration: manualTileInputDecoration.copyWith(suffixText: "속도"),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeightRow(RoutineManual routineManual, int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(
+          width: 90,
+          height: 50,
+          child: TextField(
+            controller:
+                TextEditingController(text: routineManual.weight.toString()),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              log(value);
+              if (value == "") {
+                value = "0";
+              }
+              widget.setRoutineManualType(
+                  ManualType.weight, index, int.parse(value));
+            },
+            decoration: manualTileInputDecoration.copyWith(suffixText: "무게"),
+          ),
+        ),
+        SizedBox(
+          width: 90,
+          height: 50,
+          child: TextField(
+            controller:
+                TextEditingController(text: routineManual.setNumber.toString()),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              if (value == "") {
+                value = "0";
+              }
+              widget.setRoutineManualType(
+                  ManualType.setNumber, index, int.parse(value));
+            },
+            decoration: manualTileInputDecoration.copyWith(suffixText: "세트"),
+          ),
+        ),
+        SizedBox(
+          width: 90,
+          height: 50,
+          child: TextField(
+            controller: TextEditingController(
+                text: routineManual.targetNumber.toString()),
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              if (value == "") {
+                value = "0";
+              }
+              widget.setRoutineManualType(
+                  ManualType.targetNumber, index, int.parse(value));
+            },
+            decoration: manualTileInputDecoration.copyWith(suffixText: "회"),
+          ),
+        ),
+      ],
     );
   }
 }

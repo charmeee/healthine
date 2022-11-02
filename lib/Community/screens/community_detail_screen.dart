@@ -30,7 +30,8 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
   late UserInfo user;
   CommunityBoard? board;
   List<CommunityBoardComment> comments = [];
-  final _Controller = TextEditingController();
+  String? replyId;
+  final _controller = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
@@ -42,7 +43,7 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
 
   @override
   dispose() {
-    _Controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -59,6 +60,22 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
         await getCommunityBoardComment(widget.boardId, widget.postId);
     setState(() {
       comments = tmp;
+    });
+  }
+
+  addLike() async {
+    log('addLike');
+    bool data = await postLikes(widget.boardId, widget.postId);
+    if (data) {
+      setState(() {
+        board!.likesCount++;
+      });
+    }
+  }
+
+  setReplyId(String? id) {
+    setState(() {
+      replyId = id;
     });
   }
 
@@ -101,7 +118,10 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                             board: board!,
                             comments: comments,
                             user: user,
-                          )),
+                            replyId: replyId,
+                            addLike: addLike,
+                            setReplyId: setReplyId)),
+                if (replyId != null) Text("$replyId 에 댓글을 답니다."),
                 Container(
                     margin: const EdgeInsets.only(top: 8),
                     padding: const EdgeInsets.all(8),
@@ -109,7 +129,7 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                       children: [
                         Expanded(
                             child: TextField(
-                          controller: _Controller,
+                          controller: _controller,
                           decoration:
                               const InputDecoration(labelText: "댓글을 입력해주세요"),
                         )),
@@ -135,8 +155,18 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                                       ));
                             } else {
                               try {
-                                await postCommunityBoardComment(widget.boardId,
-                                    widget.postId, _Controller.text);
+                                if (replyId == null) {
+                                  await postCommunityBoardComment(
+                                      widget.boardId,
+                                      widget.postId,
+                                      _controller.text);
+                                } else {
+                                  await postReplyComment(
+                                      widget.boardId,
+                                      widget.postId,
+                                      replyId!,
+                                      _controller.text);
+                                }
                                 await getComment();
                               } catch (e) {
                                 log(e.toString());
@@ -157,7 +187,7 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                                         ));
                               }
                               setState(() {
-                                _Controller.text = "";
+                                _controller.text = "";
                               });
                             }
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -171,141 +201,3 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
     );
   }
 }
-
-// class Communitydetail extends ConsumerStatefulWidget {
-//   const Communitydetail({Key? key, required this.id}) : super(key: key);
-//   final String id;
-//   @override
-//   ConsumerState<Communitydetail> createState() => _CommunitydetailState();
-// }
-//
-// class _CommunitydetailState extends ConsumerState<Communitydetail> {
-//   Map<String, dynamic> communityData = {};
-//   final _Controller = TextEditingController();
-//   late UserInfo user;
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     ref.read(CommunityDataNotifierProvider.notifier).getComunnity(widget.id);
-//     user = ref.read(userProfileNotifierProvider);
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//           appBar: AppBar(
-//             backgroundColor: Colors.indigo,
-//             leading: IconButton(
-//               icon: Icon(Icons.arrow_back),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//           ),
-//           body: Container(
-//             width: MediaQuery.of(context).size.width,
-//             padding: EdgeInsets.all(8),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.stretch,
-//               children: [
-//                 Expanded(child: _CommunityBody()),
-//                 Container(
-//                     margin: EdgeInsets.only(top: 8),
-//                     padding: EdgeInsets.all(8),
-//                     child: Row(
-//                       children: [
-//                         Expanded(
-//                             child: TextField(
-//                           controller: _Controller,
-//                           decoration: InputDecoration(labelText: "댓글을 입력해주세요"),
-//                         )),
-//                         IconButton(
-//                           icon: Icon(Icons.send),
-//                           onPressed: () {
-//                             if (user.nickname == null) {
-//                               log("로그인이 필요합니다");
-//                               showDialog(
-//                                   context: context,
-//                                   builder: (BuildContext context) =>
-//                                       AlertDialog(
-//                                         title: Text("로그인이 필요한 서비스입니다"),
-//                                         content: Text("로그인을 해주세요"),
-//                                         actions: [
-//                                           ElevatedButton(
-//                                             child: Text("확인"),
-//                                             onPressed: () {
-//                                               Navigator.of(context).pop();
-//                                             },
-//                                           )
-//                                         ],
-//                                       ));
-//                             }
-//                             ref
-//                                 .read(CommunityDataNotifierProvider.notifier)
-//                                 .addComment(widget.id, user.nickname.toString(),
-//                                     _Controller.text);
-//                             setState(() {
-//                               _Controller.text = "";
-//                             });
-//                             FocusManager.instance.primaryFocus?.unfocus();
-//                           },
-//                         )
-//                       ],
-//                     )),
-//               ],
-//             ),
-//           )),
-//     );
-//   }
-// }
-//
-// class _CommunityBody extends ConsumerWidget {
-//   const _CommunityBody({Key? key}) : super(key: key);
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     CommunityBoardList? boardData = ref.watch(CommunityDataNotifierProvider);
-//     if (boardData != null) {
-//       // int length =
-//       //     (boardData.comment != null) ? boardData.comment!.length + 2 : 2;
-//       //log(length.toString());
-//       return ListView.separated(
-//         itemCount: boardData.comment.length + 2,
-//         itemBuilder: (context, index) {
-//           if (index == 0) {
-//             return Padding(
-//               padding: const EdgeInsets.symmetric(vertical: 8),
-//               child: Text(boardData.title,
-//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-//             );
-//           } else if (index == 1) {
-//             return Container(
-//               constraints: BoxConstraints(minHeight: 250),
-//               padding: EdgeInsets.symmetric(vertical: 10),
-//               child: Text(
-//                 boardData.content,
-//                 style: TextStyle(fontSize: 18),
-//               ),
-//             );
-//           } else {
-//             return Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: Text(
-//                 boardData.comment[index - 2]["nickname"] +
-//                     ' : ' +
-//                     boardData.comment[index - 2]["text"],
-//                 style: TextStyle(fontSize: 15),
-//               ),
-//             );
-//           }
-//         },
-//         separatorBuilder: (BuildContext context, int index) => _divider,
-//       );
-//     } else {
-//       return Center(
-//         child: Text("로딩중"),
-//       );
-//     }
-//   }
-// }

@@ -19,4 +19,13 @@ class DietStatisticsNotifier extends StateNotifier<DayDietStatistics?> {
     DateTime now = DateTime.now();
     state = await getDietStatistics(now);
   }
+
+  Future<DayDietStatistics?> getAnotherData(selectedDay) async {
+    try {
+      return await getDietStatistics(selectedDay);
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
 }

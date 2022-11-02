@@ -17,11 +17,25 @@ class MainCommunityListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedDate = board.createdAt != null
-        ? DateFormat('yyyy-MM-dd').format(board.createdAt!)
+        ? DateFormat('yyyy-MM-dd hh:mm:ss').format(board.createdAt!)
         : '';
     return ListTile(
-      title: Text(board.title),
-      subtitle: Text(formattedDate),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(board.title),
+          Text(formattedDate, style: TextStyle(fontSize: 10))
+        ],
+      ),
+      subtitle: Row(
+        children: [
+          //Text(board.author),
+          Text("뷰" + board.views.toString()),
+          Text(" | 좋아요" + board.likesCount.toString()),
+          Text(" | 댓글 수" + board.commentsCount.toString()),
+        ],
+      ),
       onTap: () {
         Navigator.push(
             context,
