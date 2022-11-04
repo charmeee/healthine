@@ -37,29 +37,29 @@ class MainSignIn extends ConsumerWidget {
               ),
             ),
             Padding(padding: EdgeInsets.only(top: 150)),
-            TextButton.icon(
-              style: TextButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  padding: EdgeInsets.symmetric(vertical: 15)),
-              icon: Icon(
-                Icons.g_mobiledata_rounded,
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                LoginState loginState = await googleLogin.login();
-                ref.read(loginStateProvider.notifier).state =
-                    loginState.isLogin;
-                if (loginState.isFreshman) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignUpScreen(),
-                    ),
-                  );
-                }
-              },
-              label: Text("구글로 로그인", style: TextStyle(color: Colors.white)),
-            ),
+            // TextButton.icon(
+            //   style: TextButton.styleFrom(
+            //       backgroundColor: Colors.blueAccent,
+            //       padding: EdgeInsets.symmetric(vertical: 15)),
+            //   icon: Icon(
+            //     Icons.g_mobiledata_rounded,
+            //     color: Colors.white,
+            //   ),
+            //   onPressed: () async {
+            //     LoginState loginState = await googleLogin.login();
+            //     ref.read(loginStateProvider.notifier).state =
+            //         loginState.isLogin;
+            //     if (loginState.isFreshman) {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => SignUpScreen(),
+            //         ),
+            //       );
+            //     }
+            //   },
+            //   label: Text("구글로 로그인", style: TextStyle(color: Colors.white)),
+            // ),
             SizedBox(
               height: 20,
             ),
@@ -97,24 +97,24 @@ class MainSignIn extends ConsumerWidget {
             SizedBox(
               height: 20,
             ),
-            TextButton.icon(
-              style: TextButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: EdgeInsets.symmetric(vertical: 15)),
-              icon: Icon(
-                Icons.apple,
-                color: Colors.white,
-              ),
-              onPressed: () async {
-                // ref.read(loginStateProvider.notifier).state =
-                //     await kakaoLogin.login();
-                // if (ref.read(loginStateProvider.notifier).state) {
-                //   User user = await UserApi.instance.me();
-                //   log("카카오 유저아이디" + user.id.toString());
-                // }
-              },
-              label: Text("APPLE로 로그인", style: TextStyle(color: Colors.white)),
-            ),
+            // TextButton.icon(
+            //   style: TextButton.styleFrom(
+            //       backgroundColor: Colors.black,
+            //       padding: EdgeInsets.symmetric(vertical: 15)),
+            //   icon: Icon(
+            //     Icons.apple,
+            //     color: Colors.white,
+            //   ),
+            //   onPressed: () async {
+            //     // ref.read(loginStateProvider.notifier).state =
+            //     //     await kakaoLogin.login();
+            //     // if (ref.read(loginStateProvider.notifier).state) {
+            //     //   User user = await UserApi.instance.me();
+            //     //   log("카카오 유저아이디" + user.id.toString());
+            //     // }
+            //   },
+            //   label: Text("APPLE로 로그인", style: TextStyle(color: Colors.white)),
+            // ),
           ],
         ),
       ),

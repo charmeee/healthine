@@ -40,7 +40,7 @@ class _MyHomeState extends State<MyHome> {
             shape: const CircularNotchedRectangle(),
             clipBehavior: Clip.antiAlias,
             child: BottomNavigationBar(
-              backgroundColor: primaryColor,
+              backgroundColor: fColor,
               elevation: 0,
               type: BottomNavigationBarType.fixed,
               currentIndex: _selectedIndex,

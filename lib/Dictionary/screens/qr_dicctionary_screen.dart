@@ -56,7 +56,7 @@ class _QrDictionaryState extends State<QrDictionary> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryColor,
+        backgroundColor: fColor,
         title: Text("--기구 운동"),
       ),
       body: ListView.separated(

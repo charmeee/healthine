@@ -30,7 +30,7 @@ class _UserSettingState extends ConsumerState<UserSetting> {
           icon: Icon(Icons.backspace),
         ),
         title: Text("사용자 설정"),
-        backgroundColor: primaryColor,
+        backgroundColor: fColor,
       ),
       body: Column(
         children: [

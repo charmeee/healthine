@@ -74,7 +74,7 @@ class _ManualTileState extends State<ManualTile> {
         return Card(
           //key: ValueKey(_routineList["type"]), 는 이름에따라서 키가 발급됨 만약 이름이 같으면 같은키
           key: Key('$index'),
-          color: secondaryColor,
+          color: tColor,
           elevation: 1,
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: ListTile(

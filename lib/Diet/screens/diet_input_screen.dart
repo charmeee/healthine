@@ -44,7 +44,7 @@ class _DietInputScreenState extends State<DietInputScreen> {
       child: Scaffold(
           appBar: AppBar(
             title: const Text('식단 등록하기'),
-            backgroundColor: primaryColor,
+            backgroundColor: fColor,
           ),
           backgroundColor: const Color(0xfff4f3f9),
           body: SingleChildScrollView(

@@ -2,6 +2,8 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'Common/Const/global.dart';
 import 'Common/Database/secureStorage.dart';
 import 'Common/Secret/secret.dart';
 import 'Common/dio/dio_handling.dart';
@@ -41,8 +43,12 @@ void main() async {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorState,
         title: 'bonoteam',
-        theme: ThemeData(),
+        theme: ThemeData(
+            scaffoldBackgroundColor: backgroundColor,
+            textTheme: TextTheme()
+                .apply(bodyColor: Colors.white, displayColor: Colors.white)),
         home: const MyApp(),
       ),
     ),

@@ -100,7 +100,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
       List<String?> days = ref.watch(dayOfWeekRoutineProvider);
       if (days[index] != null) {
         //바꿀려고햇는데 원래루틴이있을때
-        showDialog(
+        bool result = await showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
@@ -119,15 +119,15 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                       child: Text("변경"))
                 ],
               );
-            }).then((result) {
-          if (result == false) {
-            return false;
-          }
-        });
-        //이전루틴 그날짜를 지운다.
-        List<int> tmp = days.map((e) => e == days[index] ? 1 : 0).toList();
-        tmp[index] = 0; //그날은 다시지워줌.
-        await patchMyRoutine({"days": tmp}, days[index]!);
+            });
+        if (!result) {
+          return false;
+        } else {
+          //이전루틴 그날짜를 지운다.
+          List<int> tmp = days.map((e) => e == days[index] ? 1 : 0).toList();
+          tmp[index] = 0; //그날은 다시지워줌.
+          await patchMyRoutine({"days": tmp}, days[index]!);
+        }
       }
       ref.watch(dayOfWeekRoutineProvider.notifier).state[index] =
           myRoutine.id; //원래루틴이없을때
@@ -265,7 +265,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                 },
                 icon: Icon(Icons.delete))
           ],
-          backgroundColor: primaryColor,
+          backgroundColor: fColor,
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

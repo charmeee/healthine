@@ -31,7 +31,7 @@ class _RoutineListState extends State<RoutineList>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: primaryColor,
+          backgroundColor: fColor,
           title: Text("루틴 목록"),
           actions: [
             IconButton(

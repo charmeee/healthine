@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:healthin/Common/Database/secureStorage.dart';
 
+import '../Const/global.dart';
 import 'dio_main.dart';
 
 class CustomInterceptor extends Interceptor {
@@ -32,9 +35,7 @@ class CustomInterceptor extends Interceptor {
     if (options.headers['Authorization'] == 'true') {
       // 헤더 삭제
       options.headers.remove('accessToken');
-
       final token = await storage.read(key: 'accessToken');
-
       // 실제 토큰으로 대체
       options.headers.addAll({
         'Authorization': 'Bearer $token',
@@ -46,7 +47,6 @@ class CustomInterceptor extends Interceptor {
 
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
     log('[RES] [${response.statusCode}] ${response.requestOptions.uri} cookie:${response.headers['set-cookie']}');
-
     //쿠키저장하는 파트
     _saveCookies(response)
         .then((_) => handler.next(response))
@@ -80,7 +80,6 @@ class CustomInterceptor extends Interceptor {
           final token = await storage.read(key: 'accessToken');
           requestOptions.headers['Authorization'] = 'Bearer $token';
           //해더를 제대로 안넣어줘서 그럼..
-
           final response = await dio1.fetch(requestOptions);
           log("refresh 후 response: $response");
           //response를 provider 프로필에 넘겨줘야함.. 아마 dio를 riverpod에 감싸서 써야할것.
@@ -89,10 +88,15 @@ class CustomInterceptor extends Interceptor {
           log("refreshtoken발급후 이후 요청 실패 - 서버문제 예싱");
           await storage.deleteAll();
           //return null;
+
           return handler.reject(err);
         }
+      } else {
+        showErrorDialog(err.message);
+        return handler.reject(err);
       }
     } else {
+      showErrorDialog(err.message);
       return handler.reject(err);
     }
   }
@@ -111,4 +115,30 @@ class CustomInterceptor extends Interceptor {
   static String getCookies(List<Cookie> cookies) {
     return cookies.map((cookie) => '${cookie.name}=${cookie.value}').join('; ');
   }
+}
+
+showErrorDialog(String message) {
+  log("showErrorDialog 실행");
+  SchedulerBinding.instance.addPostFrameCallback((_) {
+    final context = navigatorState.currentContext;
+    if (context != null) {
+      showDialog(
+        context: context!,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(message),
+            actions: [
+              TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  });
 }

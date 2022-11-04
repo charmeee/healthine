@@ -73,11 +73,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
       } else {
         //운동이안끝난경우.
         nowRecord = beforeRecord[nowOrder - 1];
-        if (nowRecord.targetNumber ==
-            widget.routineManuals[nowOrder - 1].targetNumber) {
-          nowRecord.setNumber++;
-          nowRecord.targetNumber = 0;
-        }
+        nowRecord.targetNumber = 0;
         _time = nowRecord.playMinute;
         nowOrder--;
       }
@@ -91,15 +87,17 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
 
   Future<void> sendRecord() async {
     //기록을 보내는 함수
+    if (0 < nowRecord.targetNumber &&
+        nowRecord.targetNumber < widget.routineManuals[nowOrder].targetNumber) {
+      return;
+    }
     setState(() {
       nowRecord.playMinute = _time ~/ 60;
       nowRecord.targetNumber = widget.routineManuals[nowOrder].targetNumber;
     });
     if (beforeLength - 1 == nowOrder) {
       //전에 기록이 있는경우
-      await ref
-          .read(todayRecordProvider.notifier)
-          .editRecordData(nowRecord, widget.routineId);
+      await ref.read(todayRecordProvider.notifier).editRecordData(nowRecord);
     } else {
       await ref.read(todayRecordProvider.notifier).addRecordData(nowRecord);
     }
@@ -122,7 +120,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         }
         if (nowRecord.targetNumber ==
                 widget.routineManuals[nowOrder].targetNumber &&
-            timeWatchFlag == true) {
+            timeWatchFlag) {
           //유산소의 경우 개수 기준으로 카운트해서 멈춤
           //한세트 끝낫을때
           log("세트증가");
@@ -153,6 +151,9 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
               setState(() {
                 nowRecord = Record.init(widget.routineManuals[nowOrder],
                     widget.routineTitle, widget.routineId);
+                widget.routineManuals[nowOrder].isCardio
+                    ? isCardio = true
+                    : isCardio = false;
               });
             }
           }
@@ -167,12 +168,38 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         }
       } else {
         //유산소이면
-        if (_time == widget.routineManuals[nowOrder].playMinute) {
+        if (_time == widget.routineManuals[nowOrder].playMinute &&
+            timeWatchFlag) {
           log("유산소 완료");
+          await sendRecord();
           setState(() {
             _time = 0;
-            timeWatchFlag = false;
             _timer?.cancel();
+            timeWatchFlag = false;
+            nowOrder++;
+          });
+          log("스탑워치 멈춤/휴식");
+          if (widget.routineManuals.length == nowOrder) {
+            //전체 루틴이 끝난경우
+            log("전체루틴끝");
+            Navigator.popUntil(
+                context, (route) => route.isFirst); //=> 축하합니다 운동을 완료했습니다
+          } else {
+            //다음루틴시작.
+            setState(() {
+              nowRecord = Record.init(widget.routineManuals[nowOrder],
+                  widget.routineTitle, widget.routineId);
+              widget.routineManuals[nowOrder].isCardio
+                  ? isCardio = true
+                  : isCardio = false;
+            });
+          }
+          await Future.delayed(Duration(seconds: restSecond), () {
+            log("스탑워치 다시시작!");
+            setState(() {
+              timeWatchFlag = true;
+              startTimer();
+            });
           });
         }
       }
@@ -340,7 +367,6 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                           onPressed: () async {
                             Navigator.of(context).maybePop();
                           },
-                          //Navigator.of(context).popUntil((route) => route.isFirst)
                           style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.black54)),
