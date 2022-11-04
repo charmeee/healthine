@@ -22,6 +22,24 @@ Future<CommunityBoard> getCommunityBoardData(
   }
 }
 
+//게시글 patch
+Future<void> patchCommunityBoardData(
+    String boardId, String postId, String title, String content) async {
+  final response = await dio.patch("/boards/${boardId}/posts/${postId}",
+      data: {"title": title, "content": content},
+      options: Options(headers: {"Authorization": "true"}));
+  log("게시글 정보 수정 완료");
+  log(response.data.toString());
+}
+
+//게시글 delete
+Future<void> deleteCommunityBoardData(String boardId, String postId) async {
+  final response = await dio.delete("/boards/${boardId}/posts/${postId}",
+      options: Options(headers: {"Authorization": "true"}));
+  log("게시글 정보 삭제 완료");
+  log(response.data.toString());
+}
+
 //좋아요 누르기
 Future<bool> postLikes(String boardId, String postId) async {
   final response = await dio.post("/boards/${boardId}/posts/${postId}/like",

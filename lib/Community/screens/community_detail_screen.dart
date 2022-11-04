@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Community/models/community_model.dart';
-import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/User/providers/user_provider.dart';
 import 'package:healthin/Community/services/community_api.dart';
 
-import '../providers/community_provider.dart';
 import '../widgets/community_detail_body_widget.dart';
+import 'communiuty_write_screen.dart';
 
 class CommunityDetail extends ConsumerStatefulWidget {
   final String boardId;
@@ -98,12 +97,24 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                 Navigator.of(context).pop();
               },
             ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {},
-              )
-            ],
+            actions: user.nickname == board?.author
+                ? [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CommunityWrite(
+                                      initBoard: board,
+                                      postId: widget.postId,
+                                      boardId: widget.boardId,
+                                    )));
+                      },
+                    ),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+                  ]
+                : null,
           ),
           body: Container(
             width: MediaQuery.of(context).size.width,

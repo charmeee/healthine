@@ -89,7 +89,7 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
         } else {
           return GestureDetector(
             onTap: () {
-              if (widget.comments[index - 3].replyId == null) {
+              if (widget.comments[index - 3].childComments == null) {
                 //부모댓글이면
                 if (widget.replyId == widget.comments[index - 3].id) {
                   //댓글달기창이 열려있으면
@@ -99,7 +99,7 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
                 }
               }
             },
-            child: widget.comments[index - 3].replyId == null
+            child: widget.comments[index - 3].childComments == null
                 ? Padding(
                     //부모댓글이면
                     padding: const EdgeInsets.all(8.0),
@@ -110,15 +110,25 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
                       style: TextStyle(fontSize: 15),
                     ),
                   )
-                : Padding(
-                    //자식댓글이면
-                    padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-                    child: Text(
-                      widget.comments[index - 3].author +
-                          ' : ' +
-                          widget.comments[index - 3].content,
-                      style: TextStyle(fontSize: 15, color: Colors.grey),
-                    ),
+                : ListView.separated(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                        child: Text(
+                          widget.comments[index - 3].childComments![index]
+                                  .author +
+                              ' : ' +
+                              widget.comments[index - 3].childComments![index]
+                                  .content,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        _divider,
+                    itemCount: widget.comments[index - 3].childComments!.length,
                   ),
           );
         }

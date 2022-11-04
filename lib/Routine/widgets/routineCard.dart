@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:healthin/Common/Const/const.dart';
-import 'package:healthin/Common/styles/boxeStyle.dart';
+import 'package:healthin/Common/styles/boxStyle.dart';
 import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Record/models/exerciserecord_model.dart';
 import 'package:healthin/Record/screens/whileExercise.dart';
@@ -42,9 +42,36 @@ class _RoutineCardState extends State<RoutineCard> {
         widget.myRoutines!.routineManuals == null ||
         widget.myRoutines!.routineManuals!.isEmpty) {
       return Center(
-        child: Text(
-          "오늘의 루틴이 없습니다.",
-          style: h3Regular_18,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "오늘의 루틴이 없어요.\n 루틴을 설정해보세요.",
+              style: h3Regular_18,
+            ),
+            SizedBox(
+              height: 24,
+            ),
+            SizedBox(
+              height: primaryButtonHeight,
+              width: 240,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RoutineList()),
+                  );
+                },
+                child: Text("나만의 루틴 설정하기"),
+                style: ElevatedButton.styleFrom(
+                  primary: primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
       );
     }

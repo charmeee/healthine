@@ -123,7 +123,7 @@ showErrorDialog(String message) {
     final context = navigatorState.currentContext;
     if (context != null) {
       showDialog(
-        context: context!,
+        context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Error"),

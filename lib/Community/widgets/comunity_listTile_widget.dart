@@ -1,3 +1,4 @@
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,11 @@ class MainCommunityListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(board.title),
+          Text(
+            board.title,
+            maxLines: 1,
+            style: bodyRegular_16,
+          ),
           Text(formattedDate, style: TextStyle(fontSize: 10))
         ],
       ),

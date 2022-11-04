@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Community/models/community_model.dart';
-import 'package:healthin/Community/providers/community_provider.dart';
 import 'package:healthin/Community/services/community_api.dart';
 
 //import 'package:healthin/Model/routine_models.dart';
 
 class CommunityWrite extends ConsumerStatefulWidget {
-  final List<CommunityBoardsType> boardType;
-  const CommunityWrite({Key? key, required this.boardType}) : super(key: key);
+  final List<CommunityBoardsType>? boardType;
+  final CommunityBoard? initBoard;
+  final String? postId;
+  final String? boardId;
+  //boardType ||||| initBoard,postId,boardId
+  const CommunityWrite(
+      {Key? key, this.boardType, this.initBoard, this.postId, this.boardId})
+      : super(key: key);
 
   @override
   CommunityWriteState createState() => CommunityWriteState();
@@ -19,11 +24,14 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
   String title = "";
   String content = "";
   late String thisBoardId;
+
   @override
   void initState() {
     super.initState();
     // "ref"는 StatefulWidget의 모든 생명주기 상에서 사용할 수 있습니다.
-    thisBoardId = widget.boardType[0].id;
+    if (widget.boardType != null) {
+      thisBoardId = widget.boardType![0].id;
+    }
   }
 
   @override
@@ -52,13 +60,13 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    if (await postCommunityBoardData(
-                        thisBoardId, title, content)) {
-                      //새로고침
-                      Navigator.of(context).pop();
+                    if (widget.initBoard == null) {
+                      await postCommunityBoardData(thisBoardId, title, content);
                     } else {
-                      Navigator.of(context).pop();
+                      await patchCommunityBoardData(
+                          widget.boardId!, widget.postId!, title, content);
                     }
+                    Navigator.of(context).pop();
                   }
                 },
                 child: Text(
@@ -78,20 +86,21 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DropdownButton(
-                    value: thisBoardId,
-                    items: widget.boardType.map((e) {
-                      return DropdownMenuItem(
-                        child: Text(e.title.toString()),
-                        value: e.id,
-                      );
-                    }).toList(),
-                    onChanged: (Object? value) {
-                      setState(() {
-                        thisBoardId = value.toString();
-                      });
-                    },
-                  ),
+                  if (widget.boardType != null)
+                    DropdownButton(
+                      value: thisBoardId,
+                      items: widget.boardType?.map((e) {
+                        return DropdownMenuItem(
+                          child: Text(e.title.toString()),
+                          value: e.id,
+                        );
+                      }).toList(),
+                      onChanged: (Object? value) {
+                        setState(() {
+                          thisBoardId = value.toString();
+                        });
+                      },
+                    ),
                   TextFormField(
                     onSaved: (value) {
                       title = value.toString();
@@ -102,6 +111,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                       }
                       return null;
                     },
+                    initialValue: widget.initBoard?.title,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -123,6 +133,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                       }
                       return null;
                     },
+                    initialValue: widget.initBoard?.content,
                     maxLines: null,
                     decoration: InputDecoration(
                         border: InputBorder.none,

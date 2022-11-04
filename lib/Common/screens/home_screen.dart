@@ -18,7 +18,7 @@ import '../../User/screens/userSetting_screen.dart';
 import '../../Routine/widgets/routineCard.dart';
 import '../../Record/widgets/todayExecisedCard.dart';
 import '../../Diet/screens/diet_input_screen.dart';
-import '../styles/boxeStyle.dart';
+import '../styles/boxStyle.dart';
 import '../styles/textStyle.dart';
 
 const double profileImageSize = 44;
@@ -188,111 +188,6 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     SizedBox(
                       height: 10,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        "오늘의 루틴",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                      child: Card(
-                        child: todayRoutine.when(
-                          data: (data) {
-                            if (data == null) {
-                              return SizedBox(
-                                height: 250,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("루틴을 추가해 보세요."),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RoutineList()),
-                                        );
-                                      },
-                                      icon: Icon(Icons.add),
-                                      iconSize: 50,
-                                    )
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: data.routineManuals!.length + 3,
-                                itemBuilder: (context, index) {
-                                  if (data.routineManuals!.length == index) {
-                                    return ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RoutineList()),
-                                        );
-                                      },
-                                      child: Text("목록보기"),
-                                    );
-                                  } //todayRoutine
-                                  if (data.routineManuals!.length + 1 ==
-                                      index) {
-                                    return ElevatedButton(
-                                      onPressed: () {
-                                        if (data.routineManuals != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WhileExercise(
-                                                        routineManuals: data
-                                                            .routineManuals!,
-                                                        routineId: data.id,
-                                                        routineTitle:
-                                                            data.title)),
-                                          );
-                                        }
-                                      },
-                                      child: Text("루틴 시작하기"),
-                                    );
-                                  }
-                                  if (data.routineManuals!.length + 2 ==
-                                      index) {
-                                    return Text(todayRecord.length.toString());
-                                  }
-                                  return ListTile(
-                                    leading: Icon(Icons.fitness_center),
-                                    title: Text(data
-                                        .routineManuals![index].manualTitle),
-                                    subtitle: Text(data
-                                        .routineManuals![index].routineManualId
-                                        .toString()),
-                                  );
-                                },
-                              );
-                            }
-                          },
-                          loading: () => const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                          error: (error, stack) => const Center(
-                            child: Text('Error'),
-                          ),
-                        ),
-                      ),
                     ),
                     SizedBox(
                       height: 10,

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Community/models/community_model.dart';
-import 'package:healthin/Community/providers/community_provider.dart';
 import 'package:healthin/Community/services/community_api.dart';
 
 import '../widgets/community_main_body_widget.dart';
