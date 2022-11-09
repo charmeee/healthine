@@ -87,7 +87,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
 
   Future<void> sendRecord() async {
     //기록을 보내는 함수
-    if (0 < nowRecord.targetNumber &&
+    if (0 <= nowRecord.targetNumber &&
         nowRecord.targetNumber < widget.routineManuals[nowOrder].targetNumber) {
       return;
     }
@@ -101,6 +101,9 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
     } else {
       await ref.read(todayRecordProvider.notifier).addRecordData(nowRecord);
     }
+    setState(() {
+      _time = 0;
+    });
   }
 
   void startTimer() {
@@ -136,7 +139,6 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
             log("현재운동끝");
             await sendRecord();
             setState(() {
-              _time = 0;
               _timer?.cancel();
               timeWatchFlag = false;
               nowOrder++;

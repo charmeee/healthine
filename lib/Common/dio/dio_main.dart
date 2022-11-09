@@ -14,6 +14,7 @@ var options = BaseOptions(
   receiveTimeout: 3000,
 );
 Dio dio = Dio(options);
+
 // FutureProvider<Dio> dioProvider = FutureProvider<Dio>((ref) async {
 //   var options = BaseOptions(
 //     baseUrl: 'https://api.be-healthy.life',

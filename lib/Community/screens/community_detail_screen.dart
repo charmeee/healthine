@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/User/providers/user_provider.dart';
@@ -30,6 +31,7 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
   CommunityBoard? board;
   List<CommunityBoardComment> comments = [];
   String? replyId;
+  String? replyName;
   final _controller = TextEditingController();
   @override
   void initState() {
@@ -72,9 +74,10 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
     }
   }
 
-  setReplyId(String? id) {
+  setReply(String? id, String? name) {
     setState(() {
       replyId = id;
+      replyName = name;
     });
   }
 
@@ -130,9 +133,14 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                             comments: comments,
                             user: user,
                             replyId: replyId,
+                            replyName: replyName,
                             addLike: addLike,
-                            setReplyId: setReplyId)),
-                if (replyId != null) Text("$replyId 에 댓글을 답니다."),
+                            setReply: setReply)),
+                if (replyId != null && replyName != null)
+                  Text(
+                    "$replyName 에 댓글을 답니다.",
+                    style: bodyRegular_12,
+                  ),
                 Container(
                     margin: const EdgeInsets.only(top: 8),
                     padding: const EdgeInsets.all(8),
@@ -141,8 +149,9 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                         Expanded(
                             child: TextField(
                           controller: _controller,
-                          decoration:
-                              const InputDecoration(labelText: "댓글을 입력해주세요"),
+                          decoration: const InputDecoration(
+                              labelText: "댓글을 입력해주세요",
+                              labelStyle: bodyRegular_14),
                         )),
                         IconButton(
                           icon: const Icon(Icons.send),
@@ -166,16 +175,16 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                                       ));
                             } else {
                               try {
-                                if (replyId == null) {
-                                  await postCommunityBoardComment(
-                                      widget.boardId,
-                                      widget.postId,
-                                      _controller.text);
-                                } else {
+                                if (replyId != null && replyName != null) {
                                   await postReplyComment(
                                       widget.boardId,
                                       widget.postId,
                                       replyId!,
+                                      _controller.text);
+                                } else {
+                                  await postCommunityBoardComment(
+                                      widget.boardId,
+                                      widget.postId,
                                       _controller.text);
                                 }
                                 await getComment();

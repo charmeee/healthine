@@ -6,28 +6,30 @@ import '../screens/routineSetting_screen.dart';
 
 class NameInputDialog extends StatelessWidget {
   final GlobalKey<FormState> routineFormKey;
-  final bool addMode;
+  final bool hasReference;
   const NameInputDialog({
     Key? key,
     required this.routineFormKey,
-    required this.addMode,
+    required this.hasReference,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: addMode ? Text("루틴 추가") : Text("루틴 이름 변경"),
+      title: hasReference ? Text("루틴 이름 변경") : Text("루틴 추가"),
       content: TextFormField(
         onSaved: (value) async {
           log(value.toString());
-          if (addMode) {
+          if (hasReference) {
+            Navigator.pop(context, value.toString());
+          } else {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        RoutineSetting(routineTitle: value.toString())));
-          } else {
-            Navigator.pop(context, value.toString());
+                    builder: (context) => RoutineSetting(
+                          routineTitle: value.toString(),
+                          isNew: true,
+                        )));
           }
         },
         decoration: InputDecoration(

@@ -8,6 +8,7 @@ import 'package:healthin/Record/models/exerciserecord_model.dart';
 import 'package:healthin/Record/screens/whileExercise.dart';
 
 import '../../Common/screens/home_screen.dart';
+import '../../Common/styles/buttonStyle.dart';
 import '../models/routine_models.dart';
 import '../screens/routineList_screen.dart';
 
@@ -63,12 +64,7 @@ class _RoutineCardState extends State<RoutineCard> {
                   );
                 },
                 child: Text("나만의 루틴 설정하기"),
-                style: ElevatedButton.styleFrom(
-                  primary: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                style: primaryButton,
               ),
             )
           ],
@@ -218,12 +214,7 @@ class _RoutineCardState extends State<RoutineCard> {
               }
             },
             child: Text("운동 시작하기"),
-            style: ElevatedButton.styleFrom(
-              primary: primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            style: primaryButton,
           ),
         ),
       ],

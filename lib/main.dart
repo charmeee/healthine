@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'Common/Const/global.dart';
 import 'Common/Database/secureStorage.dart';
@@ -22,8 +23,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   KakaoSdk.init(nativeAppKey: kakaoTalkKey);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -80,20 +81,38 @@ class _MyAppState extends ConsumerState<MyApp> {
     initializeDateFormatting();
     try {
       await ref.read(userProfileNotifierProvider.notifier).getUserProfile();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return MyHome();
+      }));
     } catch (e) {
       print(e);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return MainSignIn();
+      }));
     }
-    FlutterNativeSplash.remove();
+    //FlutterNativeSplash.remove();
   }
 
   @override
   Widget build(BuildContext context) {
     //changeStatus();
-    final isLogined = ref.watch(loginStateProvider);
-    print("메인 status $isLogined");
+    // final isLogined = ref.watch(loginStateProvider);
+    // print("메인 status $isLogined");
     //status는 로그인정보가있는지
     //MyHome은 로그인되고 메인홈페이지
     //MainSignIn은 로그인 페이지'
-    return isLogined ? MyHome() : MainSignIn();
+    //return isLogined ? MyHome() : MainSignIn();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          "assets/icons/logo.svg",
+          width: MediaQuery.of(context).size.width * 0.6,
+        ),
+        CircularProgressIndicator(
+          color: Colors.white,
+        ),
+      ],
+    );
   }
 }

@@ -25,12 +25,13 @@ class MyRoutineListTabLayout extends ConsumerWidget {
         return GestureDetector(
           onTap: () {
             Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RoutineSetting(
-                            routine: myRoutineList[index],
-                            routineTitle: myRoutineList[index].title)))
-                .then((value) {
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RoutineSetting(
+                          routine: myRoutineList[index],
+                          routineTitle: myRoutineList[index].title,
+                          isNew: false,
+                        ))).then((value) {
               log("pop");
             });
           },

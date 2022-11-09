@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 const fColor = Color(0xFF24292f);
 const tColor = Color(0xFFd3f5e5);
 
+const String imgBaseUrl = "https://cdn.be-healthy.life/";
+
 /*
 color
 #496EF6 primary

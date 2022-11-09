@@ -12,16 +12,18 @@ class CommunityDetailBody extends StatefulWidget {
   final List<CommunityBoardComment> comments;
   final UserInfo user;
   final Function addLike;
-  final Function(String? id) setReplyId;
+  final Function(String? id, String? name) setReply;
   final String? replyId;
+  final String? replyName;
   const CommunityDetailBody(
       {Key? key,
       required this.board,
       required this.comments,
       required this.user,
       required this.addLike,
-      required this.setReplyId,
-      this.replyId})
+      required this.setReply,
+      this.replyId,
+      this.replyName})
       : super(key: key);
 
   @override
@@ -41,15 +43,20 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(widget.board.title,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        color: Colors.white)),
               ),
               SizedBox(
                 height: 20,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(widget.board.author),
+                    Text(
+                      widget.board.author,
+                      style: TextStyle(color: Colors.white),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 2.0, horizontal: 4),
@@ -73,7 +80,7 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Text(
               widget.board.content ?? "",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           );
         } else if (index == 2) {
@@ -83,54 +90,77 @@ class _CommunityDetailBodyState extends State<CommunityDetailBody> {
               onPressed: () {
                 widget.addLike();
               },
-              child: Text('좋아요 ${widget.board.likesCount}'),
+              child: Text(
+                '좋아요 ${widget.board.likesCount}',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           );
         } else {
           return GestureDetector(
-            onTap: () {
-              if (widget.comments[index - 3].childComments == null) {
+              onTap: () {
                 //부모댓글이면
                 if (widget.replyId == widget.comments[index - 3].id) {
                   //댓글달기창이 열려있으면
-                  widget.setReplyId(null);
+                  widget.setReply(null, null);
                 } else {
-                  widget.setReplyId(widget.comments[index - 3].id);
+                  widget.setReply(widget.comments[index - 3].id,
+                      widget.comments[index - 3].author);
                 }
-              }
-            },
-            child: widget.comments[index - 3].childComments == null
-                ? Padding(
-                    //부모댓글이면
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.comments[index - 3].author +
-                          ' : ' +
-                          widget.comments[index - 3].content,
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  )
-                : ListView.separated(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-                        child: Text(
-                          widget.comments[index - 3].childComments![index]
-                                  .author +
-                              ' : ' +
-                              widget.comments[index - 3].childComments![index]
-                                  .content,
-                          style: TextStyle(fontSize: 15),
+              },
+              child: widget.comments[index - 3].childComments == null ||
+                      widget.comments[index - 3].childComments!.isEmpty
+                  ? Padding(
+                      //부모댓글이면
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        widget.comments[index - 3].author +
+                            ' : ' +
+                            widget.comments[index - 3].content,
+                        style: TextStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          //부모댓글이면
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            widget.comments[index - 3].author +
+                                ' : ' +
+                                widget.comments[index - 3].content,
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
                         _divider,
-                    itemCount: widget.comments[index - 3].childComments!.length,
-                  ),
-          );
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: widget.comments[index - 3].childComments!
+                              .length, //자식댓글 갯수
+                          itemBuilder: (context, childIndex) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "   ㄴ" +
+                                    widget.comments[index - 3]
+                                        .childComments![childIndex].author +
+                                    ' : ' +
+                                    widget.comments[index - 3]
+                                        .childComments![childIndex].content,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return _divider;
+                          },
+                        ),
+                      ],
+                    ));
         }
       },
       separatorBuilder: (BuildContext context, int index) => _divider,

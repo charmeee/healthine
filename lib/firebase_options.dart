@@ -74,6 +74,6 @@ class DefaultFirebaseOptions {
         '812774997300-ssr1q1d8m9d0ukcjdrbduslevu31vv17.apps.googleusercontent.com',
     iosClientId:
         '812774997300-03t8m3p0ccekt72mvdtugqnq84c6j0k3.apps.googleusercontent.com',
-    iosBundleId: 'com.example.heathin',
+    iosBundleId: 'life.healthy.be',
   );
 }

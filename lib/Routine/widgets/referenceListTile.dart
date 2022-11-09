@@ -1,3 +1,4 @@
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:healthin/Routine/screens/referenceRoutineDetail.dart';
 import 'package:intl/intl.dart';
@@ -16,15 +17,22 @@ class ReferenceRoutineListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(reference.title),
-      subtitle: Text(reference.description),
+      title: Text(
+        reference.title,
+        style: h3Bold_18,
+      ),
+      subtitle: Text(
+        reference.description,
+        maxLines: 2,
+        style: bodyRegular_14,
+      ),
       onTap: () {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ReferenceScreen(referenceId: reference.id)))
-            .then((value) => refreshKey.currentState?.show());
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ReferenceScreen(referenceId: reference.id)));
+        //.then((value) => refreshKey.currentState?.show());
       },
       trailing: Text(reference.likesCount.toString()),
     );

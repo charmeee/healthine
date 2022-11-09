@@ -74,7 +74,7 @@ class _RoutineListState extends State<RoutineList>
                     key: _routineFormKey,
                     child: NameInputDialog(
                       routineFormKey: _routineFormKey,
-                      addMode: true,
+                      hasReference: false,
                     ),
                   );
                 });

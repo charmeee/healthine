@@ -53,6 +53,15 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
     }
   }
 
+  Future<LoginState> nativeLogin(String username, String password) async {
+    log("nativeLogin");
+    LoginState isLogin = await nativeLoginRequest(username, password);
+    if (isLogin.isLogin) {
+      await getUserProfile();
+    }
+    return isLogin;
+  }
+
   Future<bool> updateUserProfile(String nickname) async {
     UserInfo userInfo = UserInfo(
         id: state.id,
@@ -74,7 +83,6 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
   logout() async {
     await logoutRequest();
     state = UserInfo.init();
-    ref.read(loginStateProvider.notifier).state = false;
   }
 
   deleteUserProfile() async {

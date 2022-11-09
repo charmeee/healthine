@@ -38,6 +38,26 @@ Future<LoginState> sendVendorToken(
   }
 }
 
+Future<LoginState> nativeLoginRequest(username, password) async {
+  log('login attempt: $username with $password');
+  try {
+    final response = await dio.post("/auth/native-login",
+        data: {"username": username, "password": password});
+    if (response.statusCode == 201) {
+      log("access token 발급 완료  ${response.data["accessToken"]}");
+      storage.delete(key: "accessToken");
+      storage.write(key: "accessToken", value: response.data["accessToken"]);
+      return LoginState(isLogin: true, isFreshman: false);
+    } else {
+      log("server cant login");
+      return LoginState(isLogin: false, isFreshman: false);
+    }
+  } catch (e) {
+    log("login error $e");
+    return LoginState(isLogin: false, isFreshman: false);
+  }
+}
+
 Future<UserInfo> userProfileRequest() async {
   try {
     final response = await dio.get("/auth/profile",

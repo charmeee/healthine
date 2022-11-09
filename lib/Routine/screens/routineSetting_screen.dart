@@ -20,10 +20,12 @@ import '../widgets/routineName_dialog.dart';
 class RoutineSetting extends ConsumerStatefulWidget {
   final MyRoutine? routine;
   final String routineTitle;
+  final bool isNew;
   const RoutineSetting({
     Key? key,
-    this.routine,
+    this.routine, //원래 루틴이 있으면 notnew, 없으면 new
     required this.routineTitle,
+    required this.isNew,
     //routineid를받고 is null이면 추가 아니면 수정.
   }) : super(key: key);
 
@@ -35,7 +37,6 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
   late MyRoutine myRoutine;
   late MyRoutine copyRoutine; //비교하기위한 복제본.
   bool editMode = false;
-  bool fixable = false;
   late TextEditingController titleController;
   int todayIndex = DateTime.now().weekday - 1;
   @override
@@ -46,7 +47,7 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
     widget.routine == null
         ? (myRoutine = MyRoutine.init(widget.routineTitle))
         : (myRoutine = widget.routine!);
-    widget.routine == null ? postRoutine() : getRoutine();
+    widget.isNew ? postRoutine() : getRoutine();
   }
 
   getRoutine() async {
@@ -59,6 +60,13 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
 
   postRoutine() async {
     MyRoutine routine = await postMyRoutine(myRoutine);
+    if (myRoutine.routineManuals != null &&
+        myRoutine.routineManuals!.isNotEmpty) {
+      for (var manual in myRoutine.routineManuals!) {
+        await postMyRoutineManual(manual, routine.id);
+      }
+      routine.routineManuals = myRoutine.routineManuals;
+    }
     setState(() {
       myRoutine = MyRoutine.copyWith(routine);
       copyRoutine = MyRoutine.copyWith(routine);

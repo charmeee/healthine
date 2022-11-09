@@ -1,1 +1,1 @@
-const String kakaoTalkKey = "8a9e99aa7c39e4e0369b5ad69554c50b";
+const String kakaoTalkKey = "b220a3e330a56011ca4883969d1886a6";

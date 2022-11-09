@@ -113,3 +113,11 @@ const captionRegular_12 = TextStyle(
   letterSpacing: 0.15,
   color: whiteColor,
 );
+const captionRegular_10 = TextStyle(
+  fontFamily: 'Pretendard',
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
+  height: 1.33,
+  letterSpacing: 0.15,
+  color: bulletRedColor,
+);

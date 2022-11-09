@@ -39,58 +39,64 @@ class _MyHomeState extends State<MyHome> {
             notchMargin: 8,
             shape: const CircularNotchedRectangle(),
             clipBehavior: Clip.antiAlias,
-            child: BottomNavigationBar(
-              backgroundColor: fColor,
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _selectedIndex,
-              onTap: (int index) {
-                if (index == 2) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => QrScanPage()));
-                } else {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                }
-              },
-              unselectedItemColor: Colors.grey[400],
-              selectedItemColor: Colors.white,
-              // unselectedIconTheme: IconThemeData(color: Colors.grey[100]),
-              // selectedIconTheme: IconThemeData(color: Colors.white),
-              // unselectedLabelStyle: TextStyle(color: Colors.grey[100]),
-              // selectedLabelStyle: TextStyle(color: Colors.white),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.home_filled,
-                  ),
-                  label: "홈",
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 1,
+                  color: darkGrayColor,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.calendar_today,
-                  ),
-                  label: "운동 달력",
+                BottomNavigationBar(
+                  backgroundColor: backgroundColor,
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex: _selectedIndex,
+                  onTap: (int index) {
+                    if (index == 2) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => QrScanPage()));
+                    } else {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    }
+                  },
+                  unselectedItemColor: Colors.grey[400],
+                  selectedItemColor: Colors.white,
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.home_filled,
+                      ),
+                      label: "홈",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.calendar_today,
+                      ),
+                      label: "운동 달력",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.camera_alt,
+                      ),
+                      label: "기구 스캔",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.comment,
+                      ),
+                      label: "커뮤니티",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.library_books,
+                      ),
+                      label: "운동사전",
+                    )
+                  ],
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.camera_alt,
-                  ),
-                  label: "기구 스캔",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.comment,
-                  ),
-                  label: "커뮤니티",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.library_books,
-                  ),
-                  label: "운동사전",
-                )
               ],
             )),
       ),

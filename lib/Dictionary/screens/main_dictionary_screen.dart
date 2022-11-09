@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Dictionary/providers/dictonary_provider.dart';
 import 'package:healthin/Routine/providers/routine_provider.dart';
 import '../../Routine/models/routine_models.dart';
@@ -35,19 +37,28 @@ class _DictionaryState extends ConsumerState<Dictionary> {
   Widget build(BuildContext context) {
     final routineListRead = ref.read(userRoutinePreviewProvider.notifier);
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          children: [
-            SearchBar(), //검색창
-            ChipsWidget(), //칩들
-            DictionaryList(
-                routineList: routineList,
-                addmode: widget.addmode,
-                addRoutineData: addRoutineData,
-                removeRoutineData: removeRoutineData), //리스트
-          ],
-        ),
+      body: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            height: 64,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "운동사전",
+              style: h1Bold_24,
+            ),
+          ),
+          SearchBar(), //검색창
+          SizedBox(
+            height: 8,
+          ),
+          ChipsWidget(), //칩들
+          DictionaryList(
+              routineList: routineList,
+              addmode: widget.addmode,
+              addRoutineData: addRoutineData,
+              removeRoutineData: removeRoutineData), //리스트
+        ],
       ),
       bottomNavigationBar: routineList.isNotEmpty
           ? ElevatedButton(
@@ -89,26 +100,26 @@ class SearchBarState extends ConsumerState<SearchBar> {
   Widget build(BuildContext context) {
     // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-      height: 40,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      height: 44,
+      decoration: BoxDecoration(
+        color: darkGrayColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: TextField(
-        style: TextStyle(fontSize: 15),
+        style: bodyRegular_14,
         focusNode: focusNode,
         autofocus: false,
         keyboardType: TextInputType.text,
         onChanged: (text) =>
             ref.read(searchBynameProvider.notifier).state = text,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          //contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          icon: Icon(Icons.search),
           hintText: "운동을 검색해주세요",
-          border: OutlineInputBorder(
-            borderSide: BorderSide(width: 1, color: Colors.indigo),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 3, color: Colors.indigo),
-            borderRadius: BorderRadius.circular(10),
-          ),
+          border: InputBorder.none,
+          hoverColor: Colors.white,
         ),
       ),
     );
@@ -128,21 +139,25 @@ class ChipsWidgetState extends ConsumerState<ChipsWidget> {
   @override
   Widget build(BuildContext context) {
     // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
-    return SizedBox(
-      height: 50,
+    return Container(
+      height: 32,
+      margin: EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.only(left: 16),
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: healthtype.length,
           itemBuilder: (context, index) {
             return Container(
-              padding: const EdgeInsets.fromLTRB(0, 3, 10, 3),
+              padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
+              height: 32,
               child: ChoiceChip(
-                backgroundColor: Colors.indigo[50],
-                label: Container(
-                    alignment: Alignment.center,
-                    width: 40,
-                    height: 30,
-                    child: Text(healthtype[index])),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                backgroundColor: darkGrayColor,
+                labelPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                ),
+                label: Text(healthtype[index]),
                 selected: isSelected[index],
                 onSelected: (bool value) {
                   setState(() {
@@ -158,8 +173,9 @@ class ChipsWidgetState extends ConsumerState<ChipsWidget> {
                   });
                 },
                 labelStyle: TextStyle(
-                    color: isSelected[index] ? Colors.white : Colors.indigo),
-                selectedColor: Colors.indigo,
+                    color: isSelected[index] ? lightGrayColor : whiteColor),
+                selectedColor: primaryColor,
+                elevation: 0,
               ),
             );
           }),
@@ -191,6 +207,7 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
     final filteredDatasWatch = ref.watch(filteredDictionaryDatas);
     return Expanded(
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
         child: filteredDatasWatch == null || filteredDatasWatch.isEmpty
             ? Text("로딩중")
             : ListView.separated(
@@ -225,13 +242,16 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                               }
                             })
                         : null,
-                    title: Text(filteredDatasWatch[index].title.toString()),
+                    title: Text(
+                      filteredDatasWatch[index].title.toString(),
+                      style: bodyRegular_16,
+                    ),
                   );
                 },
                 itemCount: filteredDatasWatch.length,
                 separatorBuilder: (BuildContext context, int index) => Divider(
                   height: 10,
-                  color: Colors.indigo,
+                  color: mediumGrayColor,
                 ),
               ),
       ),

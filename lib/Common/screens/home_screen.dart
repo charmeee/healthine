@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/buttonStyle.dart';
 import 'package:healthin/Diet/widgets/diet_main_card.dart';
 import 'package:healthin/Record/screens/whileExercise.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/Diet/screens/diet.dart';
 import 'package:healthin/znotUseFiles/report_screen.dart';
 import 'package:healthin/Routine/screens/routineList_screen.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../Diet/models/diet_model.dart';
+import '../../Diet/providers/diet_provider.dart';
+import '../../Record/models/exerciserecord_model.dart';
 import '../../Record/providers/exercisedata_provider.dart';
 import '../../Routine/models/routine_models.dart';
 import '../../Routine/providers/routine_provider.dart';
@@ -23,6 +28,7 @@ import '../styles/textStyle.dart';
 
 const double profileImageSize = 44;
 const double primaryButtonHeight = 56;
+
 List<Map> manuButton = [
   {
     "icon": Icons.qr_code,
@@ -86,12 +92,18 @@ class HomeScreen extends ConsumerWidget {
     UserInfo user = ref.watch(userProfileNotifierProvider);
     final todayRoutine = ref.watch(todayRoutineProvider);
     final todayRecord = ref.watch(todayRecordProvider);
+    int todayTotalExerciseTime = 0;
+    for (Record record in todayRecord) {
+      todayTotalExerciseTime += record.playMinute;
+    }
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
                   height: 12,
@@ -184,52 +196,104 @@ class HomeScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Column(
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  "일일 활동",
+                  style: h3Bold_18,
+                ),
+                SizedBox(
+                  height: 14,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      height: 10,
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.36,
+                      width: MediaQuery.of(context).size.width * 0.43,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
+                      ),
+                      decoration: filledContainer,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 36,
+                            width: 36,
+                            margin: EdgeInsets.only(bottom: 16),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
+                            child: SvgPicture.asset(
+                              'assets/icons/exercise.svg',
+                              color: primaryColor,
+                            ),
+                          ),
+                          Text(
+                            (todayTotalExerciseTime / 60).toInt().toString() +
+                                "h " +
+                                (todayTotalExerciseTime % 60).toString() +
+                                "min",
+                            style: bodyBold_16,
+                          ),
+                          Text(
+                            "운동시간",
+                            style: bodyRegular_14,
+                          )
+                        ],
+                      ),
                     ),
                     Container(
-                      height: 70,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                      height: MediaQuery.of(context).size.width * 0.36,
+                      width: MediaQuery.of(context).size.width * 0.43,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 18,
                       ),
-                      width: MediaQuery.of(context).size.width,
-                      child: Image.asset(
-                        './assets/banner_img/img2.png',
-                        fit: BoxFit.cover,
+                      decoration: filledContainer,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 36,
+                            width: 36,
+                            margin: EdgeInsets.only(bottom: 16),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
+                            child: SvgPicture.asset(
+                              'assets/icons/exercise.svg',
+                              color: primaryColor,
+                            ),
+                          ),
+                          Text(
+                            (todayRecord.length).toString() + "개",
+                            style: bodyBold_16,
+                          ),
+                          Text(
+                            "운동개수",
+                            style: bodyRegular_14,
+                          )
+                        ],
                       ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        "오늘의 음식",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                      child: DietCard(),
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 36,
+                ),
+                //식단부분 위젯 분리시켜야함
+                DietCard(),
                 Container(
-                  height: 50,
-                  padding: EdgeInsets.all(4),
+                  height: primaryButtonHeight,
+                  margin: EdgeInsets.symmetric(vertical: 24),
                   child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.black54),
+                      style: primaryButton,
                       child: const Text(
                         "리포트 보기",
                         style: TextStyle(color: Colors.white),

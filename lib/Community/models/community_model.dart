@@ -1,3 +1,8 @@
+class Reply {
+  String? id;
+  String? username;
+}
+
 //게시글 목록 분류
 class CommunityBoardsType {
   String id;
@@ -99,6 +104,7 @@ class CommunityBoard {
   String title;
   int likesCount;
   int views;
+  bool? hasImages;
   int? commentsCount;
   String? content;
   DateTime? createdAt;
@@ -109,6 +115,7 @@ class CommunityBoard {
       required this.title,
       this.commentsCount,
       this.content,
+      this.hasImages,
       required this.likesCount,
       required this.views,
       this.createdAt,
@@ -121,6 +128,7 @@ class CommunityBoard {
         content = json['content'] ?? "",
         likesCount = json['likesCount'] ?? 0,
         views = json['views'] ?? 0,
+        hasImages = json['hasImages'] ?? false,
         createdAt = json['createdAt'] != null
             ? DateTime.parse(json['createdAt'])
             : null,

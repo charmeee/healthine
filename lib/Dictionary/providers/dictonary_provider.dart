@@ -9,21 +9,21 @@ final searchBynameProvider = StateProvider<String?>((ref) => null);
 final searchBytypeProvider = StateProvider<String?>((ref) => null);
 
 final filteredDictionaryDatas = Provider<List<ManualData>>((ref) {
-  final String? filtername = ref.watch(searchBynameProvider); //string으로 들어감.
-  final String? filtertype = ref.watch(searchBytypeProvider); //string으로 들어갈것.
+  final String? filterName = ref.watch(searchBynameProvider); //string으로 들어감.
+  final String? filterType = ref.watch(searchBytypeProvider); //string으로 들어갈것.
   final List<ManualData> dictionarys =
       ref.watch(DictionaryNotifierProvider); //전체 데이타
   Set<ManualData> filteredDictionarys = {};
-  if (filtername == null && filtertype == null) {
+  if (filterName == null && filterType == null) {
     return dictionarys;
   } else {
-    if (filtername != null) {
+    if (filterName != null) {
       filteredDictionarys.addAll(dictionarys.where((data) =>
-          data.title.toLowerCase().contains(filtername.toLowerCase())));
+          data.title.toLowerCase().contains(filterName.toLowerCase())));
     }
-    if (filtertype != null) {
+    if (filterType != null) {
       filteredDictionarys
-          .addAll(dictionarys.where((element) => element.type == filtertype));
+          .addAll(dictionarys.where((element) => element.type == filterType));
     }
     return filteredDictionarys.toList();
   }
