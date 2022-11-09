@@ -52,5 +52,5 @@ app.*.map.json
 
 
 # 키들
-/lib/Common/Secret
+/lib/Common/Secret/
 /secrets
