@@ -10,11 +10,13 @@ class MainCommunityListTile extends StatelessWidget {
   final CommunityBoard board;
   final String boardId;
   final GlobalKey<RefreshIndicatorState> refreshKey;
+  final String boardTitle;
   const MainCommunityListTile(
       {Key? key,
       required this.board,
       required this.boardId,
-      required this.refreshKey})
+      required this.refreshKey,
+      required this.boardTitle})
       : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class MainCommunityListTile extends StatelessWidget {
                   builder: (context) => CommunityDetail(
                         boardId: boardId,
                         postId: board.id,
-                        boardTitle: board.title,
+                        boardTitle: boardTitle,
                       ))).then((value) => refreshKey.currentState?.show());
         },
         child: Padding(

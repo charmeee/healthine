@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:healthin/Community/services/community_api.dart';
+import 'package:image_picker/image_picker.dart';
 
 //import 'package:healthin/Model/routine_models.dart';
 
@@ -24,6 +30,25 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
   String title = "";
   String content = "";
   late String thisBoardId;
+  String? photoId;
+  File? _image;
+  final picker = ImagePicker();
+  var imagePath = '';
+  XFile? image;
+  // 비동기 처리를 통해 카메라와 갤러리에서 이미지를 가져온다.
+  Future getImage(ImageSource imageSource) async {
+    image = await picker.pickImage(
+        source: imageSource, maxHeight: 500, maxWidth: 500, imageQuality: 50);
+    if (image != null) {
+      String data = await postCommunityImage(thisBoardId, image!);
+      setState(() {
+        //imagePath = image!.path;
+        photoId = data;
+        _image = File(image!.path); // 가져온 이미지를 _image에 저장
+      });
+    }
+    //사진보내는 api.
+  }
 
   @override
   void initState() {
@@ -42,17 +67,20 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
 
   @override
   Widget build(BuildContext context) {
-    // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
+    // 화면 세로 고정
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.indigo,
+          backgroundColor: backgroundColor,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
+          title: Text("글 작성하기", style: h3Bold_18),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -60,17 +88,22 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
+                    List<String> images = [];
+                    if (photoId != null) {
+                      images.add(photoId!);
+                    }
                     if (widget.initBoard == null) {
-                      await postCommunityBoardData(thisBoardId, title, content);
+                      await postCommunityBoardData(
+                          thisBoardId, title, content, images);
                     } else {
-                      await patchCommunityBoardData(
-                          widget.boardId!, widget.postId!, title, content);
+                      await patchCommunityBoardData(widget.boardId!,
+                          widget.postId!, title, content, images);
                     }
                     Navigator.of(context).pop();
                   }
                 },
                 child: Text(
-                  '저장',
+                  '등록',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -102,6 +135,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                       },
                     ),
                   TextFormField(
+                    style: bodyRegular_16,
                     onSaved: (value) {
                       title = value.toString();
                     },
@@ -117,6 +151,38 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                       focusedBorder: InputBorder.none,
                       focusColor: Colors.grey,
                       hintText: '제목을 입력해주세요',
+                      hintStyle:
+                          bodyRegular_16.copyWith(color: mediumGrayColor),
+                    ),
+                  ),
+                  Divider(
+                    height: 10,
+                    color: Colors.indigo,
+                  ),
+                  SizedBox(
+                    height: 40,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: mediumGrayColor,
+                          ),
+                          onPressed: () {
+                            getImage(ImageSource.camera);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.image,
+                            color: mediumGrayColor,
+                          ),
+                          onPressed: () {
+                            getImage(ImageSource.camera);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                   Divider(
@@ -124,6 +190,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                     color: Colors.indigo,
                   ),
                   TextFormField(
+                    style: bodyRegular_16,
                     onSaved: (value) {
                       content = value.toString();
                     },
@@ -136,11 +203,15 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                     initialValue: widget.initBoard?.content,
                     maxLines: null,
                     decoration: InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        focusColor: Colors.grey,
-                        hintText: '내용을 입력해주세요'),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      focusColor: Colors.grey,
+                      hintText: '내용을 입력해주세요',
+                      hintStyle:
+                          bodyRegular_16.copyWith(color: mediumGrayColor),
+                    ),
                   ),
+                  if (_image != null) Image.file(_image!),
                 ],
               ),
             ),

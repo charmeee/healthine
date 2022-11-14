@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:healthin/User/models/user_model.dart';
@@ -33,6 +34,7 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
   String? replyId;
   String? replyName;
   final _controller = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -91,9 +93,9 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.indigo,
+            backgroundColor: backgroundColor,
             title: Text('${widget.boardTitle} 게시판'),
-            centerTitle: true,
+            centerTitle: false,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
@@ -115,13 +117,19 @@ class _CommunityDetailState extends ConsumerState<CommunityDetail> {
                                     )));
                       },
                     ),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+                    IconButton(
+                        onPressed: () async {
+                          await deleteCommunityBoardData(
+                              widget.boardId, widget.postId);
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.delete))
                   ]
                 : null,
           ),
           body: Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

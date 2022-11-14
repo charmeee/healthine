@@ -99,6 +99,7 @@ class _CommunityMainBodyLayoutState extends State<CommunityMainBodyLayout> {
                         MainCommunityListTile(
                       board: item,
                       boardId: widget.boardId,
+                      boardTitle: widget.boardTitle,
                       refreshKey: refreshKey,
                     ),
                   ),

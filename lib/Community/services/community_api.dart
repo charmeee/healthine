@@ -1,9 +1,29 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:healthin/Common/dio/dio_main.dart';
 import 'package:healthin/Community/models/community_model.dart';
+import 'package:image_picker/image_picker.dart';
+
+//이미지 post /boards/{boardId}/posts/image-upload
+Future<String> postCommunityImage(
+  String boardId,
+  XFile image,
+) async {
+  try {
+    var formData =
+        FormData.fromMap({'file': await MultipartFile.fromFile(image.path)});
+
+    var response = await dio.post("/boards/$boardId/posts/image-upload",
+        data: formData, options: Options(headers: {"Authorization": "true"}));
+    return response.data;
+  } on DioError catch (e) {
+    log(e.toString());
+    throw e;
+  }
+}
 
 //게시글 정보 조회
 Future<CommunityBoard> getCommunityBoardData(
@@ -23,10 +43,10 @@ Future<CommunityBoard> getCommunityBoardData(
 }
 
 //게시글 patch
-Future<void> patchCommunityBoardData(
-    String boardId, String postId, String title, String content) async {
+Future<void> patchCommunityBoardData(String boardId, String postId,
+    String title, String content, List<String> images) async {
   final response = await dio.patch("/boards/${boardId}/posts/${postId}",
-      data: {"title": title, "content": content},
+      data: {"title": title, "content": content, "photoId": images},
       options: Options(headers: {"Authorization": "true"}));
   log("게시글 정보 수정 완료");
   log(response.data.toString());
@@ -62,11 +82,11 @@ Future<void> postReplyComment(
 
 ///boards/{boardId}/posts
 Future<bool> postCommunityBoardData(
-    String boardId, String title, String content) async {
+    String boardId, String title, String content, List<String> images) async {
   try {
     final response = await dio.post("/boards/${boardId}/posts",
         options: Options(headers: {"Authorization": "true"}),
-        data: {"title": title, "content": content});
+        data: {"title": title, "content": content, "images": images});
     if (response.statusCode == 200 || response.statusCode == 201) {
       log("게시글 post 완료");
       log(response.data.toString());

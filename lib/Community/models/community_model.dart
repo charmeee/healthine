@@ -104,6 +104,7 @@ class CommunityBoard {
   String title;
   int likesCount;
   int views;
+  List<String>? images;
   bool? hasImages;
   int? commentsCount;
   String? content;
@@ -116,6 +117,7 @@ class CommunityBoard {
       this.commentsCount,
       this.content,
       this.hasImages,
+      this.images,
       required this.likesCount,
       required this.views,
       this.createdAt,
@@ -128,6 +130,11 @@ class CommunityBoard {
         content = json['content'] ?? "",
         likesCount = json['likesCount'] ?? 0,
         views = json['views'] ?? 0,
+        images = json['images'] == null
+            ? null
+            : (json['images'] as List<dynamic>)
+                .map((e) => e.toString())
+                .toList(),
         hasImages = json['hasImages'] ?? false,
         createdAt = json['createdAt'] != null
             ? DateTime.parse(json['createdAt'])
