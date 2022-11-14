@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/User/providers/user_provider.dart';
@@ -59,8 +60,14 @@ class _UserSettingState extends ConsumerState<UserSetting> {
           Column(
             children: [
               ListTile(
-                leading: Text("닉네임"),
-                title: Text(_userinfo.nickname.toString()),
+                leading: Text(
+                  "닉네임",
+                  style: bodyRegular_16,
+                ),
+                title: Text(
+                  _userinfo.nickname.toString(),
+                  style: bodyRegular_16,
+                ),
                 trailing: IconButton(
                     onPressed: () {
                       showDialog(

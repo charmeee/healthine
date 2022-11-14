@@ -87,8 +87,11 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
 
   Future<void> sendRecord() async {
     //기록을 보내는 함수
-    if (0 <= nowRecord.targetNumber &&
+    if (0 < nowRecord.targetNumber &&
         nowRecord.targetNumber < widget.routineManuals[nowOrder].targetNumber) {
+      return;
+    }
+    if (0 == nowRecord.targetNumber && nowRecord.setNumber == 0) {
       return;
     }
     setState(() {
