@@ -35,6 +35,7 @@ Future<ReferenceRoutine> getReferenceRoutine(String referenceId) async {
     return ReferenceRoutine.fromJson(response.data);
   } catch (e) {
     log("참조루틴 조회 오류");
+    log("error: $e");
     throw Exception(e);
   }
 }

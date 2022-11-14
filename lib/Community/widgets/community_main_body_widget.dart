@@ -1,11 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthin/Community/providers/community_provider.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/boxStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:healthin/Community/services/community_api.dart';
 import 'package:intl/intl.dart';
+import '../../Common/styles/textStyle.dart';
 import '../screens/community_detail_screen.dart';
 import 'comunity_listTile_widget.dart';
 
@@ -65,17 +66,49 @@ class _CommunityMainBodyLayoutState extends State<CommunityMainBodyLayout> {
       onRefresh: () => Future.sync(
         () => _pagingController.refresh(),
       ),
-      child: PagedListView<int, CommunityBoard>.separated(
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<CommunityBoard>(
-            itemBuilder: (context, item, index) => MainCommunityListTile(
-              board: item,
-              boardId: widget.boardId,
-              refreshKey: refreshKey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: [
+            Padding(
+                padding: EdgeInsets.symmetric(vertical: 18),
+                child: IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                          decoration: borderContainer.copyWith(
+                              border: Border.all(color: bulletRedColor),
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Text("공지", style: captionRegular_10)),
+                      SizedBox(width: 8),
+                      Text(
+                        "공지사항입니다. 읽어주시기 바랍니다.",
+                        style: bodyRegular_14,
+                      )
+                    ],
+                  ),
+                )),
+            const Divider(height: 1, color: mediumGrayColor),
+            Expanded(
+              child: PagedListView<int, CommunityBoard>.separated(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<CommunityBoard>(
+                    itemBuilder: (context, item, index) =>
+                        MainCommunityListTile(
+                      board: item,
+                      boardId: widget.boardId,
+                      boardTitle: widget.boardTitle,
+                      refreshKey: refreshKey,
+                    ),
+                  ),
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 1, color: mediumGrayColor)),
             ),
-          ),
-          separatorBuilder: (context, index) =>
-              const Divider(height: 10, color: Colors.indigo)),
+          ],
+        ),
+      ),
     );
   }
 }

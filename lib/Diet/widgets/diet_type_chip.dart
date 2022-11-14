@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:healthin/Diet/models/diet_model.dart';
 
+import '../../Common/Const/const.dart';
+import '../../Common/styles/textStyle.dart';
+
 class DietTypeChips extends StatefulWidget {
   const DietTypeChips({Key? key}) : super(key: key);
 
@@ -29,26 +32,35 @@ class _DietTypeChipsState extends State<DietTypeChips> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         for (var i = 0; i < DietType.values.length; i++)
-          ChoiceChip(
-            backgroundColor: Colors.indigo[50],
-            labelStyle:
-                TextStyle(color: isSelected[i] ? Colors.white : Colors.indigo),
-            selectedColor: Colors.indigo,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-            label: Text(DietType.values[i].korName),
-            selected: isSelected[i],
-            onSelected: (bool selected) {
-              if (selected) {
-                setState(() {
-                  isSelected = List<bool>.filled(DietType.values.length, false);
-                  isSelected[i] = selected;
-                });
-              }
-            },
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: ChoiceChip(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              backgroundColor: Colors.black54,
+              selectedColor: primaryColor,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              label: Text(
+                DietType.values[i].korName,
+                style: bodyRegular_16.copyWith(
+                  color: isSelected[i] ? whiteColor : backgroundColor,
+                ),
+              ),
+              selected: isSelected[i],
+              onSelected: (bool selected) {
+                if (selected) {
+                  setState(() {
+                    isSelected =
+                        List<bool>.filled(DietType.values.length, false);
+                    isSelected[i] = selected;
+                  });
+                }
+              },
+            ),
           ),
       ],
     );

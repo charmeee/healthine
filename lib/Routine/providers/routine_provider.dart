@@ -4,17 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/Routine/services/myRoutine_api.dart';
 
-import '../test.dart';
-
-/*
-* 1. myroutinelist를 조회] => List<String?> 요일별 루틴 id값을 저장함
-* 2. 만약 이미 그요일에 루틴이있으면
-*
-*
-*
-*
-* */
-
 class MyRoutinePreviewNotifier extends StateNotifier<List<MyRoutine>> {
   MyRoutinePreviewNotifier() : super([]) {
     log("내 루틴데이터 가져오기 실행");

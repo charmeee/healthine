@@ -17,7 +17,7 @@ enum ExerciseType {
   chest,
   shoulder,
   arm,
-  leg,
+  legs,
   abs,
   cardio,
   etc;
@@ -32,8 +32,8 @@ enum ExerciseType {
         return ExerciseType.shoulder;
       case 'arm':
         return ExerciseType.arm;
-      case 'leg':
-        return ExerciseType.leg;
+      case 'legs':
+        return ExerciseType.legs;
       case 'abs':
         return ExerciseType.abs;
       case 'cardio':
@@ -42,16 +42,57 @@ enum ExerciseType {
         return ExerciseType.etc;
     }
   }
+  factory ExerciseType.fromKorName(String name) {
+    switch (name) {
+      case 'back':
+        return ExerciseType.back;
+      case 'chest':
+        return ExerciseType.chest;
+      case 'shoulder':
+        return ExerciseType.shoulder;
+      case 'arm':
+        return ExerciseType.arm;
+      case 'leg':
+        return ExerciseType.legs;
+      case 'abs':
+        return ExerciseType.abs;
+      case 'cardio':
+        return ExerciseType.cardio;
+      default:
+        return ExerciseType.etc;
+    }
+  }
+
+  toKorName() {
+    switch (this) {
+      case ExerciseType.back:
+        return '등';
+      case ExerciseType.chest:
+        return '가슴';
+      case ExerciseType.shoulder:
+        return '어깨';
+      case ExerciseType.arm:
+        return '팔';
+      case ExerciseType.legs:
+        return '다리';
+      case ExerciseType.abs:
+        return '복부';
+      case ExerciseType.cardio:
+        return '유산소';
+      default:
+        return '기타';
+    }
+  }
 }
 
-enum routineStatus {
+enum RoutineStatus {
   before,
   doing,
   done;
 
-  factory routineStatus.getByString(String str) {
-    return routineStatus.values
-        .firstWhere((value) => value == str, orElse: () => routineStatus.doing);
+  factory RoutineStatus.getByString(String str) {
+    return RoutineStatus.values
+        .firstWhere((value) => value == str, orElse: () => RoutineStatus.doing);
   }
 }
 
@@ -98,10 +139,11 @@ class MyRoutine {
           .toList(),
     );
   }
-  factory MyRoutine.fromReferenceRoutine(ReferenceRoutine referencerRoutine) {
+  factory MyRoutine.fromReferenceRoutine(
+      ReferenceRoutine referencerRoutine, String? title) {
     return MyRoutine(
       id: "",
-      title: referencerRoutine.title,
+      title: title ?? referencerRoutine.title,
       days: [0, 0, 0, 0, 0, 0, 0],
       types: referencerRoutine.types,
       routineManuals: referencerRoutine.routineManuals,
@@ -192,13 +234,13 @@ class ReferenceRoutine {
 
   factory ReferenceRoutine.fromJson(Map<String, dynamic> json) {
     return ReferenceRoutine(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      author: json['author'],
+      id: json['id'] ?? "",
+      title: json['title'] ?? "",
+      description: json['description'] ?? "",
+      author: json['author'] ?? "",
       likesCount: json['likesCount'] ?? 0,
       types: json['types'].map<String>((e) => e.toString()).toList() ?? [],
-      routineManuals: (json['routineManuals'] as List<dynamic>)
+      routineManuals: ((json['routineManuals'] ?? []) as List<dynamic>)
           .map((e) => RoutineManual.fromJson(e))
           .toList(),
     );

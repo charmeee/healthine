@@ -22,6 +22,6 @@ class ManualData {
         enTitle = json['enTitle'],
         type = json['type'],
         // difficulty = json['difficulty'],
-        description = json['description'].split('\n');
+        description = (json['description'] ?? "").split('\n');
   //precautions = json['precautions'];
 }

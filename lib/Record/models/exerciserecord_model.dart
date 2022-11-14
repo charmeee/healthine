@@ -88,10 +88,25 @@ class Record {
   // "speed": 0,
   // "playMinute": 0
 
-  toJson() {
+  toPostJson() {
     return {
       "routineId": routineId,
       "manualId": manualId,
+      //startedAt: "2022-10-29T11:09:27.922Z",
+      "startedAt": DateFormat("yyyy-MM-dd HH:mm:ss").format(startedAt),
+      "endedAt": DateFormat("yyyy-MM-dd HH:mm:ss").format(endedAt),
+      "targetNumber": targetNumber,
+      "setNumber": setNumber,
+      "weight": weight,
+      "speed": speed,
+      "playMinute": playMinute,
+    };
+  }
+
+  toPatchJson() {
+    return {
+      // "routineId": routineId,
+      // "manualId": manualId,
       //startedAt: "2022-10-29T11:09:27.922Z",
       "startedAt": DateFormat("yyyy-MM-dd HH:mm:ss").format(startedAt),
       "endedAt": DateFormat("yyyy-MM-dd HH:mm:ss").format(endedAt),

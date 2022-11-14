@@ -13,7 +13,7 @@ class DictionaryDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: primaryColor,
+        backgroundColor: fColor,
         title: Text(founddata.title.toString()),
       ),
       body: Container(

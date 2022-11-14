@@ -2,11 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/boxStyle.dart';
 import 'package:healthin/Record/models/exerciserecord_model.dart';
 import 'package:healthin/Record/providers/exercisedata_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../Common/styles/textStyle.dart';
 import '../../Diet/models/diet_model.dart';
 import '../../Diet/providers/diet_provider.dart';
 import '../../Diet/services/diet_api.dart';
@@ -26,6 +30,8 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
   DateTime focusedDay = DateTime.now();
   List<Record>? exerciseRecords;
   DayDietStatistics? dietRecords;
+  PageController? pageController;
+  bool floatingToggle = false;
   bool isToday() {
     return selectedDay.year == DateTime.now().year &&
         selectedDay.month == DateTime.now().month &&
@@ -47,65 +53,162 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
     final todayRecord = ref.watch(todayRecordProvider);
     final todayDiet = ref.watch(todayDietProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('운동달력'),
-        backgroundColor: Color(0xffFF24292f),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (floatingToggle)
+            Container(
+              width: 100,
+              decoration: filledContainer.copyWith(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text("💪 운동"),
+                    style: ElevatedButton.styleFrom(
+                        primary: secondaryColor, elevation: 0),
+                  ),
+                  Divider(
+                    color: mediumGrayColor,
+                    height: 1,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text("💪 식단"),
+                    style: ElevatedButton.styleFrom(
+                        primary: secondaryColor, elevation: 0),
+                  )
+                ],
+              ),
+            ),
+          if (floatingToggle)
+            SizedBox(
+              height: 16,
+            ),
+          FloatingActionButton(
+            backgroundColor: floatingToggle ? secondaryColor : primaryColor,
+            onPressed: () {
+              setState(() {
+                floatingToggle = !floatingToggle;
+              });
+            },
+            child: floatingToggle
+                ? SvgPicture.asset(
+                    'assets/icons/close.svg',
+                    width: 20,
+                    height: 20,
+                  )
+                : Icon(Icons.add),
+          )
+        ],
       ),
       body: Column(
         children: [
-          TableCalendar(
-            locale: 'ko_KR',
-            focusedDay: focusedDay,
-            firstDay: DateTime(2020),
-            lastDay: DateTime(2100),
-            headerStyle: HeaderStyle(
-              titleCentered: true,
-              formatButtonVisible: false,
-              titleTextStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-              ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            height: 64,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "운동사전",
+                  style: h1Bold_24,
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        pageController?.previousPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeOut);
+                      },
+                      //svg icon
+                      icon: SvgPicture.asset(
+                        'assets/icons/left.svg',
+                        color: Colors.white,
+                        height: 24,
+                        width: 24,
+                      ),
+                    ),
+                    Text(DateFormat("yyyy년 MM월").format(focusedDay).toString()),
+                    IconButton(
+                      onPressed: () {
+                        pageController?.nextPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeOut);
+                      },
+                      icon: SvgPicture.asset(
+                        'assets/icons/right.svg',
+                        color: Colors.white,
+                        height: 24,
+                        width: 24,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            calendarStyle: CalendarStyle(
-              outsideDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              defaultDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              weekendDecoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              todayDecoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              //markersColor: didhealthcolor,
-            ),
-            onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-              setState(() {
-                this.selectedDay = selectedDay;
-                this.focusedDay = selectedDay;
-                if (isToday() == false) {
-                  getLog();
-                }
-              });
-            },
-            selectedDayPredicate: (DateTime date) {
-              return date.year == selectedDay.year &&
-                  date.month == selectedDay.month &&
-                  date.day == selectedDay.day;
-            },
+          ),
+          SizedBox(
+            height: 8,
           ),
           Container(
-            color: Colors.indigo,
+            height: 300,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            margin: EdgeInsets.only(bottom: 12),
+            child: TableCalendar(
+              shouldFillViewport: true,
+              onCalendarCreated: (controller) {
+                pageController = controller;
+              },
+              onPageChanged: (focusedDay) {
+                setState(() {
+                  this.focusedDay = focusedDay;
+                });
+              },
+              locale: 'ko_KR',
+              focusedDay: focusedDay,
+              firstDay: DateTime(2020),
+              lastDay: DateTime(2100),
+              headerVisible: false,
+              daysOfWeekHeight: 40,
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekdayStyle: bodyBold_14,
+                weekendStyle: bodyBold_14,
+              ),
+              calendarStyle: CalendarStyle(
+                //cellPadding: EdgeInsets.symmetric(vertical: 4),
+                defaultTextStyle: bodyRegular_14,
+                outsideDaysVisible: false,
+              ),
+              onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                setState(() {
+                  this.selectedDay = selectedDay;
+                  this.focusedDay = selectedDay;
+                  if (isToday() == false) {
+                    getLog();
+                  }
+                });
+              },
+              selectedDayPredicate: (DateTime date) {
+                return date.year == selectedDay.year &&
+                    date.month == selectedDay.month &&
+                    date.day == selectedDay.day;
+              },
+            ),
+          ),
+          Container(
+            decoration: filledContainer,
+            height: 96,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -140,82 +243,6 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
   }
 }
 
-//
-// class RecordCalender extends ConsumerWidget {
-//   RecordCalender({Key? key, required this.selectedDay}) : super(key: key);
-//   final DateTime selectedDay;
-//   List<Record>? exerciseRecords;
-//   DayDietStatistics? dietRecords;
-//
-//   bool isToday() {
-//     return selectedDay.year == DateTime.now().year &&
-//         selectedDay.month == DateTime.now().month &&
-//         selectedDay.day == DateTime.now().day;
-//   }
-//
-//   getLog() async {
-//     exerciseRecords = await getRoutineLogByDay(
-//         DateFormat("yyyy-MM-dd").format(selectedDay).toString());
-//     dietRecords = await getDietStatistics(selectedDay);
-//     log("운동기록이 비어있나요?  : " + exerciseRecords!.isEmpty.toString());
-//     log("운동기록이 비어있나요?  : " + exerciseRecords!.isEmpty.toString());
-//     log("식단기록이 비어있나요?  : " + dietRecords!.meals.isEmpty.toString());
-//   }
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     log("빌드여부 : ${selectedDay}");
-//     if (isToday() == false) {
-//       log("오늘아님");
-//       getLog();
-//     }
-//     final todayRecord = ref.watch(todayRecordProvider);
-//     final todayDiet = ref.watch(todayDietProvider);
-//
-//     if (isToday()) {
-//       return todayDiet == null
-//           ? const Center(
-//               child: Text("로딩 중"),
-//             )
-//           : Column(
-//               mainAxisSize: MainAxisSize.min,
-//               children: [
-//                 Text("운동기록"),
-//                 todayRecord.isEmpty
-//                     ? Text("운동기록이 없습니다.")
-//                     : CalendarExerciseEvents(
-//                         todayRecord: todayRecord,
-//                       ),
-//                 Text("식단 기록"),
-//                 todayDiet.meals.isEmpty
-//                     ? Text("식단기록이 없습니다.")
-//                     : CalendarDietEvents(
-//                         todayDiet: isToday() ? todayDiet : dietRecords!),
-//               ],
-//             );
-//     } else {
-//       return exerciseRecords == null
-//           ? const Center(
-//               child: Text("로딩 중"),
-//             )
-//           : Column(
-//               mainAxisSize: MainAxisSize.min,
-//               children: [
-//                 Text("운동기록"),
-//                 exerciseRecords!.isEmpty
-//                     ? Text("운동기록이 없습니다.")
-//                     : CalendarExerciseEvents(
-//                         todayRecord: exerciseRecords!,
-//                       ),
-//                 Text("식단 기록"),
-//                 (dietRecords!.meals.isEmpty)
-//                     ? Text("식단기록이 없습니다.")
-//                     : CalendarDietEvents(todayDiet: dietRecords!),
-//               ],
-//             );
-//     }
-//   }
-// }
 class RecordCalender extends StatelessWidget {
   const RecordCalender({Key? key, this.exerciseRecords, this.dietRecords})
       : super(key: key);
@@ -224,25 +251,44 @@ class RecordCalender extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("빌드여부 : ${exerciseRecords} ${dietRecords}");
-    return exerciseRecords == null || dietRecords == null
-        ? const Center(
-            child: Text("로딩 중"),
-          )
-        : Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("운동기록"),
-              exerciseRecords!.isEmpty
-                  ? Text("운동기록이 없습니다.")
-                  : CalendarExerciseEvents(
-                      todayRecord: exerciseRecords!,
-                    ),
-              Text("식단 기록"),
-              dietRecords!.meals.isEmpty
-                  ? Text("식단기록이 없습니다.")
-                  : CalendarDietEvents(todayDiet: dietRecords!),
-            ],
-          );
+    if (exerciseRecords == null || dietRecords == null) {
+      return Center(
+        child: Text("로딩 중"),
+      );
+    }
+    if (exerciseRecords!.isEmpty && dietRecords!.meals.isEmpty) {
+      return Center(
+        child: Text(
+          "운동과 식단이 없습니다.\n운동과 식단을 추가해주세요.",
+          textAlign: TextAlign.center,
+          style: bodyRegular_16,
+        ),
+      );
+    }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "🍽식단 기록",
+          style: TextStyle(color: Colors.white),
+        ),
+        dietRecords!.meals.isEmpty
+            ? Text(
+                "식단기록이 없습니다.",
+                style: TextStyle(color: Colors.white),
+              )
+            : CalendarDietEvents(todayDiet: dietRecords!),
+        Text("💪운동기록", style: TextStyle(color: Colors.white)),
+        exerciseRecords!.isEmpty
+            ? Text(
+                "운동기록이 없습니다.",
+                style: TextStyle(color: Colors.white),
+              )
+            : CalendarExerciseEvents(
+                todayRecord: exerciseRecords!,
+              ),
+      ],
+    );
   }
 }
 
@@ -286,7 +332,10 @@ class CalendarDietEvents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text("${todayDiet.statistics.calories}kcal"),
+      title: Text(
+        "${todayDiet.statistics.calories}kcal",
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 }
@@ -303,8 +352,14 @@ class CalendarExerciseEvents extends StatelessWidget {
         itemCount: todayRecord.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(todayRecord[index].startedAt.toString()),
-            subtitle: Text(todayRecord[index].playMinute.toString()),
+            title: Text(
+              todayRecord[index].startedAt.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
+            subtitle: Text(
+              todayRecord[index].playMinute.toString() + "분",
+              style: TextStyle(color: Colors.white),
+            ),
           );
         });
   }

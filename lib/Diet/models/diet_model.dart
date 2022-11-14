@@ -114,7 +114,7 @@ class DietDetailResult extends NutritionResult {
       : id = json["id"],
         date = DateTime.parse(json["date"] ?? DateTime.now().toString()),
         type = json["type"],
-        photoId = json["photoId"],
+        photoId = json["photoId"] ?? "",
         super(
           name: json["title"],
           carbohydrate: (json["carbohydrate"] ?? 0).toDouble(),

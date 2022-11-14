@@ -23,7 +23,7 @@ Future<List<Record>> getRoutineLogByDay(String date) async {
 Future<Record> postRoutineLog(Record recode) async {
   final response = await dio.post("/routine-logs",
       options: Options(headers: {"Authorization": "true"}),
-      data: recode.toJson());
+      data: recode.toPostJson());
   log("루틴로그 생성 완료");
   log(response.data.toString());
   try {
@@ -37,16 +37,10 @@ Future<Record> postRoutineLog(Record recode) async {
 //patch routineLog /routine-logs/{routineLogId}
 Future<void> patchRoutineLog(
     //세트수만 수정가능
-    String routineLogId,
-    String routineId,
-    int setData,
-    int playMinute) async {
-  final response = await dio.patch("/routine-logs/$routineLogId",
+    Record record) async {
+  final response = await dio.patch("/routine-logs/${record.id}",
       options: Options(headers: {"Authorization": "true"}),
-      data: {
-        "setNumber": setData,
-        "playMinute": playMinute,
-      });
+      data: record.toPatchJson());
   log("루틴로그 수정 완료");
   log(response.data.toString());
 }

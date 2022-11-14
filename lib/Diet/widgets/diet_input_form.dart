@@ -40,6 +40,7 @@ class _DietTextFormState extends State<DietTextForm> {
       child: Form(
         key: formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
               decoration: const InputDecoration(

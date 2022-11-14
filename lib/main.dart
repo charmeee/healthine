@@ -2,6 +2,9 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'Common/Const/global.dart';
 import 'Common/Database/secureStorage.dart';
 import 'Common/Secret/secret.dart';
 import 'Common/dio/dio_handling.dart';
@@ -41,8 +44,12 @@ void main() async {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorState,
         title: 'bonoteam',
-        theme: ThemeData(),
+        theme: ThemeData(
+            scaffoldBackgroundColor: backgroundColor,
+            textTheme: TextTheme()
+                .apply(bodyColor: Colors.white, displayColor: Colors.white)),
         home: const MyApp(),
       ),
     ),
@@ -60,8 +67,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
-    //status = true;
-    //storage.delete(key: "accessToken");
     initialization();
   }
 
@@ -74,8 +79,14 @@ class _MyAppState extends ConsumerState<MyApp> {
     initializeDateFormatting();
     try {
       await ref.read(userProfileNotifierProvider.notifier).getUserProfile();
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      //   return MyHome();
+      // }));
     } catch (e) {
       print(e);
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      //   return MainSignIn();
+      // }));
     }
     FlutterNativeSplash.remove();
   }
@@ -89,5 +100,17 @@ class _MyAppState extends ConsumerState<MyApp> {
     //MyHome은 로그인되고 메인홈페이지
     //MainSignIn은 로그인 페이지'
     return isLogined ? MyHome() : MainSignIn();
+    // return Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     SvgPicture.asset(
+    //       "assets/icons/logo.svg",
+    //       width: MediaQuery.of(context).size.width * 0.6,
+    //     ),
+    //     CircularProgressIndicator(
+    //       color: Colors.white,
+    //     ),
+    //   ],
+    // );
   }
 }

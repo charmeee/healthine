@@ -1,3 +1,8 @@
+class Reply {
+  String? id;
+  String? username;
+}
+
 //게시글 목록 분류
 class CommunityBoardsType {
   String id;
@@ -12,27 +17,6 @@ class CommunityBoardsType {
         title = json['title'],
         description = json['description'];
 }
-
-//게시글 목록
-// class CommunityBoardsList {
-//   //provider
-//   String boardId;
-//   int nowPage = 1;
-//   int limit = 20;
-//   List<CommunityBoard> boards;
-//   CommunityBoardsList(
-//       {required this.nowPage,
-//       this.limit = 20,
-//       required this.boardId,
-//       required this.boards});
-//   CommunityBoardsList.fromJson(Map<String, dynamic> json)
-//       : nowPage = json['nowPage'],
-//         limit = json['limit'],
-//         boardId = json['boardId'],
-//         boards = (json['boards'] as List<dynamic>)
-//             .map((e) => CommunityBoard.fromJson(e))
-//             .toList();
-// }
 
 //특정 게시물 데이터
 class CommunityBoardData {
@@ -61,29 +45,51 @@ class CommunityBoardData {
 // "updatedAt": "2022-11-02T08:24:13.032Z"
 // }
 
+// [{
+// "id": "96172339-a210-47c3-898e-c3aeff84b2fc",
+// "content": "ㅇㅇㅇㅇ",
+// "createdAt": "2022-10-04T08:08:18.448Z",
+// "updatedAt": "2022-10-04T08:08:18.448Z",
+// "author": "만두",
+// "childComments": [
+// {
+// "id": "1e3cc59c-9763-44d4-b3ee-f3cab6d8d2e1",
+// "content": "방가염",
+// "createdAt": "2022-11-02T12:04:23.441Z",
+// "updatedAt": "2022-11-02T12:04:23.441Z",
+// "author": "만두",
+// "childComments": null,
+// "postId": "ca8fa5e3-d19d-4f09-b257-6f9f55bac23b"
+// }
+// ],
+// "postId": "ca8fa5e3-d19d-4f09-b257-6f9f55bac23b"
+// }],
 //게시물 코멘트
 class CommunityBoardComment {
   //boards/{boardId}/posts/{postId}/comments
   String id;
   String content;
   String author;
-  String? replyId;
   DateTime createdAt;
   DateTime? updatedAt;
-  CommunityBoardComment({
-    required this.id,
-    required this.content,
-    required this.author,
-    required this.createdAt,
-    this.replyId,
-    this.updatedAt,
-  });
+  List<CommunityBoardComment>? childComments;
+  CommunityBoardComment(
+      {required this.id,
+      required this.content,
+      required this.author,
+      required this.createdAt,
+      this.updatedAt,
+      this.childComments});
   CommunityBoardComment.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         content = json['content'],
         author = json['author'],
-        replyId = json['replyId'],
         createdAt = DateTime.parse(json['createdAt']),
+        childComments = json['childComments'] == null
+            ? null
+            : (json['childComments'] as List<dynamic>)
+                .map((e) => CommunityBoardComment.fromJson(e))
+                .toList(),
         updatedAt = json['updatedAt'] != null
             ? DateTime.parse(json['updatedAt'])
             : null;
@@ -98,6 +104,8 @@ class CommunityBoard {
   String title;
   int likesCount;
   int views;
+  List<String>? images;
+  bool? hasImages;
   int? commentsCount;
   String? content;
   DateTime? createdAt;
@@ -108,6 +116,8 @@ class CommunityBoard {
       required this.title,
       this.commentsCount,
       this.content,
+      this.hasImages,
+      this.images,
       required this.likesCount,
       required this.views,
       this.createdAt,
@@ -120,6 +130,12 @@ class CommunityBoard {
         content = json['content'] ?? "",
         likesCount = json['likesCount'] ?? 0,
         views = json['views'] ?? 0,
+        images = json['images'] == null
+            ? null
+            : (json['images'] as List<dynamic>)
+                .map((e) => e.toString())
+                .toList(),
+        hasImages = json['hasImages'] ?? false,
         createdAt = json['createdAt'] != null
             ? DateTime.parse(json['createdAt'])
             : null,

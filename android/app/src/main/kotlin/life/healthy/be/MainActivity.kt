@@ -1,4 +1,4 @@
-package com.example.heathin
+package life.healthy.be
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -24,13 +24,17 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
 
   getUserProfile() async {
     log("******userProfile 받아오기******");
-    UserInfo userInfo = await userProfileRequest();
-    state = userInfo;
-    log(state.id.toString());
-    log(state.username.toString());
-    log(state.nickname.toString());
-    log("*****************************");
-    ref.read(loginStateProvider.notifier).state = true;
+    try {
+      UserInfo userInfo = await userProfileRequest();
+      state = userInfo;
+      log(state.id.toString());
+      log(state.username.toString());
+      log(state.nickname.toString());
+      log("*****************************");
+      ref.read(loginStateProvider.notifier).state = true;
+    } catch (e) {
+      logout();
+    }
   }
 
   Future<LoginState> venderLogin(Vender vender) async {
@@ -51,6 +55,15 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
         log("애플 로그인");
         return LoginState(isLogin: false, isFreshman: false);
     }
+  }
+
+  Future<LoginState> nativeLogin(String username, String password) async {
+    log("nativeLogin");
+    LoginState isLogin = await nativeLoginRequest(username, password);
+    if (isLogin.isLogin) {
+      await getUserProfile();
+    }
+    return isLogin;
   }
 
   Future<bool> updateUserProfile(String nickname) async {

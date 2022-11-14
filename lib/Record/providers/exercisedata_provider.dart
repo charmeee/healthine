@@ -1,5 +1,7 @@
 // import 'dart:developer';
 //
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Record/models/exerciserecord_model.dart';
 import 'package:healthin/Record/services/record_api.dart';
@@ -23,21 +25,16 @@ class RecordNotifier extends StateNotifier<List<Record>> {
       state = recordData;
     }
   }
-  Future<List<Record>> getAnotherRecordDataByDay(selectedDay) async {
-    List<Record> recordData = await getRoutineLogByDay(
-        DateFormat("yyyy-MM-dd").format(selectedDay).toString());
-    return recordData;
-
-  }
 
   addRecordData(Record record) async {
-    await postRoutineLog(record);
-    state = [...state, record];
+    log(record.routineId.toString());
+    log(record.manualId.toString());
+    Record result = await postRoutineLog(record);
+    state = [...state, result];
   }
 
-  editRecordData(Record record, String routineId) async {
-    await patchRoutineLog(
-        record.id, routineId, record.setNumber, record.playMinute);
+  editRecordData(Record record) async {
+    await patchRoutineLog(record);
     state = [...state, record];
   }
 }
