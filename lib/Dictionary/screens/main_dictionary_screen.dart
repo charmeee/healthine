@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Common/Const/const.dart';
@@ -11,15 +12,6 @@ import 'package:uuid/uuid.dart';
 import 'dictionary_detail_screeen.dart';
 
 var uuid = const Uuid();
-final List<String> healthtype = [
-  "가슴",
-  "등",
-  "어깨",
-  "팔",
-  "복근",
-  "하체",
-  "유산소",
-];
 
 //view, add, edit mode 총 3가지.
 
@@ -134,48 +126,50 @@ class ChipsWidget extends ConsumerStatefulWidget {
 }
 
 class ChipsWidgetState extends ConsumerState<ChipsWidget> {
-  var isSelected = List<bool>.filled(healthtype.length, false);
+  var isSelected = List<bool>.filled(ExerciseType.values.length, false);
 
   @override
   Widget build(BuildContext context) {
     // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
     return Container(
-      height: 32,
-      margin: EdgeInsets.symmetric(vertical: 16),
+      height: 36,
+      margin: EdgeInsets.symmetric(vertical: 12),
       padding: EdgeInsets.only(left: 16),
       child: ListView.builder(
+          shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: healthtype.length,
+          itemCount: ExerciseType.values.length,
           itemBuilder: (context, index) {
-            return Container(
+            return Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
-              height: 32,
               child: ChoiceChip(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
-                backgroundColor: darkGrayColor,
+                backgroundColor: Colors.black54,
                 labelPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
+                  horizontal: 8,
                 ),
-                label: Text(healthtype[index]),
+                label: Text(
+                  ExerciseType.values[index].toKorName(),
+                  style: bodyRegular_16.copyWith(
+                      color: isSelected[index] ? whiteColor : backgroundColor),
+                ),
                 selected: isSelected[index],
                 onSelected: (bool value) {
                   setState(() {
-                    isSelected = List<bool>.filled(healthtype.length, false);
+                    isSelected =
+                        List<bool>.filled(ExerciseType.values.length, false);
                     isSelected[index] = value;
                     //value가 참이면 filter 값에 대입해서  chipfilter를 실행시킨다.
                     if (value) {
                       ref.read(searchBytypeProvider.notifier).state =
-                          healthtype[index];
+                          describeEnum(ExerciseType.values[index]);
                     } else {
                       ref.read(searchBytypeProvider.notifier).state = null;
                     }
                   });
                 },
-                labelStyle: TextStyle(
-                    color: isSelected[index] ? lightGrayColor : whiteColor),
                 selectedColor: primaryColor,
-                elevation: 0,
               ),
             );
           }),
@@ -204,56 +198,68 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
   @override
   Widget build(BuildContext context) {
     // "ref"는 build 메소드 안에서 프로바이더를 구독(listen)하기위해 사용할 수 있습니다.
-    final filteredDatasWatch = ref.watch(filteredDictionaryDatas);
+    final filteredDataWatch = ref.watch(filteredDictionaryDatas);
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: filteredDatasWatch == null || filteredDatasWatch.isEmpty
-            ? Text("로딩중")
-            : ListView.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DictionaryDetail(
-                                founddata: filteredDatasWatch[index])),
+        child: filteredDataWatch == null
+            ? Center(
+                child: Text(
+                "로딩중",
+                style: h3Regular_18,
+              ))
+            : filteredDataWatch.isEmpty
+                ? Center(
+                    child: Text(
+                    "해당 운동이 존재하지 않습니다.",
+                    style: h3Regular_18,
+                  ))
+                : ListView.separated(
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DictionaryDetail(
+                                    founddata: filteredDataWatch[index])),
+                          );
+                        },
+                        trailing: widget.addmode
+                            ? Checkbox(
+                                value: widget.routineList.any((item) =>
+                                    item.manualId ==
+                                    filteredDataWatch[index].id),
+                                onChanged: (value) {
+                                  log(widget.routineList.length.toString());
+                                  log("체크박스 value" + value.toString());
+                                  if (value!) {
+                                    RoutineManual routineManual =
+                                        RoutineManual.init();
+                                    routineManual.manualId =
+                                        filteredDataWatch[index].id;
+                                    routineManual.manualTitle =
+                                        filteredDataWatch[index].title;
+                                    widget.addRoutineData(routineManual);
+                                  } else {
+                                    widget.removeRoutineData(
+                                        filteredDataWatch[index].id);
+                                  }
+                                })
+                            : null,
+                        title: Text(
+                          filteredDataWatch[index].title.toString(),
+                          style: bodyRegular_16,
+                        ),
                       );
                     },
-                    trailing: widget.addmode
-                        ? Checkbox(
-                            value: widget.routineList.any((item) =>
-                                item.manualId == filteredDatasWatch[index].id),
-                            onChanged: (value) {
-                              log(widget.routineList.length.toString());
-                              log("체크박스 value" + value.toString());
-                              if (value!) {
-                                RoutineManual routineManual =
-                                    RoutineManual.init();
-                                routineManual.manualId =
-                                    filteredDatasWatch[index].id;
-                                routineManual.manualTitle =
-                                    filteredDatasWatch[index].title;
-                                widget.addRoutineData(routineManual);
-                              } else {
-                                widget.removeRoutineData(
-                                    filteredDatasWatch[index].id);
-                              }
-                            })
-                        : null,
-                    title: Text(
-                      filteredDatasWatch[index].title.toString(),
-                      style: bodyRegular_16,
+                    itemCount: filteredDataWatch.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(
+                      height: 10,
+                      color: mediumGrayColor,
                     ),
-                  );
-                },
-                itemCount: filteredDatasWatch.length,
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  height: 10,
-                  color: mediumGrayColor,
-                ),
-              ),
+                  ),
       ),
     );
   }

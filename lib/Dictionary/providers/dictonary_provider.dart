@@ -8,11 +8,12 @@ import 'package:healthin/Dictionary/services/dictionary_api.dart';
 final searchBynameProvider = StateProvider<String?>((ref) => null);
 final searchBytypeProvider = StateProvider<String?>((ref) => null);
 
-final filteredDictionaryDatas = Provider<List<ManualData>>((ref) {
+final filteredDictionaryDatas = Provider<List<ManualData>?>((ref) {
   final String? filterName = ref.watch(searchBynameProvider); //string으로 들어감.
   final String? filterType = ref.watch(searchBytypeProvider); //string으로 들어갈것.
   final List<ManualData> dictionarys =
-      ref.watch(DictionaryNotifierProvider); //전체 데이타
+      ref.watch(dictionaryNotifierProvider); //전체 데이타
+  if (dictionarys.isEmpty) return null;
   Set<ManualData> filteredDictionarys = {};
   if (filterName == null && filterType == null) {
     return dictionarys;
@@ -65,7 +66,7 @@ class DictionaryNotifier extends StateNotifier<List<ManualData>> {
 //루틴삭제
 //루틴순서변경
 //루틴세부항목 변경
-final DictionaryNotifierProvider =
+final dictionaryNotifierProvider =
     StateNotifierProvider<DictionaryNotifier, List<ManualData>>((ref) {
   log("DictionaryNotifierProvider실행");
   return DictionaryNotifier();

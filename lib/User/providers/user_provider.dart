@@ -24,13 +24,17 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
 
   getUserProfile() async {
     log("******userProfile 받아오기******");
-    UserInfo userInfo = await userProfileRequest();
-    state = userInfo;
-    log(state.id.toString());
-    log(state.username.toString());
-    log(state.nickname.toString());
-    log("*****************************");
-    ref.read(loginStateProvider.notifier).state = true;
+    try {
+      UserInfo userInfo = await userProfileRequest();
+      state = userInfo;
+      log(state.id.toString());
+      log(state.username.toString());
+      log(state.nickname.toString());
+      log("*****************************");
+      ref.read(loginStateProvider.notifier).state = true;
+    } catch (e) {
+      logout();
+    }
   }
 
   Future<LoginState> venderLogin(Vender vender) async {
@@ -83,6 +87,7 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
   logout() async {
     await logoutRequest();
     state = UserInfo.init();
+    ref.read(loginStateProvider.notifier).state = false;
   }
 
   deleteUserProfile() async {
