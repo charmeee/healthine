@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/boxStyle.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/diet_model.dart';
@@ -12,7 +16,6 @@ import 'diet_input_form.dart';
 
 class DietResultWidget extends StatelessWidget {
   final XFile image;
-
   const DietResultWidget({Key? key, required this.image}) : super(key: key);
 
   @override
@@ -21,14 +24,65 @@ class DietResultWidget extends StatelessWidget {
         future: getDietDataByAi(image), //<List<DietResult>>
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: snapshot.data!.results.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == snapshot.data!.results.length) {
-                    //마지막에 식단추가 버튼.
-                    return ElevatedButton(
+            return ResultListView(
+              data: snapshot.data!,
+            );
+          } else {
+            return const Center(
+                child: Text(
+              "식단을 분석 중 입니다.",
+              style: bodyBold_16,
+            ));
+          }
+        });
+  }
+}
+
+class ResultListView extends ConsumerStatefulWidget {
+  final DietAiPhotoAnalysis data;
+  const ResultListView({Key? key, required this.data}) : super(key: key);
+
+  @override
+  ConsumerState createState() => _ResultListViewState();
+}
+
+class _ResultListViewState extends ConsumerState<ResultListView> {
+  int selectedChipIndex = 0;
+  setItem(int index) {
+    setState(() {
+      selectedChipIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: widget.data.results.length + 2,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text('AI 추천 단탄지 정보', style: h3Bold_18),
+            );
+          }
+          if (index == widget.data.results.length + 1) {
+            //마지막에 식단추가 버튼.
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              height: 56,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(color: primaryColor),
+                        ),
+                      ),
                       onPressed: () {
                         showBottomSheet(
                             context: context,
@@ -37,66 +91,116 @@ class DietResultWidget extends StatelessWidget {
                             });
                         //바텀시트열ㅔㅐ
                       },
-                      child: const Text('식단 추가'),
-                    );
-                  }
-                  return DietSelectTile(
-                    item: snapshot.data!.results[index],
-                    photoId: snapshot.data!.photoId,
-                  );
-                });
-          } else {
-            return const Center(child: Text("식단을 분석 중 입니다."));
+                      child: Text(
+                        '직접입력',
+                        style: bodyBold_16.copyWith(color: primaryColor),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (selectedChipIndex != 0) {
+                          await postDiet(DietDetailResult.fromDietResult(
+                              widget.data.results[selectedChipIndex],
+                              describeEnum(DietType.breakfast),
+                              widget.data.photoId));
+                          ref.refresh(todayDietProvider); //getData
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => Diet()),
+                              (route) => route.isFirst);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('식단을 선택해주세요.')));
+                        }
+                      },
+                      child: const Text('식단 추가', style: bodyBold_16),
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
+          return DietSelectTile(
+            item: widget.data.results[index - 1],
+            photoId: widget.data.photoId,
+            setItem: setItem,
+            selectedChipIndex: selectedChipIndex,
+            index: index,
+          );
         });
   }
 }
 
-class DietSelectTile extends ConsumerWidget {
+class DietSelectTile extends StatelessWidget {
   final NutritionResult item;
   final String photoId;
-  const DietSelectTile({Key? key, required this.item, required this.photoId})
+  final Function(int index) setItem;
+  final int selectedChipIndex;
+  final int index;
+  const DietSelectTile(
+      {Key? key,
+      required this.item,
+      required this.photoId,
+      required this.setItem,
+      required this.selectedChipIndex,
+      required this.index})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      tileColor: Colors.white,
-      onTap: () async {
-        //alert창 띄우기
-        await showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('식단 추가'),
-                content: const Text('식단을 추가하시겠습니까?'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('취소')),
-                  TextButton(
-                      onPressed: () async {
-                        //식단 추가 api
-                        await postDiet(DietDetailResult.fromDietResult(
-                            item, describeEnum(DietType.breakfast), photoId));
-                        ref.refresh(todayDietProvider); //getData
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => Diet()),
-                            (route) => route.isFirst);
-                      },
-                      child: const Text('확인')),
-                ],
-              );
-            });
-        //post요청을날리고 식단 페이지로 navigate 함
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if (selectedChipIndex == index) {
+          setItem(0);
+        } else {
+          setItem(index);
+        }
       },
-      title: Text(item.name.toString()),
-      trailing: Text(item.calories.toString()),
-      subtitle:
-          Text('탄: ${item.carbohydrate} 단: ${item.protein} 지: ${item.fat}'),
+      child: Container(
+        decoration: filledContainer.copyWith(
+            border: (selectedChipIndex == index)
+                ? Border.all(color: primaryColor)
+                : null),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${item.name}  ${item.calories.toString()}kcal',
+                style: bodyRegular_16),
+            SizedBox(height: 8),
+            Flexible(
+              fit: FlexFit.loose,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                      '탄수화물: ${(item.carbohydrate! * 1000).toInt().toString()}g',
+                      style: bodyRegular_14),
+                  SizedBox(width: 8),
+                  Text('단백질: ${(item.protein! * 1000).toInt().toString()}g',
+                      style: bodyRegular_14),
+                  SizedBox(width: 8),
+                  Text('지방: ${(item.fat! * 1000).toInt().toString()}g',
+                      style: bodyRegular_14),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
