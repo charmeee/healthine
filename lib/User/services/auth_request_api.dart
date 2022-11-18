@@ -110,6 +110,20 @@ Future<void> logoutRequest() async {
   }
 }
 
+//delete user
+Future<bool> deleteUser(String userId) async {
+  final response = await dio.delete("/users/$userId",
+      options: Options(headers: {"Authorization": "true"}));
+  if (response.statusCode == 200) {
+    log("탈퇴성공{ data:${response.data}, statusCode:${response.statusCode} }");
+    await storage.delete(key: "accessToken");
+    return response.data;
+  } else {
+    log("탈퇴 에러");
+    return false;
+  }
+}
+
 Future<bool> UserUpdateRequest(UserInfo userInfo) async {
   //type, value
   try {

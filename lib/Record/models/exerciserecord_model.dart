@@ -50,7 +50,7 @@ class Record {
       RoutineManual routineManual, String routineTitle, String routineId) {
     return Record(
       id: "",
-      manualId: routineManual.routineManualId,
+      manualId: routineManual.manualId,
       routineId: routineId,
       routineTitle: routineTitle,
       startedAt: DateTime.now(),
@@ -66,7 +66,7 @@ class Record {
     return Record(
       id: json['id'],
       manualId: json['manualId'],
-      routineId: "",
+      routineId: json['routineId'],
       routineTitle: json['routineTitle'],
       startedAt: DateTime.parse(json['startedAt']),
       endedAt: DateTime.parse(json['endedAt']),

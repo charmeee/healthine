@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../Common/styles/textStyle.dart';
+import '../../Dictionary/providers/dictonary_provider.dart';
 import '../../Diet/models/diet_model.dart';
 import '../../Diet/providers/diet_provider.dart';
 import '../../Diet/services/diet_api.dart';
@@ -108,136 +109,134 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            height: 64,
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "운동사전",
-                  style: h1Bold_24,
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        pageController?.previousPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
-                      },
-                      //svg icon
-                      icon: SvgPicture.asset(
-                        'assets/icons/left.svg',
-                        color: Colors.white,
-                        height: 24,
-                        width: 24,
-                      ),
-                    ),
-                    Text(DateFormat("yyyy년 MM월").format(focusedDay).toString()),
-                    IconButton(
-                      onPressed: () {
-                        pageController?.nextPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
-                      },
-                      icon: SvgPicture.asset(
-                        'assets/icons/right.svg',
-                        color: Colors.white,
-                        height: 24,
-                        width: 24,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Container(
-            height: 300,
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            margin: EdgeInsets.only(bottom: 12),
-            child: TableCalendar(
-              shouldFillViewport: true,
-              onCalendarCreated: (controller) {
-                pageController = controller;
-              },
-              onPageChanged: (focusedDay) {
-                setState(() {
-                  this.focusedDay = focusedDay;
-                });
-              },
-              locale: 'ko_KR',
-              focusedDay: focusedDay,
-              firstDay: DateTime(2020),
-              lastDay: DateTime(2100),
-              headerVisible: false,
-              daysOfWeekHeight: 40,
-              daysOfWeekStyle: DaysOfWeekStyle(
-                weekdayStyle: bodyBold_14,
-                weekendStyle: bodyBold_14,
-              ),
-              calendarStyle: CalendarStyle(
-                //cellPadding: EdgeInsets.symmetric(vertical: 4),
-                defaultTextStyle: bodyRegular_14,
-                outsideDaysVisible: false,
-              ),
-              onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
-                setState(() {
-                  this.selectedDay = selectedDay;
-                  this.focusedDay = selectedDay;
-                  if (isToday() == false) {
-                    getLog();
-                  }
-                });
-              },
-              selectedDayPredicate: (DateTime date) {
-                return date.year == selectedDay.year &&
-                    date.month == selectedDay.month &&
-                    date.day == selectedDay.day;
-              },
-            ),
-          ),
-          Container(
-            decoration: filledContainer,
-            height: 96,
-            margin: EdgeInsets.symmetric(horizontal: 16),
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${selectedDay.year}년 ${selectedDay.month}월 ${selectedDay.day}일',
-                    style: TextStyle(color: Colors.white),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              height: 64,
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "운동사전",
+                    style: h1Bold_24,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("하체", style: TextStyle(color: Colors.white)),
-                )
-              ],
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          pageController?.previousPage(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
+                        },
+                        //svg icon
+                        icon: SvgPicture.asset(
+                          'assets/icons/left.svg',
+                          color: Colors.white,
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
+                      Text(
+                        DateFormat("yyyy년 MM월").format(focusedDay).toString(),
+                        style: bodyBold_16,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          pageController?.nextPage(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
+                        },
+                        icon: SvgPicture.asset(
+                          'assets/icons/right.svg',
+                          color: Colors.white,
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: RecordCalender(
+            SizedBox(
+              height: 8,
+            ),
+            Container(
+              height: 300,
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              margin: EdgeInsets.only(bottom: 12),
+              child: TableCalendar(
+                shouldFillViewport: true,
+                onCalendarCreated: (controller) {
+                  pageController = controller;
+                },
+                onPageChanged: (focusedDay) {
+                  setState(() {
+                    this.focusedDay = focusedDay;
+                  });
+                },
+                locale: 'ko_KR',
+                focusedDay: focusedDay,
+                firstDay: DateTime(2020),
+                lastDay: DateTime(2100),
+                headerVisible: false,
+                daysOfWeekHeight: 40,
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: bodyBold_14,
+                  weekendStyle: bodyBold_14,
+                ),
+                calendarStyle: CalendarStyle(
+                  //cellPadding: EdgeInsets.symmetric(vertical: 4),
+                  defaultTextStyle: bodyRegular_14,
+                  outsideDaysVisible: false,
+                ),
+                onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+                  setState(() {
+                    this.selectedDay = selectedDay;
+                    this.focusedDay = selectedDay;
+                    if (isToday() == false) {
+                      getLog();
+                    }
+                  });
+                },
+                selectedDayPredicate: (DateTime date) {
+                  return date.year == selectedDay.year &&
+                      date.month == selectedDay.month &&
+                      date.day == selectedDay.day;
+                },
+              ),
+            ),
+            Container(
+              decoration: filledContainer,
+              height: 96,
+              margin: EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '${selectedDay.year}년 ${selectedDay.month}월 ${selectedDay.day}일',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("하체", style: TextStyle(color: Colors.white)),
+                  )
+                ],
+              ),
+            ),
+            RecordCalender(
               exerciseRecords: isToday() ? todayRecord : exerciseRecords,
               dietRecords: isToday() ? todayDiet : dietRecords,
             ),
-            // child: ListView.builder(
-            //     itemCount: 10,
-            //     itemBuilder: (context, index) {
-            //       return CalendarEvents(selectedDay:selectedDay);
-            //     }),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -265,64 +264,50 @@ class RecordCalender extends StatelessWidget {
         ),
       );
     }
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          "🍽식단 기록",
-          style: TextStyle(color: Colors.white),
-        ),
-        dietRecords!.meals.isEmpty
-            ? Text(
-                "식단기록이 없습니다.",
-                style: TextStyle(color: Colors.white),
-              )
-            : CalendarDietEvents(todayDiet: dietRecords!),
-        Text("💪운동기록", style: TextStyle(color: Colors.white)),
-        exerciseRecords!.isEmpty
-            ? Text(
-                "운동기록이 없습니다.",
-                style: TextStyle(color: Colors.white),
-              )
-            : CalendarExerciseEvents(
-                todayRecord: exerciseRecords!,
-              ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "🍽  식단 기록",
+            style: h3Bold_18,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          dietRecords!.meals.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      "식단기록이 없습니다.",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              : CalendarDietEvents(todayDiet: dietRecords!),
+          Text(
+            "💪  운동기록",
+            style: h3Bold_18,
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          exerciseRecords!.isEmpty
+              ? Text(
+                  "운동기록이 없습니다.",
+                  style: TextStyle(color: Colors.white),
+                )
+              : CalendarExerciseEvents(
+                  todayRecord: exerciseRecords!,
+                ),
+        ],
+      ),
     );
   }
 }
-
-//
-// class RecordCalender extends ConsumerWidget {
-//   final DateTime selectedDay;
-//
-//   const RecordCalender({Key? key, required this.selectedDay}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final todayRecord = ref.watch(todayRecordProvider);
-//     final todayDiet = ref.watch(todayDietProvider);
-//     return Column(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         Text("운동기록"),
-//         selectedDay.year == DateTime.now().year &&
-//                 selectedDay.month == DateTime.now().month &&
-//                 selectedDay.day == DateTime.now().day
-//             ? CalendarExerciseEvents(
-//                 todayRecord: todayRecord,
-//               )
-//             : Text("운동기록이 없습니다."),
-//         Text("식단기록"),
-//         selectedDay.year == DateTime.now().year &&
-//                 selectedDay.month == DateTime.now().month &&
-//                 selectedDay.day == DateTime.now().day
-//             ? CalendarDietEvents(todayDiet: todayDiet)
-//             : Text("식단기록이 없습니다."),
-//       ],
-//     );
-//   }
-// }
 
 class CalendarDietEvents extends StatelessWidget {
   final DayDietStatistics todayDiet;
@@ -340,27 +325,35 @@ class CalendarDietEvents extends StatelessWidget {
   }
 }
 
-class CalendarExerciseEvents extends StatelessWidget {
+class CalendarExerciseEvents extends ConsumerWidget {
   final List<Record> todayRecord;
   const CalendarExerciseEvents({Key? key, required this.todayRecord})
       : super(key: key);
-
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: todayRecord.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              todayRecord[index].startedAt.toString(),
-              style: TextStyle(color: Colors.white),
-            ),
-            subtitle: Text(
-              todayRecord[index].playMinute.toString() + "분",
-              style: TextStyle(color: Colors.white),
-            ),
-          );
-        });
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      decoration: borderContainer,
+      child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: todayRecord.length,
+          itemBuilder: (context, index) {
+            log("달력");
+            log(todayRecord[index].manualId.toString());
+            // String? exName = ref
+            //     .read(dictionaryNotifierProvider.notifier)
+            //     .getDictionaryNameById(todayRecord[index].manualId.toString());
+            return ListTile(
+              title: Text(
+                todayRecord[index].manualId.toString(),
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                todayRecord[index].playMinute.toString() + "분",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }),
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -47,13 +48,17 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   late Record nowRecord; //현재 레코드.
   late int nowOrder = 0; //현재 운동순서.
   int restSecond = 120;
-  late int beforeLength = 0;
+  int beforeLength = 0;
   Timer? _timer;
   int _time = 0; //초단위
-  late int findedindex;
+
+  FlutterTts tts = FlutterTts();
+
   @override
   void initState() {
     super.initState();
+    tts.setLanguage("ko-KR");
+    tts.setSpeechRate(0.5);
     nowRecord = Record.init(
         widget.routineManuals[0], widget.routineTitle, widget.routineId);
     final beforeRecord = ref.read(todayRecordProvider);
@@ -78,11 +83,10 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         nowOrder--;
       }
     }
-    startTimer();
-    timeWatchFlag = true;
     if (widget.routineManuals[nowOrder].isCardio) {
       isCardio = true;
     }
+    startTimer();
   }
 
   Future<void> sendRecord() async {
@@ -110,6 +114,9 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   }
 
   void startTimer() {
+    setState(() {
+      timeWatchFlag = true;
+    });
     _timer = Timer.periodic(duration, (timer) async {
       setState(() {
         _time++;
@@ -121,6 +128,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         if (_time % countSpeed == 0 && timeWatchFlag) {
           setState(() {
             nowRecord.targetNumber++;
+            tts.speak(nowRecord.targetNumber.toString());
           });
           log("개수증가");
         }
@@ -165,10 +173,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           log("스탑워치 멈춤/휴식");
           await Future.delayed(Duration(seconds: restSecond), () {
             log("스탑워치 다시시작!");
-            setState(() {
-              timeWatchFlag = true;
-              startTimer();
-            });
+            startTimer();
           });
         }
       } else {
@@ -201,10 +206,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           }
           await Future.delayed(Duration(seconds: restSecond), () {
             log("스탑워치 다시시작!");
-            setState(() {
-              timeWatchFlag = true;
-              startTimer();
-            });
+            startTimer();
           });
         }
       }
@@ -215,6 +217,8 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   void dispose() {
     // TODO: 시간을 상위 state에 넘겨 줘야함.
     _timer?.cancel();
+    tts.stop();
+
     super.dispose();
   }
 
@@ -224,6 +228,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
       body: WillPopScope(
         onWillPop: () {
           bool flag = false;
+
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
@@ -237,6 +242,9 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                       TextButton(
                           onPressed: () async {
                             await sendRecord();
+                            _timer?.cancel();
+                            tts.stop();
+
                             flag = true;
                             Navigator.popUntil(
                                 context, (route) => route.isFirst);
@@ -287,9 +295,11 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                         children: [
                           IconButton(
                               onPressed: () {
-                                setState(() {
-                                  countSpeed--;
-                                });
+                                if (countSpeed > 1) {
+                                  setState(() {
+                                    countSpeed--;
+                                  });
+                                }
                               },
                               icon: Icon(Icons.exposure_minus_1)),
                           IconButton(
@@ -354,10 +364,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                                 timeWatchFlag = false;
                               });
                             } else {
-                              setState(() {
-                                timeWatchFlag = true;
-                                startTimer();
-                              });
+                              startTimer();
                             }
                           },
                           child: timeWatchFlag

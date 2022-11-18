@@ -92,8 +92,11 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
 
   deleteUserProfile() async {
     log("회원탈퇴");
-    state = UserInfo.init();
-    ref.read(loginStateProvider.notifier).state = false;
+    if (state.id != null) {
+      await deleteUser(state.id!);
+      state = UserInfo.init();
+      ref.read(loginStateProvider.notifier).state = false;
+    }
   }
 }
 
