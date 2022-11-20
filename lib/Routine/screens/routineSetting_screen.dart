@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Routine/providers/routine_provider.dart';
 import 'package:healthin/Dictionary/screens/main_dictionary_screen.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
@@ -282,12 +283,6 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
               height: 10,
             ),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  "요일",
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                )),
-            Container(
               height: 50,
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -311,16 +306,18 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
             ),
             Divider(
               thickness: 1,
+              color: darkGrayColor,
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: Text(
                 "태그 : " + type.join(" "),
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: bodyRegular_14,
               ),
             ),
             Divider(
               thickness: 1,
+              color: darkGrayColor,
             ),
             Expanded(
                 child: myRoutine.routineManuals != null
@@ -338,62 +335,69 @@ class _RoutineSettingState extends ConsumerState<RoutineSetting> {
                       )),
           ],
         ),
-        bottomNavigationBar: ElevatedButton(
-            onPressed: () async {
-              if (myRoutine.routineManuals == null ||
-                  myRoutine.routineManuals!.isEmpty) {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("루틴이 비어있습니다."),
-                        content: Text("루틴을 추가해주세요."),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("확인"))
-                        ],
-                      );
-                    });
-              } else {
-                if (dayRoutine[todayIndex] == myRoutine.id) {
-                  //오늘의 루틴이다.
-                  if (record.isEmpty) {
-                    //오늘의 루틴이지만 기록이 없다.
-                    await sendRoutineManuals();
-                  }
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WhileExercise(
-                              routineManuals: myRoutine.routineManuals!,
-                              routineId: myRoutine.id,
-                              routineTitle: myRoutine.title)),
-                      (route) => route.isFirst);
+        bottomNavigationBar: SizedBox(
+          height: 56,
+          child: ElevatedButton(
+              onPressed: () async {
+                if (myRoutine.routineManuals == null ||
+                    myRoutine.routineManuals!.isEmpty) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("루틴이 비어있습니다."),
+                          content: Text("루틴을 추가해주세요."),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("확인"))
+                          ],
+                        );
+                      });
                 } else {
-                  //오늘의 루틴이 아니다.
-                  if (record.isEmpty) {
-                    //오늘의 루틴이 아니지만 기록이 없다.
-                    if (await editRoutineDay(todayIndex, true)) {
+                  if (dayRoutine[todayIndex] == myRoutine.id) {
+                    //오늘의 루틴이다.
+                    if (record.isEmpty) {
+                      //오늘의 루틴이지만 기록이 없다.
                       await sendRoutineManuals();
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WhileExercise(
-                                  routineManuals: myRoutine.routineManuals!,
-                                  routineId: myRoutine.id,
-                                  routineTitle: myRoutine.title)),
-                          (route) => route.isFirst);
                     }
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WhileExercise(
+                                routineManuals: myRoutine.routineManuals!,
+                                routineId: myRoutine.id,
+                                routineTitle: myRoutine.title)),
+                        (route) => route.isFirst);
                   } else {
-                    showDoingRoutineAlert();
+                    //오늘의 루틴이 아니다.
+                    if (record.isEmpty) {
+                      //오늘의 루틴이 아니지만 기록이 없다.
+                      if (await editRoutineDay(todayIndex, true)) {
+                        await sendRoutineManuals();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WhileExercise(
+                                    routineManuals: myRoutine.routineManuals!,
+                                    routineId: myRoutine.id,
+                                    routineTitle: myRoutine.title)),
+                            (route) => route.isFirst);
+                      }
+                    } else {
+                      showDoingRoutineAlert();
+                    }
                   }
                 }
-              }
-            },
-            child: Text("루틴시작하기")),
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12))),
+              child: Text("루틴시작하기")),
+        ),
       ),
     );
   }

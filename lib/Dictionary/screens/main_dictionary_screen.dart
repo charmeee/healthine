@@ -36,7 +36,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
             height: 64,
             alignment: Alignment.centerLeft,
             child: Text(
-              "운동사전",
+              "운동달력",
               style: h1Bold_24,
             ),
           ),

@@ -69,9 +69,9 @@ class MainSignIn extends ConsumerWidget {
               //   },
               //   label: Text("구글로 로그인", style: TextStyle(color: Colors.white)),
               // ),
-              EmailSignIn(),
+              //EmailSignIn(),
               SizedBox(
-                height: 20,
+                height: 200,
               ),
               TextButton.icon(
                 style: TextButton.styleFrom(

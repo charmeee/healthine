@@ -9,6 +9,7 @@ import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/User/providers/user_provider.dart';
+import 'package:healthin/User/screens/userSetting_edit_screen.dart';
 
 class UserSetting extends ConsumerStatefulWidget {
   const UserSetting({Key? key}) : super(key: key);
@@ -18,8 +19,6 @@ class UserSetting extends ConsumerStatefulWidget {
 }
 
 class _UserSettingState extends ConsumerState<UserSetting> {
-  final formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     UserInfo _userinfo = ref.watch(userProfileNotifierProvider);
@@ -36,7 +35,10 @@ class _UserSettingState extends ConsumerState<UserSetting> {
         backgroundColor: backgroundColor,
         actions: [
           TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => UserEditSetting()));
+              },
               child: Text(
                 "수정",
                 style: bodyBold_16.copyWith(color: primaryColor),
@@ -116,70 +118,6 @@ class _UserSettingState extends ConsumerState<UserSetting> {
                         style: bodyRegular_16,
                       ),
                     ),
-                    // ListTile(
-                    //   leading: Text(
-                    //     "닉네임",
-                    //     style: bodyRegular_16,
-                    //   ),
-                    //   title: Text(
-                    //     _userinfo.nickname.toString(),
-                    //     style: bodyRegular_16,
-                    //   ),
-                    //   trailing: IconButton(
-                    //       onPressed: () {
-                    //         showDialog(
-                    //             context: context,
-                    //             builder: (context) {
-                    //               return Form(
-                    //                 key: formKey,
-                    //                 child: AlertDialog(
-                    //                   title: Text("닉네임 변경"),
-                    //                   content: TextFormField(
-                    //                     onSaved: (value) async {
-                    //                       log(value.toString());
-                    //                       if (await ref
-                    //                           .read(userProfileNotifierProvider
-                    //                               .notifier)
-                    //                           .updateUserProfile(value!)) {
-                    //                         Navigator.of(context).pop();
-                    //                       }
-                    //                     },
-                    //                     decoration: InputDecoration(
-                    //                       hintText: "변경할 닉네임을 입력하세요",
-                    //                     ),
-                    //                     validator: (value) {
-                    //                       if (value == null || value.isEmpty) {
-                    //                         return "닉네임을 입력하세요";
-                    //                       }
-                    //                       if (value.length > 10) {
-                    //                         return "닉네임은 10자 이하로 입력하세요";
-                    //                       }
-                    //                       return null;
-                    //                     },
-                    //                   ),
-                    //                   actions: [
-                    //                     TextButton(
-                    //                         onPressed: () {
-                    //                           Navigator.of(context).pop();
-                    //                         },
-                    //                         child: Text("취소")),
-                    //                     TextButton(
-                    //                         onPressed: () {
-                    //                           if (formKey.currentState!
-                    //                               .validate()) {
-                    //                             log("닉네임 변경");
-                    //                             formKey.currentState!.save();
-                    //                             //Navigator.of(context).pop();
-                    //                           }
-                    //                         },
-                    //                         child: Text("확인")),
-                    //                   ],
-                    //                 ),
-                    //               );
-                    //             });
-                    //       },
-                    //       icon: Icon(Icons.edit)),
-                    // ),
                   ],
                 )
               ],
@@ -209,44 +147,42 @@ class _UserSettingState extends ConsumerState<UserSetting> {
                       border: Border.all(color: primaryColor)),
                   width: double.infinity,
                   height: 64,
-                  child: Expanded(
-                    child: TextButton(
-                      onPressed: () async {
-                        await ref
-                            .read(userProfileNotifierProvider.notifier)
-                            .logout();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      },
-                      child: Text(
-                        "로그아웃",
-                        style: bodyBold_16.copyWith(color: primaryColor),
-                      ),
+                  child: TextButton(
+                    onPressed: () async {
+                      await ref
+                          .read(userProfileNotifierProvider.notifier)
+                          .logout();
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    child: Text(
+                      "로그아웃",
+                      style: bodyBold_16.copyWith(color: primaryColor),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Row(
-                    children: [
-                      Text(
-                        "탈퇴하기",
-                        style: bodyRegular_16.copyWith(color: mediumGrayColor),
-                      ),
-                      IconButton(
-                          onPressed: () async {
-                            await ref
-                                .read(userProfileNotifierProvider.notifier)
-                                .deleteUserProfile();
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          },
-                          icon: SvgPicture.asset(
-                            "assets/icons/right.svg",
-                            color: mediumGrayColor,
-                          ))
-                    ],
-                  ),
-                )
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(vertical: 16),
+                //   child: Row(
+                //     children: [
+                //       Text(
+                //         "탈퇴하기",
+                //         style: bodyRegular_16.copyWith(color: mediumGrayColor),
+                //       ),
+                //       IconButton(
+                //           onPressed: () async {
+                //             await ref
+                //                 .read(userProfileNotifierProvider.notifier)
+                //                 .deleteUserProfile();
+                //             Navigator.popUntil(
+                //                 context, (route) => route.isFirst);
+                //           },
+                //           icon: SvgPicture.asset(
+                //             "assets/icons/right.svg",
+                //             color: mediumGrayColor,
+                //           ))
+                //     ],
+                //   ),
+                // )
               ],
             )
           ],

@@ -50,7 +50,7 @@ class Record {
       RoutineManual routineManual, String routineTitle, String routineId) {
     return Record(
       id: "",
-      manualId: routineManual.manualId,
+      manualId: routineManual.routineManualId,
       routineId: routineId,
       routineTitle: routineTitle,
       startedAt: DateTime.now(),

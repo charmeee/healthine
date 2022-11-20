@@ -1,3 +1,5 @@
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Community/models/community_model.dart';
 import 'package:healthin/Routine/screens/referenceRoutineDetail.dart';
@@ -16,25 +18,45 @@ class ReferenceRoutineListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        reference.title,
-        style: h3Bold_18,
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 24),
+        tileColor: secondaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          reference.title,
+          style: h3Bold_18,
+        ),
+        subtitle: Text(
+          reference.description,
+          maxLines: 1,
+          style: bodyRegular_14,
+        ),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ReferenceScreen(referenceId: reference.id)));
+          //.then((value) => refreshKey.currentState?.show());
+        },
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              "assets/icons/thumbup.svg",
+              color: Colors.white,
+            ),
+            Text(
+              reference.likesCount.toString(),
+              style: bodyRegular_14,
+            ),
+          ],
+        ),
       ),
-      subtitle: Text(
-        reference.description,
-        maxLines: 2,
-        style: bodyRegular_14,
-      ),
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ReferenceScreen(referenceId: reference.id)));
-        //.then((value) => refreshKey.currentState?.show());
-      },
-      trailing: Text(reference.likesCount.toString()),
     );
   }
 }

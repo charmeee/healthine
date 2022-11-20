@@ -5,7 +5,11 @@ import '../../Common/Const/const.dart';
 import '../../Common/styles/textStyle.dart';
 
 class DietTypeChips extends StatefulWidget {
-  const DietTypeChips({Key? key}) : super(key: key);
+  final Function(DietType dietType) setDietType;
+  final DietType nowDietType;
+  const DietTypeChips(
+      {Key? key, required this.setDietType, required this.nowDietType})
+      : super(key: key);
 
   @override
   State<DietTypeChips> createState() => _DietTypeChipsState();
@@ -18,13 +22,13 @@ class _DietTypeChipsState extends State<DietTypeChips> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (nowHour >= 5 && nowHour < 11) {
+    if (widget.nowDietType == DietType.breakfast) {
       isSelected[0] = true;
-    } else if (nowHour >= 11 && nowHour < 14) {
+    } else if (widget.nowDietType == DietType.lunch) {
       isSelected[1] = true;
-    } else if (nowHour >= 17 && nowHour < 20) {
+    } else if (widget.nowDietType == DietType.dinner) {
       isSelected[2] = true;
-    } else {
+    } else if (widget.nowDietType == DietType.snack) {
       isSelected[3] = true;
     }
   }
@@ -57,6 +61,20 @@ class _DietTypeChipsState extends State<DietTypeChips> {
                     isSelected =
                         List<bool>.filled(DietType.values.length, false);
                     isSelected[i] = selected;
+                    switch (i) {
+                      case 0:
+                        widget.setDietType(DietType.breakfast);
+                        break;
+                      case 1:
+                        widget.setDietType(DietType.lunch);
+                        break;
+                      case 2:
+                        widget.setDietType(DietType.dinner);
+                        break;
+                      case 3:
+                        widget.setDietType(DietType.snack);
+                        break;
+                    }
                   });
                 }
               },
