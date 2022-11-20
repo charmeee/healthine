@@ -179,7 +179,7 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                             color: mediumGrayColor,
                           ),
                           onPressed: () {
-                            getImage(ImageSource.camera);
+                            getImage(ImageSource.gallery);
                           },
                         ),
                       ],

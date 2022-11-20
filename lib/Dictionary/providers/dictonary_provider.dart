@@ -46,7 +46,7 @@ class DictionaryNotifier extends StateNotifier<List<ManualData>> {
     }
   }
 
-  String getDictionaryNameById(String id) {
+  String? getDictionaryNameById(String id) {
     return state.firstWhere((element) => element.id == id).title;
   }
 

@@ -25,6 +25,7 @@ class RoutineCard extends StatefulWidget {
 class _RoutineCardState extends State<RoutineCard> {
   int index = 0;
   String dettailData = "";
+  int routineLength = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -33,6 +34,9 @@ class _RoutineCardState extends State<RoutineCard> {
       widget.myRoutines!.types.forEach((element) {
         dettailData += "$element · ";
       });
+      if (widget.myRoutines!.routineManuals != null) {
+        routineLength = widget.myRoutines!.routineManuals!.length;
+      }
     }
   }
 
@@ -64,6 +68,42 @@ class _RoutineCardState extends State<RoutineCard> {
                   );
                 },
                 child: Text("나만의 루틴 설정하기"),
+                style: primaryButton,
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    if (routineLength == widget.records.length &&
+        widget.myRoutines!.routineManuals![routineLength - 1].setNumber ==
+            widget.records[routineLength - 1].setNumber) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "축하합니다🎉🎉",
+              style: h2Regular_22,
+            ),
+            Text(
+              "오늘의 루틴을 완료하셨습니다.",
+              style: h3Regular_18,
+            ),
+            SizedBox(
+              height: 28,
+            ),
+            SizedBox(
+              height: primaryButtonHeight,
+              width: 240,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RoutineList()),
+                  );
+                },
+                child: Text("내 루틴 보기"),
                 style: primaryButton,
               ),
             )
@@ -165,18 +205,27 @@ class _RoutineCardState extends State<RoutineCard> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1,
-                          color: primaryColor,
+                    if (index < widget.records.length)
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        borderRadius: BorderRadius.circular(50),
+                        child: Text(
+                            (index == widget.records.length - 1 &&
+                                    widget.records[index].setNumber !=
+                                        widget.myRoutines!
+                                            .routineManuals![index].setNumber)
+                                ? "진행 중"
+                                : "완료",
+                            style:
+                                bodyRegular_12.copyWith(color: primaryColor)),
                       ),
-                      child: Text("완료",
-                          style: bodyRegular_12.copyWith(color: primaryColor)),
-                    ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(

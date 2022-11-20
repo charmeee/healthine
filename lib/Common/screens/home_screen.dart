@@ -5,6 +5,8 @@ import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Common/styles/buttonStyle.dart';
 import 'package:healthin/Diet/widgets/diet_main_card.dart';
 import 'package:healthin/Record/screens/whileExercise.dart';
+import 'package:healthin/Report/models/report_model.dart';
+import 'package:healthin/Report/services/report_api.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/Diet/screens/diet.dart';
 import 'package:healthin/znotUseFiles/report_screen.dart';
@@ -298,9 +300,16 @@ class HomeScreen extends ConsumerWidget {
                         "리포트 보기",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Report()));
+                      onPressed: () async {
+                        Report report = await createNewReport();
+                        if (report.id != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ReportScreen(id: report.id!)),
+                          );
+                        }
                       }),
                 )
               ],

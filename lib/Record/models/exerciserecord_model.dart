@@ -66,7 +66,7 @@ class Record {
     return Record(
       id: json['id'],
       manualId: json['manualId'],
-      routineId: "",
+      routineId: json['routineId'],
       routineTitle: json['routineTitle'],
       startedAt: DateTime.parse(json['startedAt']),
       endedAt: DateTime.parse(json['endedAt']),

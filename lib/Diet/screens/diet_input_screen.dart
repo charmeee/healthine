@@ -26,6 +26,29 @@ class _DietInputScreenState extends State<DietInputScreen> {
   final picker = ImagePicker();
   var imagePath = '';
   XFile? image;
+  int nowHour = DateTime.now().hour;
+
+  DietType nowDietType = DietType.breakfast;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (nowHour >= 5 && nowHour < 11) {
+      nowDietType = DietType.breakfast;
+    } else if (nowHour >= 11 && nowHour < 14) {
+      nowDietType = DietType.lunch;
+    } else if (nowHour >= 17 && nowHour < 20) {
+      nowDietType = DietType.dinner;
+    } else {
+      nowDietType = DietType.snack;
+    }
+  }
+
+  setDietType(DietType dietType) {
+    setState(() {
+      nowDietType = dietType;
+    });
+  }
+
   // 비동기 처리를 통해 카메라와 갤러리에서 이미지를 가져온다.
   Future getImage(ImageSource imageSource) async {
     image = await picker.pickImage(
@@ -60,7 +83,8 @@ class _DietInputScreenState extends State<DietInputScreen> {
                 SizedBox(
                   height: 20.0,
                 ),
-                DietTypeChips(),
+                DietTypeChips(
+                    setDietType: setDietType, nowDietType: nowDietType),
                 SizedBox(
                   height: 16,
                 ),

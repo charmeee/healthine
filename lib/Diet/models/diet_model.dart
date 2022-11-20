@@ -204,6 +204,15 @@ class DayDietType {
         snack.isEmpty;
   }
 
+  int get dietCount {
+    int count = 0;
+    if (breakfast.isNotEmpty) count++;
+    if (lunch.isNotEmpty) count++;
+    if (dinner.isNotEmpty) count++;
+    if (snack.isNotEmpty) count++;
+    return count;
+  }
+
   DayDietType.fromJson(Map<String, dynamic> json)
       : breakfast = json["breakfast"].isEmpty
             ? []

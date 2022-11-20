@@ -35,7 +35,9 @@ class RecordNotifier extends StateNotifier<List<Record>> {
 
   editRecordData(Record record) async {
     await patchRoutineLog(record);
-    state = [...state, record];
+    List<Record> tmp = [...state];
+    tmp.last = record;
+    state = tmp;
   }
 }
 

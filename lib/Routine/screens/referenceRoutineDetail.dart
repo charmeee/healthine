@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/boxStyle.dart';
 import 'package:healthin/Common/styles/buttonStyle.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/Routine/screens/routineSetting_screen.dart';
 import 'package:healthin/Routine/services/referenceRoutine_api.dart';
@@ -39,66 +42,96 @@ class _ReferenceScreenState extends State<ReferenceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(referenceRoutine.title),
+        backgroundColor: backgroundColor,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Container(
+            color: darkGrayColor,
+            height: 1,
+          ),
+        ),
       ),
       body: Column(
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                referenceRoutine.title,
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                referenceRoutine.description,
-                style: TextStyle(color: Colors.white),
-                maxLines: 5,
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+            child: Text(
+              referenceRoutine.description,
+              style: bodyRegular_16,
+              maxLines: 5,
+            ),
           ),
           SizedBox(
             height: 20,
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: referenceRoutine.routineManuals!
-                .map((e) => ListTile(
-                      title: Text(e.manualTitle,
-                          style: TextStyle(color: Colors.white)),
-                      subtitle: Text(
-                          "${e.weight}kg/ ${e.targetNumber}회/ ${e.setNumber}세트",
-                          style: TextStyle(color: Colors.white)),
-                    ))
-                .toList(),
+          Text(
+            "세부 루틴",
+            style: h3Bold_18,
           ),
-          ElevatedButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return Form(
-                      key: _routineFormKey,
-                      child: NameInputDialog(
-                        routineFormKey: _routineFormKey,
-                        hasReference: true,
-                      ),
-                    );
-                  }).then((value) {
-                if (value != null) {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RoutineSetting(
-                                routineTitle: value.toString(),
-                                routine: MyRoutine.fromReferenceRoutine(
-                                    referenceRoutine, value.toString()),
-                                isNew: true,
-                              )));
-                }
-              });
-            },
-            child: Text("루틴 가져오기"),
-            style: primaryButton,
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              decoration: borderContainer,
+              child: ListView.builder(
+                itemCount: referenceRoutine.routineManuals!.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                        referenceRoutine.routineManuals![index].manualTitle,
+                        style: TextStyle(color: Colors.white)),
+                    subtitle: Text(
+                        "${referenceRoutine.routineManuals![index].weight}kg/ ${referenceRoutine.routineManuals![index].targetNumber}회/ ${referenceRoutine.routineManuals![index].setNumber}세트",
+                        style: TextStyle(color: Colors.white)),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: referenceRoutine.routineManuals!
+          //       .map((e) => ListTile(
+          //             title: Text(e.manualTitle,
+          //                 style: TextStyle(color: Colors.white)),
+          //             subtitle: Text(
+          //                 "${e.weight}kg/ ${e.targetNumber}회/ ${e.setNumber}세트",
+          //                 style: TextStyle(color: Colors.white)),
+          //           ))
+          //       .toList(),
+          // ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 24),
+            child: ElevatedButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Form(
+                        key: _routineFormKey,
+                        child: NameInputDialog(
+                          routineFormKey: _routineFormKey,
+                          hasReference: true,
+                        ),
+                      );
+                    }).then((value) {
+                  if (value != null) {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RoutineSetting(
+                                  routineTitle: value.toString(),
+                                  routine: MyRoutine.fromReferenceRoutine(
+                                      referenceRoutine, value.toString()),
+                                  isNew: true,
+                                )));
+                  }
+                });
+              },
+              child: Text("루틴 가져오기"),
+              style: primaryButton,
+            ),
           )
         ],
       ),

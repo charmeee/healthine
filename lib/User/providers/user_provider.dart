@@ -66,18 +66,18 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
     return isLogin;
   }
 
-  Future<bool> updateUserProfile(String nickname) async {
+  Future<bool> updateUserProfile(UserInfo newUserInfo) async {
     UserInfo userInfo = UserInfo(
         id: state.id,
-        username: state.username,
-        nickname: nickname,
-        userEmail: state.userEmail,
-        ageRange: state.ageRange,
-        gender: state.gender);
+        username: newUserInfo.username,
+        nickname: newUserInfo.nickname,
+        userEmail: newUserInfo.userEmail,
+        ageRange: newUserInfo.ageRange,
+        gender: newUserInfo.gender);
     bool result = await UserUpdateRequest(userInfo);
     if (result) {
       state = userInfo;
-      log("$nickname로 닉넴 변경 ");
+      log("$newUserInfo.nickname로 닉넴 변경 ");
       return true;
     } else {
       return false;
@@ -92,8 +92,11 @@ class UserProfileNotifier extends StateNotifier<UserInfo> {
 
   deleteUserProfile() async {
     log("회원탈퇴");
-    state = UserInfo.init();
-    ref.read(loginStateProvider.notifier).state = false;
+    if (state.id != null) {
+      await deleteUser(state.id!);
+      state = UserInfo.init();
+      ref.read(loginStateProvider.notifier).state = false;
+    }
   }
 }
 

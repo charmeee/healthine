@@ -48,6 +48,7 @@ class ResultListView extends ConsumerStatefulWidget {
 
 class _ResultListViewState extends ConsumerState<ResultListView> {
   int selectedChipIndex = 0;
+
   setItem(int index) {
     setState(() {
       selectedChipIndex = index;
@@ -111,14 +112,11 @@ class _ResultListViewState extends ConsumerState<ResultListView> {
                       onPressed: () async {
                         if (selectedChipIndex != 0) {
                           await postDiet(DietDetailResult.fromDietResult(
-                              widget.data.results[selectedChipIndex],
+                              widget.data.results[selectedChipIndex - 1],
                               describeEnum(DietType.breakfast),
                               widget.data.photoId));
                           ref.refresh(todayDietProvider); //getData
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => Diet()),
-                              (route) => route.isFirst);
+                          Navigator.pop(context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('식단을 선택해주세요.')));

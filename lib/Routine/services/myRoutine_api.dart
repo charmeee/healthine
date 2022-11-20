@@ -42,6 +42,21 @@ Future<MyRoutine> getMyRoutineById(String routineId) async {
   }
 }
 
+//routine-manuals/{routineManualId} getroutinemanual
+Future<RoutineManual> getRoutineManual(String routineManualId) async {
+  final response = await dio.get("/routine-manuals/$routineManualId",
+      options: Options(headers: {"Authorization": "true"}));
+  log("내루틴 조회 완료");
+  log(response.data.toString());
+  try {
+    return RoutineManual.fromJson(response.data);
+  } catch (e) {
+    log("내루틴 조회 오류");
+    log("error: $e");
+    throw Exception(e);
+  }
+}
+
 //post myRoutine
 Future<MyRoutine> postMyRoutine(MyRoutine routine) async {
   //dio로 post 요청 /routines/my-routines

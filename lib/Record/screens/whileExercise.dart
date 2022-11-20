@@ -3,13 +3,19 @@ import 'dart:developer';
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Common/styles/textStyle.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../models/exerciserecord_model.dart';
 import '../providers/exercisedata_provider.dart';
+import '../widgets/progress_bar.dart';
 
 //import './youtubePlayer.dart';
 
@@ -45,15 +51,19 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
   final duration = const Duration(seconds: 1);
   List<Record> records = [];
   late Record nowRecord; //현재 레코드.
-  late int nowOrder = 0; //현재 운동순서.
-  int restSecond = 120;
-  late int beforeLength = 0;
+  int nowOrder = 0; //현재 운동순서.
+  int restSecond = 60;
+  int beforeLength = 0;
   Timer? _timer;
   int _time = 0; //초단위
-  late int findedindex;
+
+  FlutterTts tts = FlutterTts();
+
   @override
   void initState() {
     super.initState();
+    tts.setLanguage("ko-KR");
+    tts.setSpeechRate(0.5);
     nowRecord = Record.init(
         widget.routineManuals[0], widget.routineTitle, widget.routineId);
     final beforeRecord = ref.read(todayRecordProvider);
@@ -78,11 +88,11 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
         nowOrder--;
       }
     }
-    startTimer();
-    timeWatchFlag = true;
     if (widget.routineManuals[nowOrder].isCardio) {
       isCardio = true;
     }
+
+    startTimer();
   }
 
   Future<void> sendRecord() async {
@@ -104,23 +114,275 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
     } else {
       await ref.read(todayRecordProvider.notifier).addRecordData(nowRecord);
     }
+  }
+
+  initTimer() {
     setState(() {
       _time = 0;
+      _timer?.cancel();
+      timeWatchFlag = false;
     });
   }
 
+  @override
+  void dispose() {
+    // TODO: 시간을 상위 state에 넘겨 줘야함.
+    _timer?.cancel();
+    tts.stop();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        bool flag = false;
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text("운동을 종료하시겠습니까?"),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("아니오")),
+                    TextButton(
+                        onPressed: () async {
+                          await sendRecord();
+                          initTimer();
+                          tts.stop();
+
+                          flag = true;
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        child: Text("확인")),
+                  ],
+                ));
+        return Future.value(flag);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('$minutes:$seconds'),
+          centerTitle: false,
+          backgroundColor: backgroundColor,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(1),
+            child: Container(
+              color: darkGrayColor,
+              height: 1,
+            ),
+          ),
+        ),
+        body: Container(
+          color: backgroundColor,
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                StepProgressView(
+                  maxStep: widget.routineManuals.length,
+                  curStep: nowOrder,
+                ),
+                _progressIndicator(),
+                Text(
+                  //이름
+                  widget.routineManuals[nowOrder].manualTitle,
+                  textAlign: TextAlign.center,
+                  style: h1Regular_24,
+                ),
+                if (!timeWatchFlag)
+                  Text(
+                    "휴식중",
+                    style: h2Regular_22,
+                  ),
+                _controlButtons(),
+                if (!isCardio) _setCounter(),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          color: darkGrayColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).maybePop();
+                  },
+                  icon: SvgPicture.asset("assets/icons/finished_active.svg")),
+              IconButton(
+                  onPressed: () {
+                    if (timeWatchFlag) {
+                      //스탑워치가 실행중일때 멈추면
+                      setState(() {
+                        _timer?.cancel();
+                        timeWatchFlag = false;
+                      });
+                    } else {
+                      startTimer();
+                    }
+                  },
+                  icon: SvgPicture.asset(timeWatchFlag
+                      ? "assets/icons/pause.svg"
+                      : "assets/icons/play_arrow.svg")),
+              IconButton(
+                  onPressed: () {
+                    launchUrl(Uri.parse(
+                        "https://www.youtube.com/watch?v=2K2WCGstHOY"));
+                  },
+                  icon: SvgPicture.asset("assets/icons/books.svg")),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _progressIndicator() {
+    return CircularPercentIndicator(
+      radius: 104,
+      lineWidth: 30.0,
+      percent: isCardio
+          ? 1
+          : nowRecord.targetNumber /
+              widget.routineManuals[nowOrder].targetNumber,
+      center: isCardio
+          ? Text(
+              '$minutes:$seconds',
+              style: h1Bold_24.copyWith(color: Color(0xFFA2A3A3)),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${nowRecord.targetNumber}',
+                  style: h1Bold_24.copyWith(color: primaryColor),
+                ),
+                Text(
+                  '/${widget.routineManuals[nowOrder].targetNumber}',
+                  style: h1Bold_24.copyWith(color: Color(0xFFA2A3A3)),
+                )
+              ],
+            ),
+      progressColor: isCardio ? bulletPurpleColor : primaryColor,
+    );
+  }
+
+  Widget _setCounter() {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: widget.routineManuals[nowOrder].setNumber,
+        itemBuilder: (context, index) {
+          return Container(
+              margin: EdgeInsets.only(bottom: 8),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${index + 1}set",
+                    style: bodyBold_16,
+                  ),
+                  Text(
+                    "${widget.routineManuals[nowOrder].weight}kg",
+                    style: bodyRegular_16,
+                  ),
+                  Text("${widget.routineManuals[nowOrder].targetNumber}회",
+                      style: bodyRegular_16),
+                  SvgPicture.asset(
+                    "assets/icons/finished.svg",
+                    width: 16,
+                    height: 16,
+                    color: nowRecord.setNumber > index
+                        ? primaryColor
+                        : const Color(0xFFA2A3A3),
+                  ),
+                ],
+              ));
+        });
+  }
+
+  Widget _controlButtons() {
+    return Row(
+      children: [
+        Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  if (countSpeed > 1 && !isCardio) {
+                    setState(() {
+                      countSpeed--;
+                    });
+                  }
+                },
+                icon: SvgPicture.asset("assets/icons/delete_withborder.svg")),
+            Text(
+              "$countSpeed 속도",
+              textAlign: TextAlign.center,
+              style: h1Regular_24.copyWith(fontSize: 22),
+            ),
+            IconButton(
+                onPressed: () {
+                  if (!isCardio) {
+                    setState(() {
+                      countSpeed++;
+                    });
+                  }
+                },
+                icon: SvgPicture.asset("assets/icons/add_withborder.svg"))
+          ],
+        ),
+        Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  if (restSecond > 0) {
+                    setState(() {
+                      restSecond--;
+                    });
+                  }
+                },
+                icon: SvgPicture.asset("assets/icons/delete_withborder.svg")),
+            Text(
+              "$restSecond초 휴식",
+              textAlign: TextAlign.center,
+              style: h1Regular_24.copyWith(fontSize: 22),
+            ),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    restSecond++;
+                  });
+                },
+                icon: SvgPicture.asset("assets/icons/add_withborder.svg"))
+          ],
+        ),
+      ],
+    );
+  }
+
   void startTimer() {
+    log(nowOrder.toString() + "번째 운동 시작");
+    setState(() {
+      timeWatchFlag = true;
+    });
     _timer = Timer.periodic(duration, (timer) async {
       setState(() {
         _time++;
         seconds = (_time % 60).toString().padLeft(2, '0');
         minutes = (_time ~/ 60).toString().padLeft(2, "0");
       });
-      if (isCardio == false) {
+      if (!isCardio) {
         //유산소가 아니면
         if (_time % countSpeed == 0 && timeWatchFlag) {
           setState(() {
             nowRecord.targetNumber++;
+            tts.speak(nowRecord.targetNumber.toString());
           });
           log("개수증가");
         }
@@ -130,20 +392,18 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           //유산소의 경우 개수 기준으로 카운트해서 멈춤
           //한세트 끝낫을때
           log("세트증가");
+          initTimer();
           setState(() {
             nowRecord.setNumber++;
             nowRecord.targetNumber = 0;
-            timeWatchFlag = false;
-            _timer?.cancel();
           });
           if (nowRecord.setNumber ==
               widget.routineManuals[nowOrder].setNumber) {
             //nowRecord finished
             log("현재운동끝");
             await sendRecord();
+            initTimer();
             setState(() {
-              _timer?.cancel();
-              timeWatchFlag = false;
               nowOrder++;
             });
             if (widget.routineManuals.length == nowOrder) {
@@ -165,10 +425,7 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           log("스탑워치 멈춤/휴식");
           await Future.delayed(Duration(seconds: restSecond), () {
             log("스탑워치 다시시작!");
-            setState(() {
-              timeWatchFlag = true;
-              startTimer();
-            });
+            startTimer();
           });
         }
       } else {
@@ -177,10 +434,8 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
             timeWatchFlag) {
           log("유산소 완료");
           await sendRecord();
+          initTimer();
           setState(() {
-            _time = 0;
-            _timer?.cancel();
-            timeWatchFlag = false;
             nowOrder++;
           });
           log("스탑워치 멈춤/휴식");
@@ -201,211 +456,10 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
           }
           await Future.delayed(Duration(seconds: restSecond), () {
             log("스탑워치 다시시작!");
-            setState(() {
-              timeWatchFlag = true;
-              startTimer();
-            });
+            startTimer();
           });
         }
       }
     }); //Timer(Duration duration, void callback())
-  }
-
-  @override
-  void dispose() {
-    // TODO: 시간을 상위 state에 넘겨 줘야함.
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        onWillPop: () {
-          bool flag = false;
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: Text("운동을 종료하시겠습니까?"),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("아니오")),
-                      TextButton(
-                          onPressed: () async {
-                            await sendRecord();
-                            flag = true;
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          },
-                          child: Text("확인")),
-                    ],
-                  ));
-          return Future.value(flag);
-        },
-        child: Container(
-          color: timeWatchFlag ? Colors.green : Colors.red,
-          padding: EdgeInsets.all(10),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  //이름
-                  widget.routineManuals[nowOrder].manualTitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
-                ),
-                Text(
-                  //시간
-                  '$minutes:$seconds',
-                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 60),
-                ),
-                if (isCardio == false) ...[
-                  Text(
-                    "${nowRecord.targetNumber} / ${widget.routineManuals[nowOrder].targetNumber} 개",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                  ),
-                  Text(
-                    "${nowRecord.setNumber} / ${widget.routineManuals[nowOrder].setNumber} 세트",
-                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 35),
-                  ),
-                  Row(
-                    //개수 사이 시간
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "${countSpeed} 속도",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300, fontSize: 35),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  countSpeed--;
-                                });
-                              },
-                              icon: Icon(Icons.exposure_minus_1)),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  countSpeed++;
-                                });
-                              },
-                              icon: Icon(Icons.plus_one))
-                        ],
-                      )
-                    ],
-                  ),
-                  Row(
-                    //쉬는시간
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "$restSecond초 휴식",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300, fontSize: 35),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  restSecond--;
-                                });
-                              },
-                              icon: Icon(Icons.exposure_minus_1)),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  restSecond++;
-                                });
-                              },
-                              icon: Icon(Icons.plus_one))
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-                SizedBox(
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SizedBox(
-                        // height: buttonheight,
-                        width: MediaQuery.of(context).size.width / 3 * 0.8,
-                        child: TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  timeWatchFlag ? Colors.red : Colors.green)),
-                          onPressed: () {
-                            if (timeWatchFlag) {
-                              //스탑워치가 실행중일때 멈추면
-                              setState(() {
-                                _timer?.cancel();
-                                timeWatchFlag = false;
-                              });
-                            } else {
-                              setState(() {
-                                timeWatchFlag = true;
-                                startTimer();
-                              });
-                            }
-                          },
-                          child: timeWatchFlag
-                              ? Text("휴식", style: textstyle1)
-                              : Text("다시 시작", style: textstyle1),
-                        ),
-                      ),
-                      SizedBox(
-                        // height: buttonheight,
-                        width: MediaQuery.of(context).size.width / 3 * 0.8,
-                        child: TextButton(
-                          onPressed: () async {
-                            Navigator.of(context).maybePop();
-                          },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.black54)),
-                          child: Text(
-                            "운동 완료",
-                            style: textstyle1,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        // height: buttonheight,
-                        width: MediaQuery.of(context).size.width / 3 * 0.8,
-                        child: TextButton(
-                          onPressed: () => {
-                            launchUrl(Uri.parse(
-                                "https://www.youtube.com/watch?v=2K2WCGstHOY"))
-                          },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.black54)),
-                          child: Text(
-                            "운동 방법",
-                            style: textstyle1,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
