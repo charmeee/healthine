@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:healthin/Common/Const/const.dart';
+import 'package:healthin/Report/models/report_model.dart';
+import 'package:healthin/Report/screens/report_error_screen.dart';
+import 'package:healthin/Report/screens/report_screen.dart';
+import 'package:healthin/Report/services/report_api.dart';
 import '../../Calender/screens/new_calander.dart';
 import '../screens/home_screen.dart';
 import '../../Community/screens/community_main_screen.dart';
-import '../../Diet/screens/diet.dart';
-import '../../Dictionary/screens/qrscan_screen.dart';
+
 import '../../Dictionary/screens/main_dictionary_screen.dart';
 
 class MyHome extends StatefulWidget {
@@ -16,10 +19,20 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _selectedIndex = 0;
+  Report report = Report.init();
+
   //ㅇㅣ름,횟수,시간
   @override
   void initState() {
     super.initState();
+    getReport();
+  }
+
+  getReport() async {
+    Report tmp = await createNewReport();
+    setState(() {
+      report = tmp;
+    });
   }
 
   @override
@@ -27,7 +40,7 @@ class _MyHomeState extends State<MyHome> {
     final List<Widget> widgetOptions = <Widget>[
       const HomeScreen(),
       const CalendarTab(),
-      QrScanPage(),
+      report.id != null ? ReportScreen(id: report.id!) : const ReportError(),
       const Community(),
       const Dictionary(addmode: false),
     ];
@@ -51,16 +64,19 @@ class _MyHomeState extends State<MyHome> {
                   type: BottomNavigationBarType.fixed,
                   currentIndex: _selectedIndex,
                   onTap: (int index) {
-                    if (index == 2) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => QrScanPage()));
-                    } else {
-                      setState(() {
-                        _selectedIndex = index;
-                      });
-                    }
+                    // if (index == 2) {
+                    //   Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => QrScanPage()));
+                    // } else {
+                    //   setState(() {
+                    //     _selectedIndex = index;
+                    //   });
+                    // }
+                    setState(() {
+                      _selectedIndex = index;
+                    });
                   },
                   unselectedItemColor: Colors.grey[400],
                   selectedItemColor: Colors.white,
@@ -79,9 +95,9 @@ class _MyHomeState extends State<MyHome> {
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(
-                        Icons.camera_alt,
+                        Icons.sticky_note_2,
                       ),
-                      label: "기구 스캔",
+                      label: "리포트",
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(
