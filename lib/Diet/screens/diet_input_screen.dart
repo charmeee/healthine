@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +8,6 @@ import 'package:healthin/Diet/widgets/diet_type_chip.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Common/styles/textStyle.dart';
-import '../services/diet_api.dart';
-import '../widgets/diet_input_form.dart';
 import '../widgets/diet_result_tile.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -27,7 +24,6 @@ class _DietInputScreenState extends State<DietInputScreen> {
   var imagePath = '';
   XFile? image;
   int nowHour = DateTime.now().hour;
-
   DietType nowDietType = DietType.breakfast;
   void initState() {
     // TODO: implement initState
@@ -212,7 +208,8 @@ class _DietInputScreenState extends State<DietInputScreen> {
         child: Text("식단을 등록해주세요.", style: h3Regular_18),
       );
     } else {
-      return DietResultWidget(image: image!);
+      return DietResultWidget(
+          image: image!, setDietType: setDietType, nowDietType: nowDietType);
     }
   }
 }
