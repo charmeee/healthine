@@ -120,19 +120,26 @@ class CommunityWriteState extends ConsumerState<CommunityWrite> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (widget.boardType != null)
-                    DropdownButton(
-                      value: thisBoardId,
-                      items: widget.boardType?.map((e) {
-                        return DropdownMenuItem(
-                          child: Text(e.title.toString()),
-                          value: e.id,
-                        );
-                      }).toList(),
-                      onChanged: (Object? value) {
-                        setState(() {
-                          thisBoardId = value.toString();
-                        });
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: DropdownButton(
+                        value: thisBoardId,
+                        dropdownColor: Colors.black45,
+                        items: widget.boardType?.map((e) {
+                          return DropdownMenuItem(
+                            child: Text(
+                              e.title.toString(),
+                              style: bodyRegular_16,
+                            ),
+                            value: e.id,
+                          );
+                        }).toList(),
+                        onChanged: (Object? value) {
+                          setState(() {
+                            thisBoardId = value.toString();
+                          });
+                        },
+                      ),
                     ),
                   TextFormField(
                     style: bodyRegular_16,
