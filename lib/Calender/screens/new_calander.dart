@@ -122,7 +122,7 @@ class _CalendarTabState extends ConsumerState<CalendarTab> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "운동사전",
+                    "운동달력",
                     style: h1Bold_24,
                   ),
                   Row(
