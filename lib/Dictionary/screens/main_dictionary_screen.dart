@@ -36,7 +36,7 @@ class _DictionaryState extends ConsumerState<Dictionary> {
             height: 64,
             alignment: Alignment.centerLeft,
             child: Text(
-              "운동달력",
+              "운동사전",
               style: h1Bold_24,
             ),
           ),
@@ -227,6 +227,8 @@ class DictionaryListState extends ConsumerState<DictionaryList> {
                         },
                         trailing: widget.addmode
                             ? Checkbox(
+                                side: BorderSide(color: mediumGrayColor),
+                                checkColor: primaryColor,
                                 value: widget.routineList.any((item) =>
                                     item.manualId ==
                                     filteredDataWatch[index].id),
