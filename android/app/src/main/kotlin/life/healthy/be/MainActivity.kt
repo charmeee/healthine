@@ -1,69 +1,42 @@
 package life.healthy.be
 import io.flutter.embedding.android.FlutterActivity
-//import androidx.annotation.NonNull
-//import io.flutter.embedding.engine.FlutterEngine
-//import io.flutter.plugin.common.MethodChannel
+import androidx.annotation.NonNull
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
+import android.annotation.SuppressLint;
+
+import android.content.Intent;
+
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "life.healthy.be/android"
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
+//    private var methodChannel: MethodChannel? = null
 //
-//        GeneratedPluginRegistrant.registerWith(FlutterEngine(this))
-//        MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-//
-//            when {
-//                call.method.equals("getAppUrl") -> {
-//                    try {
-//
-//                        val url: String = call.argument("url")!!
-//                        startActivity(Intent(Intent.ACTION_VIEW, uri))
-//
-//                        result.success(url)
-//
-//                    } catch (e: Exception) {
-//                        result.notImplemented()
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        GeneratedPluginRegister.registerGeneratedPlugins(FlutterEngine(this));
-//        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
-//            {
-//
-//                if (call.method.equals("shareReport")) {
-//                    val url: String = call.argument("url")
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-//                    startActivity(intent)
-//                    result.success("success")
-//                }
-//                result.notImplemented()
-//            }
-//            // Note: this method is invoked on the main thread.
-//            // TODO
-//        }
-//    }
+//    @SuppressLint("NewApi")
 //    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
 //        super.configureFlutterEngine(flutterEngine)
-//
-//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-//            // Note: this method is invoked on the main thread.
-//            call, result ->
-//            if (call.method.equals("shareReport")) {
-//                    val url: String = call.argument("url")
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL);
+//        methodChannel?.setMethodCallHandler { call, result ->
+//            if (call.method == "shareReport") {
+//                var url = call.argument<String>("url");
+//                val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+//                // 실행 가능한 앱이 있으면 앱 실행
+//                if (intent.resolveActivity(packageManager) != null) {
+//                    val existPackage = packageManager.getLaunchIntentForPackage("" + intent.getPackage());
 //                    startActivity(intent)
-//                    result.success("success")
-//            }else {
+//                    result.success(null);
+//                } else {
+//                    // Fallback URL이 있으면 현재 웹뷰에 로딩
+//                    val fallbackUrl = intent.getStringExtra("browser_fallback_url")
+//                    if (fallbackUrl != null) {
+//                        result.success(fallbackUrl);
+//                    }
+//                }
+//            } else {
 //                result.notImplemented()
 //            }
 //        }
 //    }
+
 }
 

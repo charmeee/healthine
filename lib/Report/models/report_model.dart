@@ -27,12 +27,12 @@ class Report {
   factory Report.init() {
     return Report(
       year: DateTime.now().year,
-      week: (DateTime.now()
+      week: ((DateTime.now()
                   .difference(DateTime(DateTime.now().year, 1, 1))
                   .inDays +
-              DateTime(DateTime.now().year, 1, 1).weekday -
-              1) ~/
-          7,
+              DateTime(DateTime.now().year, 1, 1).weekday +
+              5) ~/
+          7),
     );
   }
   toJson() {

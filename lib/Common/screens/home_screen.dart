@@ -8,6 +8,7 @@ import 'package:healthin/Report/models/report_model.dart';
 import 'package:healthin/Report/services/report_api.dart';
 import 'package:healthin/User/models/user_model.dart';
 import 'package:healthin/Report/screens/report_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Record/models/exerciserecord_model.dart';
 import '../../Record/providers/exercisedata_provider.dart';
 import '../../Routine/providers/routine_provider.dart';
@@ -250,12 +251,16 @@ class HomeScreen extends ConsumerWidget {
                       onPressed: () async {
                         Report report = await createNewReport();
                         if (report.id != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ReportScreen(id: report.id!)),
-                          );
+                          await launchUrl(
+                              Uri.parse(
+                                  'https://report.be-healthy.life/reports/${report.id}'),
+                              mode: LaunchMode.externalApplication);
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) =>
+                          //           ReportScreen(id: report.id!)),
+                          // );
                         }
                       }),
                 )

@@ -26,23 +26,18 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: WebView(
-        initialUrl:
-            'https://report.be-healthy.life/reports/fe779182-10de-4765-bf3b-9daa7e37bdc8',
-        //initialUrl: 'https://report.be-healthy.life/reports/${widget.id}',
+        initialUrl: 'https://report.be-healthy.life/reports/${widget.id}',
         javascriptMode: JavascriptMode.unrestricted,
         navigationDelegate: (NavigationRequest request) async {
           if (request.url.startsWith('intent')) {
             print('blocking navigation to $request}');
-            // if (Platform.isAndroid) {
-            //   //await platform.invokeMethod('shareReport', {"url": request.url});
-            //   if (await canLaunchUrl(Uri.parse(request.url))) {
-            //     log("launching ${request.url}");
-            //     await launchUrl(
-            //       Uri.parse(request.url),
-            //       mode: LaunchMode.externalApplication,
-            //     );
-            //   }
-            // }
+            if (Platform.isAndroid) {
+              await platform.invokeMethod('shareReport', {"url": request.url});
+              // await launchUrl(
+              //   Uri.parse(request.url),
+              //   mode: LaunchMode.externalApplication,
+              // );
+            }
             return NavigationDecision.prevent;
           }
           print('allowing navigation to $request');
