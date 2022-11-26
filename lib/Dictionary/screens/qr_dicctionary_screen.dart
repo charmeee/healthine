@@ -30,7 +30,7 @@ class _QrDictionaryState extends State<QrDictionary> {
   getList() async {
     try {
       List<ManualData> tmp =
-          await getDicionaryListByEquipmentId(widget.equipmentId);
+          await getDictionaryListByEquipmentId(widget.equipmentId);
       setState(() {
         dictionaryList = tmp;
       });

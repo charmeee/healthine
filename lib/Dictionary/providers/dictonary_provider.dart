@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthin/Dictionary/models/dictionary_model.dart';
-import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:healthin/Dictionary/services/dictionary_api.dart';
 
 final searchBynameProvider = StateProvider<String?>((ref) => null);
@@ -38,7 +37,7 @@ class DictionaryNotifier extends StateNotifier<List<ManualData>> {
   }
 
   getDictionary() async {
-    List<ManualData> dictionaryData = await getDicionaryList();
+    List<ManualData> dictionaryData = await getDictionaryList();
     if (dictionaryData.isNotEmpty) {
       state = dictionaryData;
       log(state[0].title.toString());

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,37 +8,69 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/diet_model.dart';
 import '../providers/diet_provider.dart';
-import '../screens/diet.dart';
 import '../services/diet_api.dart';
 import 'diet_input_form.dart';
 
-class DietResultWidget extends StatelessWidget {
+class DietResultWidget extends StatefulWidget {
   final XFile image;
-  const DietResultWidget({Key? key, required this.image}) : super(key: key);
+  final Function(DietType dietType) setDietType;
+  final DietType nowDietType;
+  const DietResultWidget(
+      {Key? key,
+      required this.image,
+      required this.setDietType,
+      required this.nowDietType})
+      : super(key: key);
+
+  @override
+  State<DietResultWidget> createState() => _DietResultWidgetState();
+}
+
+class _DietResultWidgetState extends State<DietResultWidget> {
+  DietAiPhotoAnalysis? dietAiPhotoAnalysis;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDietResult();
+  }
+
+  getDietResult() async {
+    DietAiPhotoAnalysis tmp = await getDietDataByAi(widget.image);
+    setState(() {
+      dietAiPhotoAnalysis = tmp;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DietAiPhotoAnalysis>(
-        future: getDietDataByAi(image), //<List<DietResult>>
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ResultListView(
-              data: snapshot.data!,
-            );
-          } else {
-            return const Center(
-                child: Text(
-              "식단을 분석 중 입니다.",
-              style: bodyBold_16,
-            ));
-          }
-        });
+    if (dietAiPhotoAnalysis == null) {
+      return const Center(
+          child: Text(
+        "식단을 분석 중 입니다.",
+        style: bodyBold_16,
+      ));
+    }
+
+    return ResultListView(
+      data: dietAiPhotoAnalysis!,
+      setDietType: widget.setDietType,
+      nowDietType: widget.nowDietType,
+    );
   }
 }
 
 class ResultListView extends ConsumerStatefulWidget {
   final DietAiPhotoAnalysis data;
-  const ResultListView({Key? key, required this.data}) : super(key: key);
+  final Function(DietType dietType) setDietType;
+  final DietType nowDietType;
+  const ResultListView(
+      {Key? key,
+      required this.data,
+      required this.setDietType,
+      required this.nowDietType})
+      : super(key: key);
 
   @override
   ConsumerState createState() => _ResultListViewState();
@@ -86,9 +116,18 @@ class _ResultListViewState extends ConsumerState<ResultListView> {
                       ),
                       onPressed: () {
                         showBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(16),
+                              ),
+                            ),
                             context: context,
                             builder: (context) {
-                              return DietTextForm();
+                              return DietTextForm(
+                                photoId: widget.data.photoId,
+                                setDietType: widget.setDietType,
+                                nowDietType: widget.nowDietType,
+                              );
                             });
                         //바텀시트열ㅔㅐ
                       },
@@ -113,7 +152,7 @@ class _ResultListViewState extends ConsumerState<ResultListView> {
                         if (selectedChipIndex != 0) {
                           await postDiet(DietDetailResult.fromDietResult(
                               widget.data.results[selectedChipIndex - 1],
-                              describeEnum(DietType.breakfast),
+                              describeEnum(widget.nowDietType),
                               widget.data.photoId));
                           ref.refresh(todayDietProvider); //getData
                           Navigator.pop(context);

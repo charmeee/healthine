@@ -7,6 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Common/styles/textStyle.dart';
+import 'package:healthin/Dictionary/models/dictionary_model.dart';
+import 'package:healthin/Dictionary/screens/dictionary_detail_screeen.dart';
+import 'package:healthin/Dictionary/services/dictionary_api.dart';
 import 'package:healthin/Routine/models/routine_models.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -231,9 +234,13 @@ class _WhileExerciseState extends ConsumerState<WhileExercise> {
                       ? "assets/icons/pause.svg"
                       : "assets/icons/play_arrow.svg")),
               IconButton(
-                  onPressed: () {
-                    launchUrl(Uri.parse(
-                        "https://www.youtube.com/watch?v=2K2WCGstHOY"));
+                  onPressed: () async {
+                    ManualData manualData = await getDictionaryByManualId(
+                        widget.routineManuals[nowOrder].manualId);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DictionaryDetail(
+                              founddata: manualData,
+                            )));
                   },
                   icon: SvgPicture.asset("assets/icons/books.svg")),
             ],

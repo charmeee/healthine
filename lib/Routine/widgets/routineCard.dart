@@ -203,7 +203,9 @@ class _RoutineCardState extends State<RoutineCard> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: (index < widget.records.length)
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
                   children: [
                     if (index < widget.records.length)
                       Container(

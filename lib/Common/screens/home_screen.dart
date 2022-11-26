@@ -4,75 +4,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:healthin/Common/Const/const.dart';
 import 'package:healthin/Common/styles/buttonStyle.dart';
 import 'package:healthin/Diet/widgets/diet_main_card.dart';
-import 'package:healthin/Record/screens/whileExercise.dart';
 import 'package:healthin/Report/models/report_model.dart';
 import 'package:healthin/Report/services/report_api.dart';
 import 'package:healthin/User/models/user_model.dart';
-import 'package:healthin/Diet/screens/diet.dart';
-import 'package:healthin/znotUseFiles/report_screen.dart';
-import 'package:healthin/Routine/screens/routineList_screen.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import '../../Diet/models/diet_model.dart';
-import '../../Diet/providers/diet_provider.dart';
+import 'package:healthin/Report/screens/report_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Record/models/exerciserecord_model.dart';
 import '../../Record/providers/exercisedata_provider.dart';
-import '../../Routine/models/routine_models.dart';
 import '../../Routine/providers/routine_provider.dart';
 import '../../User/providers/user_provider.dart';
 import '../../User/screens/userSetting_screen.dart';
 
 import '../../Routine/widgets/routineCard.dart';
-import '../../Record/widgets/todayExecisedCard.dart';
-import '../../Diet/screens/diet_input_screen.dart';
 import '../styles/boxStyle.dart';
 import '../styles/textStyle.dart';
 
 const double profileImageSize = 44;
 const double primaryButtonHeight = 56;
-
-List<Map> manuButton = [
-  {
-    "icon": Icons.qr_code,
-    "text": "출입 QR",
-    "onTab": "QR",
-  },
-  {
-    "icon": Icons.food_bank,
-    "text": "운동 식단",
-    "onTab": Diet(),
-  },
-  {
-    "icon": Icons.route,
-    "text": "루틴 찾기",
-    "onTab": DietInputScreen(),
-  },
-  {
-    "icon": Icons.person,
-    "text": "신체 기록",
-    "onTab": UserSetting(),
-  },
-  {
-    "icon": Icons.newspaper,
-    "text": "공지/민원",
-    "onTab": UserSetting(),
-  },
-  {
-    "icon": Icons.calendar_today,
-    "text": "달력",
-    "onTab": UserSetting(),
-  },
-  {
-    "icon": Icons.settings,
-    "text": "설정",
-    "onTab": UserSetting(),
-  },
-  {
-    "icon": Icons.logout,
-    "text": "로그아웃",
-    "onTab": UserSetting(),
-  },
-];
 
 List<String> day = [
   "월",
@@ -107,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 12,
                 ),
                 Column(
@@ -122,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UserSetting()),
+                                  builder: (context) => const UserSetting()),
                             );
                           },
                           child: ClipOval(
@@ -152,7 +100,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 12,
                     ),
                     Text(
@@ -161,7 +109,7 @@ class HomeScreen extends ConsumerWidget {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 22,
                 ),
                 SizedBox(
@@ -171,13 +119,13 @@ class HomeScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "오늘의 루틴",
                         style: h3Bold_18,
                       ),
                       Container(
                           height: 392,
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 20),
                           decoration: borderContainer,
                           child: todayRoutine.when(
@@ -198,14 +146,14 @@ class HomeScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
-                Text(
+                const Text(
                   "일일 활동",
                   style: h3Bold_18,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 14,
                 ),
                 Row(
@@ -214,7 +162,7 @@ class HomeScreen extends ConsumerWidget {
                     Container(
                       height: MediaQuery.of(context).size.width * 0.36,
                       width: MediaQuery.of(context).size.width * 0.43,
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 18,
                       ),
@@ -226,9 +174,9 @@ class HomeScreen extends ConsumerWidget {
                           Container(
                             height: 36,
                             width: 36,
-                            margin: EdgeInsets.only(bottom: 16),
+                            margin: const EdgeInsets.only(bottom: 16),
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: Colors.white, shape: BoxShape.circle),
                             child: SvgPicture.asset(
                               'assets/icons/exercise.svg',
@@ -242,7 +190,7 @@ class HomeScreen extends ConsumerWidget {
                                 "min",
                             style: bodyBold_16,
                           ),
-                          Text(
+                          const Text(
                             "운동시간",
                             style: bodyRegular_14,
                           )
@@ -252,7 +200,7 @@ class HomeScreen extends ConsumerWidget {
                     Container(
                       height: MediaQuery.of(context).size.width * 0.36,
                       width: MediaQuery.of(context).size.width * 0.43,
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 24,
                         vertical: 18,
                       ),
@@ -264,9 +212,9 @@ class HomeScreen extends ConsumerWidget {
                           Container(
                             height: 36,
                             width: 36,
-                            margin: EdgeInsets.only(bottom: 16),
+                            margin: const EdgeInsets.only(bottom: 16),
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: Colors.white, shape: BoxShape.circle),
                             child: SvgPicture.asset(
                               'assets/icons/exercise.svg',
@@ -277,7 +225,7 @@ class HomeScreen extends ConsumerWidget {
                             (todayRecord.length).toString() + "개",
                             style: bodyBold_16,
                           ),
-                          Text(
+                          const Text(
                             "운동개수",
                             style: bodyRegular_14,
                           )
@@ -286,14 +234,14 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 36,
                 ),
                 //식단부분 위젯 분리시켜야함
-                DietCard(),
+                const DietCard(),
                 Container(
                   height: primaryButtonHeight,
-                  margin: EdgeInsets.symmetric(vertical: 24),
+                  margin: const EdgeInsets.symmetric(vertical: 24),
                   child: ElevatedButton(
                       style: primaryButton,
                       child: const Text(
@@ -303,12 +251,16 @@ class HomeScreen extends ConsumerWidget {
                       onPressed: () async {
                         Report report = await createNewReport();
                         if (report.id != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ReportScreen(id: report.id!)),
-                          );
+                          await launchUrl(
+                              Uri.parse(
+                                  'https://report.be-healthy.life/reports/${report.id}'),
+                              mode: LaunchMode.externalApplication);
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) =>
+                          //           ReportScreen(id: report.id!)),
+                          // );
                         }
                       }),
                 )
